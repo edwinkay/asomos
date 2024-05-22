@@ -1,4 +1,330 @@
 <div id="container">
-  <strong>{{ name }}</strong>
-  <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div >
+      <div>
+        <div>
+          <form >
+            <textarea
+              class="textarea"
+              placeholder="Publicar Nota..."
+              name="infoText"
+              cols="40"
+              rows="3"
+
+            ></textarea>
+            <div
+              style="
+                right: 8%;
+                position: relative;
+                display: flex;
+                justify-content: flex-end;
+              "
+            >
+              <button
+                class="btn2"
+                type="submit"
+
+              >
+                Publicar
+              </button>
+            </div>
+          </form>
+        </div>
+        <div
+          style="display: flex; justify-content: center"
+
+        >
+          <div
+            style="
+              display: flex;
+              margin-bottom: 5px;
+              margin-top: 5px;
+              justify-content: center;
+              border: 1px solid #00000057;
+              width: 93%;
+              border-radius: 7px;
+              padding: 8px;
+            "
+          >
+            <div style="width: 100%;" >
+              <div>
+                <div style="display: flex; justify-content: space-between">
+                  <div style="display: flex; align-items: center; gap: 4px">
+                    <img
+
+                      style="border-radius: 50%; width: 40px; height: 40px"
+
+                      alt="foto"
+                    />
+                    <div style="text-align: justify; color: blue">
+
+                    </div>
+                  </div>
+                  <div
+                    style="text-align: end; width: 74%"
+
+                  >
+                    <div>
+                      <i
+
+                        style="cursor: pointer; color: red"
+                        class="fas fa-trash"
+                      ></i>
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between">
+                    <span  style="font-size: 26px; cursor: pointer;"
+                      >&#8942;</span
+                    >
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <img
+                      style="width: 93%"
+
+                      alt="Imagen del mensaje"
+                    />
+                  </div>
+                  <div
+                    style="
+                      padding-top: 8px;
+                      gap: 2rem;
+                      display: flex;
+                      justify-content: center;
+                    "
+                  >
+                    <div>
+                      <i
+
+                        style="cursor: pointer"
+                        class="far fa-comment"
+                      >
+                        <span></span>
+                      </i>
+                    </div>
+                    <div>
+                      <i
+
+                        style="cursor: pointer"
+                        class="far fa-thumbs-up"
+                      >
+                      </i>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="margin-bottom: 5px; margin-top: 5px; width: 93%"
+
+            >
+              <div>
+                <div style="display: flex; justify-content: space-between">
+                  <div style="display: flex; align-items: center; gap: 4px">
+                    <img
+
+                      style="border-radius: 50%; width: 40px; height: 40px"
+
+                      alt="foto"
+                    />
+                    <div style="text-align: justify; color: red">
+
+                    </div>
+                  </div>
+                  <div
+                    style="text-align: end; width: 74%"
+
+                  >
+                    <div>
+                      <i
+
+                        style="cursor: pointer; color: red"
+                        class="fas fa-trash"
+                      ></i>
+                    </div>
+                  </div>
+                  <div  style="display: flex; justify-content: space-between">
+                    <span  style="font-size: 26px; cursor: pointer;"
+                      >&#8942;</span
+                    >
+                  </div>
+                </div>
+                <div>
+                  <div>
+
+                  </div>
+                  <div
+                    style="
+                      padding-top: 8px;
+                      gap: 2rem;
+                      display: flex;
+                      justify-content: center;
+                    "
+                  >
+                    <div>
+                      <i
+
+                        style="cursor: pointer"
+                        class="far fa-comment"
+                      >
+                        <span></span>
+                      </i>
+                    </div>
+                    <div>
+                      <i
+
+                        style="cursor: pointer"
+                        class="far fa-thumbs-up"
+                      >
+                      </i>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modalcom" >
+        <div style="text-align: justify" class="modal-com">
+          <span  class="fas fa-times lax2"></span>
+          <h3>Comentarios:</h3>
+          <div class="comments-container">
+            <div class="comments-list">
+              <div
+                style="border-bottom: 1px solid #a1a197"
+
+              >
+                <div style="display: flex; flex-direction: column">
+                  <img
+
+                    style="cursor: pointer; border-radius: 50%"
+
+                    alt="Foto de perfil"
+                    width="50"
+                    height="50"
+                  />
+                  <span></span>
+                </div>
+
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border: 1px solid #80808054;
+                    border-radius: 9px;
+                    padding: 3px;
+                  "
+                >
+                  <p style="padding: 16px; width: 86%">
+
+                  </p>
+                  <div style="display: flex; gap: 1rem; align-items: center">
+                    <div>
+                      <i
+                        style="cursor: pointer"
+                        class="far fa-thumbs-up"
+
+                      ></i>
+                      <span></span>
+                    </div>
+                    <div style="gap: 1rem; display: flex; align-items: center">
+                      <div >
+                        <div style="gap: 1rem; display: flex">
+                          <i
+
+                            style="cursor: pointer; color: blue"
+                            class="fas fa-pencil-alt"
+                          ></i>
+                          <i
+
+                            style="cursor: pointer; color: red"
+                            class="fas fa-trash"
+                          ></i>
+                        </div>
+                      </div>
+                      <div>
+                        <span
+
+                          style="font-size: 26px; cursor: pointer;"
+                          >&#8942;</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="comment-input">
+            <form  #commentForm="ngForm">
+              <label for="comentario">Agregar comentario:</label><br />
+              <textarea
+                id="comentario"
+                name="comentario"
+                rows="4"
+                cols="50"
+
+                required
+              ></textarea
+              ><br />
+              <button
+                style="padding: 4px; border-radius: 7px"
+                type="submit"
+
+              >
+                Comentar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="modalDelete" >
+          <div class="modal-con">
+            <div style="text-align: center">
+              <p>¿Deseas eliminar este Comentario?</p>
+            </div>
+            <div style="display: flex; justify-content: space-evenly">
+              <button class="buttonDel" >
+                Cancelar
+              </button>
+              <button  class="buttonDel">
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modalEditar" >
+        <div class="modal-con">
+          <div style="text-align: center">
+            <p>Editar comentario:</p>
+            <textarea
+              style="padding: 12px"
+
+              name="esteComentario"
+              id="esteComentario"
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-evenly;
+              margin-top: 11px;
+            "
+          >
+            <button class="buttonDel" >Cancelar</button>
+            <button  class="buttonDel">
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>

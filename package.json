@@ -17,6 +17,7 @@
     "@angular/common": "^17.0.2",
     "@angular/compiler": "^17.0.2",
     "@angular/core": "^17.0.2",
+    "@angular/fire": "^7.5.0",
     "@angular/forms": "^17.0.2",
     "@angular/platform-browser": "^17.0.2",
     "@angular/platform-browser-dynamic": "^17.0.2",
@@ -30,7 +31,8 @@
     "ionicons": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.2"
+    "zone.js": "~0.14.2",
+    "firebase": "^9.21.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.0.0",

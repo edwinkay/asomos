@@ -1,0 +1,77 @@
+<div class="container-main-login">
+  <div class="container-login" *ngIf="!loading">
+    <form
+      class="login-form"
+      (ngSubmit)="login()"
+      [formGroup]="loginUsuario"
+      class="form-contenedor"
+    >
+      <div class="title-login">
+        <ion-title>AsomoS</ion-title>
+        <ion-title>Iniciar sesión</ion-title>
+      </div>
+      <div class="input-login">
+        <div>
+          <ion-label>Correo electronico</ion-label>
+          <ion-input
+            type="email"
+            name="email"
+            fill="solid"
+            placeholder="correo electronico"
+            labelPlacement="floating"
+            errorText="El correo electronico no es valido"
+            email
+            formControlName="email"
+          ></ion-input>
+        </div>
+        <div>
+          <ion-label>Contraseña</ion-label>
+          <ion-input
+            labelPlacement="floating"
+            type="password"
+            id="password"
+            fill="solid"
+            name="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            password
+            ><ion-input-password-toggle slot="end"></ion-input-password-toggle
+          ></ion-input>
+          <span
+            style="
+              left: 1rem;
+              position: relative;
+              font-size: smaller;
+              color: #e94a55;
+            "
+            *ngIf="
+              loginUsuario.get('password')?.hasError('required') &&
+              loginUsuario.get('password')?.touched
+            "
+            class="text-danger errorLabel"
+            >La contraseña debe contener mas de 6 caracteres</span
+          >
+        </div>
+      </div>
+
+      <div class="direccion">
+        <a class="enlace" routerLink="/recuperar">¿Olvidaste tu contraseña?</a>
+        <a class="enlace" routerLink="/registrar">Registrarse</a>
+      </div>
+      <div class="btn-login">
+        <ion-button color="tertiary" type="submit" class="submit-button"
+          >Iniciar sesión</ion-button
+        >
+        <div>
+          <a (click)="loginAsGuest()" class="register-link"
+            >Iniciar sesión como invitado</a
+          >
+        </div>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="loading">
+    <h2 class="elH2">Asi Somos</h2>
+    <span>Iniciando sesion...</span>
+  </div>
+</div>

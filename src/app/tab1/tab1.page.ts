@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular'; // Importar MenuController
+import { MenuController } from '@ionic/angular';
+import { UsersService } from '../services/users.service';
 
 @Component({
   selector: 'app-tab1',
@@ -9,18 +10,23 @@ import { MenuController } from '@ionic/angular'; // Importar MenuController
   styleUrls: ['tab1.page.scss'],
 })
 export class Tab1Page implements OnInit {
+  usuario:any
   usuarioActual: any;
   esInvitado = false;
   modal = false;
+  usuariosInfo:any[]= []
+  objetoUsuario:any
 
   constructor(
     private afAuth: AngularFireAuth,
     private router: Router,
-    private menu: MenuController // Agregar MenuController al constructor
+    private menu: MenuController,
+    private _user: UsersService
   ) {}
 
   ngOnInit(): void {
     this.afAuth.user.subscribe((user) => {
+      this.usuario = user
       this.usuarioActual = user?.displayName;
       if (this.usuarioActual == 'Invitad@') {
         this.esInvitado = true;
@@ -29,6 +35,24 @@ export class Tab1Page implements OnInit {
 
     // Asegurarse de que el menú esté cerrado al iniciar
     this.menu.close();
+    this.getUsers()
+  }
+  getUsers(){
+    this._user.getUsers().subscribe((usuarios) => {
+      this.usuariosInfo = [];
+      usuarios.forEach((element: any) => {
+        const data = element.payload.doc.data();
+        this.usuariosInfo.push({
+          id: element.payload.doc.data(),
+          ...element.payload.doc.data(),
+        });
+        const userData = this.usuariosInfo.find(
+          (obj) => obj.id.idUser === this.usuario?.uid
+        );
+        this.objetoUsuario = userData;
+        console.log(userData)
+      });
+    });
   }
 
   async salir() {

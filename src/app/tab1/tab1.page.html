@@ -18,13 +18,16 @@
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <!-- <ion-title>¡Hola {{usuarioActual}}!</ion-title> -->
-        <ion-chip>
-  <ion-avatar>
-    <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-  </ion-avatar>
-  <ion-label>Chip Avatar</ion-label>
-</ion-chip>
+        <div style="display: flex;">
+          <ion-avatar style="width: 45px; height: 45px;">
+            <img
+              alt="Silhouette of a person's head"
+              [src]="objetoUsuario?.foto || 'https://ionicframework.com/docs/img/demos/avatar.svg'"
+            />
+          </ion-avatar>
+          <ion-title>¡Hola {{usuarioActual}}!</ion-title>
+        </div>
+
       </ion-toolbar>
     </ion-header>
 

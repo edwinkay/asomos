@@ -12,7 +12,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { initializeApp } from 'firebase/app';
+import { provideFirebaseApp } from '@angular/fire/app';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
@@ -21,7 +22,12 @@ import { RegistrarComponent } from './components/initial/registrar/registrar.com
 import { RecuperarComponent } from './components/initial/recuperar/recuperar.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrarComponent, RecuperarComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    RegistrarComponent,
+    RecuperarComponent,
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -32,8 +38,6 @@ import { RecuperarComponent } from './components/initial/recuperar/recuperar.com
     AngularFireAuthModule,
     IonicModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideStorage(() => getStorage()),
     ToastrModule.forRoot({
       timeOut: 4000,
       positionClass: 'toast-bottom-right',
@@ -41,7 +45,13 @@ import { RecuperarComponent } from './components/initial/recuperar/recuperar.com
     }),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    provideFirebaseApp(() => {
+      return initializeApp(environment.firebase);
+    }),
+    provideStorage(() => getStorage()),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

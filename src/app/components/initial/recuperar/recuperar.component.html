@@ -1,0 +1,65 @@
+<div class="container-main-login">
+  <div class="container-login" *ngIf="!loading">
+    <form
+      class="login-form"
+      (ngSubmit)="recuperar()"
+      [formGroup]="recuperarUsuario"
+      class="form-contenedor"
+    >
+      <div class="title-login">
+        <img class="img-login" src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Fasomos.png?alt=media&token=ffa9b6c1-4157-4a5a-b588-95a267abe602" alt="">
+        <ion-title>Recuperar cuenta</ion-title>
+      </div>
+      <div class="input-login">
+        <div>
+          <ion-label>Correo electronico</ion-label>
+          <ion-input
+            type="email"
+            name="email"
+            fill="solid"
+            placeholder="correo electronico"
+            labelPlacement="floating"
+            errorText="El correo electronico no es valido"
+            email
+            formControlName="email"
+          ></ion-input>
+        </div>
+      </div>
+        <div
+        style="
+          row-gap: 1rem;
+          margin-top: 3rem;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-around;
+        "
+        class="btn-login"
+      >
+        <ion-button
+          routerLink="/login"
+          color="medium"
+          type="button"
+          >Volver</ion-button
+        >
+        <ion-button
+          color="tertiary"
+          type="submit"
+          class="submit-button"
+          [disabled]="recuperarUsuario.invalid"
+          >Aceptar</ion-button
+        >
+      </div>
+    </form>
+  </div>
+  <div class="loading-container" *ngIf="loading">
+    <img
+          style="width: 90%;"
+          class="img-login"
+          src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Fasomos.png?alt=media&token=ffa9b6c1-4157-4a5a-b588-95a267abe602"
+          alt=""
+        />
+      <ion-spinner color="tertiary"></ion-spinner>
+    <span>Iniciando sesion...</span>
+  </div>
+</div>

@@ -7,7 +7,7 @@
       class="form-contenedor"
     >
       <div class="title-login">
-        <ion-title>AsomoS</ion-title>
+        <img class="img-login" src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Fasomos.png?alt=media&token=ffa9b6c1-4157-4a5a-b588-95a267abe602" alt="">
         <ion-title>Iniciar sesión</ion-title>
       </div>
       <div class="input-login">
@@ -70,8 +70,14 @@
       </div>
     </form>
   </div>
-  <div *ngIf="loading">
-    <h2 class="elH2">Asi Somos</h2>
+  <div class="loading-container" *ngIf="loading">
+    <img
+          style="width: 90%;"
+          class="img-login"
+          src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Fasomos.png?alt=media&token=ffa9b6c1-4157-4a5a-b588-95a267abe602"
+          alt=""
+        />
+      <ion-spinner color="tertiary"></ion-spinner>
     <span>Iniciando sesion...</span>
   </div>
 </div>

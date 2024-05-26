@@ -16,6 +16,7 @@ export class Tab1Page implements OnInit {
   modal = false;
   usuariosInfo:any[]= []
   objetoUsuario:any
+  foto:any
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -50,6 +51,7 @@ export class Tab1Page implements OnInit {
           (obj) => obj.id.idUser === this.usuario?.uid
         );
         this.objetoUsuario = userData;
+        this.foto = this.objetoUsuario?.foto
       });
     });
   }

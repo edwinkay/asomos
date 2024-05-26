@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -36,7 +36,6 @@ import { RecuperarComponent } from './components/initial/recuperar/recuperar.com
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AngularFireAuthModule,
-    IonicModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     ToastrModule.forRoot({
       timeOut: 4000,
@@ -44,7 +43,7 @@ import { RecuperarComponent } from './components/initial/recuperar/recuperar.com
       preventDuplicates: true,
     }),
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideFirebaseApp(() => {

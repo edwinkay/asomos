@@ -50,7 +50,6 @@ export class Tab1Page implements OnInit {
           (obj) => obj.id.idUser === this.usuario?.uid
         );
         this.objetoUsuario = userData;
-        console.log(userData)
       });
     });
   }

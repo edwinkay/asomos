@@ -1,11 +1,28 @@
 #container {
   text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    overflow-y: auto;
+    max-height: 80vh;
+    padding: 10px;
+    box-sizing: border-box;
+}
+#container[_ngcontent-ng-c575013836]::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+/* Ocultar la barra de desplazamiento para Firefox */
+#container[_ngcontent-ng-c575013836] {
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Ocultar la barra de desplazamiento para Internet Explorer y Edge */
+#container[_ngcontent-ng-c575013836] {
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 #container strong {
@@ -25,3 +42,15 @@
 #container a {
   text-decoration: none;
 }
+.activar {
+  display: none;
+}
+
+.activar:not(.active) {
+  display: none;
+}
+
+.activar.active {
+  display: flex;
+}
+

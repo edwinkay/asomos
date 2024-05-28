@@ -33,9 +33,16 @@ export class Tab2Page implements OnInit {
         this.esInvitado = true;
       }
     });
+
+    // Asegurarse de que el menú esté cerrado al iniciar
     this.menu.close();
     this.getUsers();
   }
+
+  ionViewWillEnter() {
+    this.getUsers();
+  }
+
   getUsers() {
     this._user.getUsers().subscribe((usuarios) => {
       this.usuariosInfo = [];
@@ -54,9 +61,12 @@ export class Tab2Page implements OnInit {
     });
   }
 
+  openMenu() {
+    this.menu.open();
+  }
+
   async salir() {
-    console.log('click');
-    await this.menu.close(); // Cerrar el menú
+    await this.menu.close(); // Cierra el menú antes de salir
     this.afAuth.signOut().then(() => {
       this.router.navigate(['/login']);
     });

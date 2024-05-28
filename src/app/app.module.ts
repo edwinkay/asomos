@@ -20,6 +20,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { LoginComponent } from './components/initial/login/login.component';
 import { RegistrarComponent } from './components/initial/registrar/registrar.component';
 import { RecuperarComponent } from './components/initial/recuperar/recuperar.component';
+import { ActivateComponent } from './components/grupos/activate/activate.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { RecuperarComponent } from './components/initial/recuperar/recuperar.com
     LoginComponent,
     RegistrarComponent,
     RecuperarComponent,
+    ActivateComponent,
   ],
   imports: [
     BrowserModule,

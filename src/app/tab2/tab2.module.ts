@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { Tab2Page } from './tab2.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 import { GroupsComponentModule } from '../groups/groups.module';
+import { NavbarComponentModule } from '../components/navbar/navbar.module';
 import { Tab2PageRoutingModule } from './tab2-routing.module';
 
 @NgModule({
@@ -15,6 +16,7 @@ import { Tab2PageRoutingModule } from './tab2-routing.module';
     ExploreContainerComponentModule,
     Tab2PageRoutingModule,
     GroupsComponentModule,
+    NavbarComponentModule
   ],
   declarations: [Tab2Page],
 })

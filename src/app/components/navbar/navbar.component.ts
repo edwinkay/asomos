@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
-import { UsersService } from '../services/users.service';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
-  selector: 'app-tab1',
-  templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss'],
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
 })
-export class Tab1Page implements OnInit {
+export class NavbarComponent implements OnInit {
   usuario: any;
   usuarioActual: any;
   esInvitado = false;
@@ -29,18 +29,14 @@ export class Tab1Page implements OnInit {
     this.afAuth.user.subscribe((user) => {
       this.usuario = user;
       this.usuarioActual = user?.displayName;
-      if (this.usuarioActual == 'Invitad@') {
+      if (this.usuarioActual === 'Invitad@') {
         this.esInvitado = true;
       }
+      this.getUsers(); // Asegurarse de obtener los usuarios después de establecer la información del usuario actual
     });
 
     // Asegurarse de que el menú esté cerrado al iniciar
     this.menu.close();
-    this.getUsers();
-  }
-
-  ionViewWillEnter() {
-    this.getUsers();
   }
 
   getUsers() {
@@ -49,24 +45,21 @@ export class Tab1Page implements OnInit {
       usuarios.forEach((element: any) => {
         const data = element.payload.doc.data();
         this.usuariosInfo.push({
-          id: element.payload.doc.data(),
-          ...element.payload.doc.data(),
+          id: element.payload.doc.id, // Corregir esto para obtener el ID correcto
+          ...data,
         });
-        const userData = this.usuariosInfo.find(
-          (obj) => obj.id.idUser === this.usuario?.uid
-        );
-        this.objetoUsuario = userData;
-        this.foto = this.objetoUsuario?.foto;
       });
+      const userData = this.usuariosInfo.find(
+        (obj) => obj.id === this.usuario?.uid
+      );
+      this.objetoUsuario = userData;
+      this.foto = this.objetoUsuario?.foto;
     });
   }
 
-  openMenu() {
-    this.menu.open();
-  }
-
   async salir() {
-    await this.menu.close(); // Cierra el menú antes de salir
+    console.log('click');
+    await this.menu.close(); // Cerrar el menú
     this.afAuth.signOut().then(() => {
       this.router.navigate(['/login']);
     });

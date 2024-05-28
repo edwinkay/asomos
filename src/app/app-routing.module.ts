@@ -1,3 +1,4 @@
+import { ActivateComponent } from './components/grupos/activate/activate.component';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/initial/login/login.component';
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'recuperar',
     component: RecuperarComponent,
+  },
+  {
+    path: 'activate',
+    component: ActivateComponent,
   },
   {
     path: '',

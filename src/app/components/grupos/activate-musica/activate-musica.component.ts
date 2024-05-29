@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+} from '@angular/core';
 import { Location } from '@angular/common';
 import { UsersService } from 'src/app/services/users.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -8,6 +14,12 @@ import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Router } from '@angular/router';
 import Swiper from 'swiper';
+import {
+  ActionSheetController,
+  AlertController,
+  AlertInput,
+} from '@ionic/angular';
+import { IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-activate-musica',
@@ -15,7 +27,10 @@ import Swiper from 'swiper';
   styleUrls: ['./activate-musica.component.scss'],
 })
 export class ActivateMusicaComponent implements OnInit {
+  @ViewChild('modal') modal2: IonModal | undefined;
+
   images: any[] = [];
+  currentIndex = 0;
   currentUser: any | null;
   showCount = false;
   modal = false;
@@ -25,7 +40,6 @@ export class ActivateMusicaComponent implements OnInit {
   previewImage = false;
   showMask = false;
   currentLightboxImage = this.images[0];
-  currentIndex = 0;
   controls = true;
   totalImageCount = 0;
   reset = 0;
@@ -41,6 +55,15 @@ export class ActivateMusicaComponent implements OnInit {
   option: boolean = false;
   capIndex: any;
 
+  presentingElement: any = null;
+
+  alertButtons = ['OK'];
+  alertInputs: AlertInput[] = [
+    {
+      type: 'textarea',
+    },
+  ];
+
   constructor(
     private location: Location,
     private el: ElementRef,
@@ -49,7 +72,9 @@ export class ActivateMusicaComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private _user: UsersService,
-    private storagex: AngularFireStorage
+    private storagex: AngularFireStorage,
+    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit() {
@@ -68,21 +93,12 @@ export class ActivateMusicaComponent implements OnInit {
       }
     });
   }
-  ngAfterViewInit() {
-    const swiper = new Swiper('.swiper-container', {
-      loop: true,
-      pagination: {
-        el: '.swiper-pagination',
-      },
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
-  }
 
   goBack() {
     this.location.back();
+  }
+  openModal() {
+    this.modal2?.present();
   }
   getImages() {
     this._image.getim().subscribe((data) => {
@@ -215,7 +231,6 @@ export class ActivateMusicaComponent implements OnInit {
     }
   }
   onPreviewImage(index: number): void {
-    console.log('click', index);
     this.showMask = true;
     this.previewImage = true;
     this.currentIndex = index;
@@ -320,10 +335,14 @@ export class ActivateMusicaComponent implements OnInit {
     const user = await this.afAuth.currentUser;
 
     if (user && !this.esInvitado) {
-      this.modalcom = true;
+      // this.modalcom = true;
+      this.modal2?.present();
     } else {
       this.modal = true;
     }
+  }
+  closeModal() {
+    this.modal2?.dismiss();
   }
   borrarComentario() {
     // Encuentra el índice del comentario en el array commentsVideo
@@ -383,6 +402,20 @@ export class ActivateMusicaComponent implements OnInit {
         });
     } else {
       console.error('Índice de comentario no válido');
+    }
+  }
+  async verUsuario(id: any) {
+    console.log(id);
+    const adm = 'QxwJYfG0c2MwfjnJR70AdmmKOIz2';
+    if (id == adm) {
+    } else {
+      const user = await this.afAuth.currentUser;
+      const userId = user?.uid;
+      if (userId === id) {
+        this.router.navigate(['/perfil']);
+      } else {
+        this.router.navigate(['/usuario/', id]);
+      }
     }
   }
   async likeComment(comment: any) {
@@ -459,6 +492,8 @@ export class ActivateMusicaComponent implements OnInit {
     });
   }
   async opciones(i: any, comentario: any) {
+    this.comentarioDel = comentario
+    this.esteComentario =comentario.comentario
     const user = await this.afAuth.currentUser;
 
     if (
@@ -466,12 +501,122 @@ export class ActivateMusicaComponent implements OnInit {
       user?.email == 'administrador.sistema@gmail.com' ||
       user?.email == 'jeestrada377@gmail.com'
     ) {
-      if (this.capIndex === i) {
-        this.option = !this.option; // Toggle option if the same item is clicked
-      } else {
-        this.capIndex = i;
-        this.option = true; // Show options for a new item
+      const actionSheet = await this.actionSheetCtrl.create({
+        header: 'Acciones',
+        buttons: [
+          {
+            text: 'Editar comentario',
+            data: {
+              action: 'editar',
+            },
+          },
+          {
+            text: 'Eliminar',
+            role: 'destructive',
+            data: {
+              action: 'delete',
+            },
+          },
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            data: {
+              action: 'cancel',
+            },
+          },
+        ],
+      });
+
+      await actionSheet.present();
+
+      const { data } = await actionSheet.onDidDismiss();
+
+      if (data && data.action === 'delete') {
+        const index = this.dataVideoId.commentsVideo.indexOf(
+          this.comentarioDel
+        );
+        if (index !== -1) {
+          // Elimina el comentario del array commentsVideo
+          this.dataVideoId.commentsVideo.splice(index, 1);
+
+          // Actualiza los comentarios en Firestore
+          const videoId = this.dataVideoId.id;
+          const videox: any = {
+            commentsVideo: this.dataVideoId.commentsVideo,
+          };
+          this._image.updateImgAc(videoId, videox)
+            .then(() => {
+              this.modalDelete = false;
+              this.ocultarx = true;
+              this.option = false;
+              console.log('Comentario eliminado correctamente');
+            })
+            .catch((error) => {
+              console.error('Error al eliminar el comentario:', error);
+            });
+        } else {
+          console.error('Índice de comentario no válido');
+        }
+      } else if (data.action == 'editar') {
+        this.presentAlert();
       }
     }
+  }
+  async presentAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar Comentario',
+      inputs: [
+        {
+          name: 'comentario',
+          type: 'textarea',
+          placeholder: 'Escribe tu comentario',
+          value: this.esteComentario, // Carga el comentario existente
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            const comentarioModificado = data.comentario; // Obtiene el comentario modificado del formulario
+
+            // Encuentra el índice del comentario en el array commentsVideo
+            const index = this.dataVideoId.commentsVideo.indexOf(
+              this.comentarioDel
+            );
+
+            // Asegúrate de que el índice sea válido
+            if (index !== -1) {
+              // Actualiza el comentario en el array commentsVideo
+              this.dataVideoId.commentsVideo[index].comentario =
+                comentarioModificado;
+
+              // Actualiza los comentarios en Firestore
+              const videoId = this.dataVideoId.id;
+              const videox: any = {
+                commentsVideo: this.dataVideoId.commentsVideo,
+              };
+              this._image
+                .updateImgAc(videoId, videox)
+                .then(() => {
+                  this.modalEditar = false;
+                  this.ocultarx = true;
+                  console.log('Comentario editado correctamente');
+                })
+                .catch((error) => {
+                  console.error('Error al editar el comentario:', error);
+                });
+            } else {
+              console.error('Índice de comentario no válido');
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

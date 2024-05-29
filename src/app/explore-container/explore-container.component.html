@@ -171,12 +171,16 @@
           </ion-toolbar>
         </ion-header>
         <ion-content>
-          <div style="text-align: justify;padding: 0 10px 0 10px;" class="modal-com">
+          <div
+            style="text-align: justify; padding: 0 10px 0 10px"
+            class="modal-com"
+          >
             <span (click)="close()" class="fas fa-times lax2"></span>
             <div class="comments-container">
-              <div style="display: flex;
-    row-gap: 1rem;
-    flex-direction: column;" class="comments-list">
+              <div
+                style="display: flex; row-gap: 1rem; flex-direction: column"
+                class="comments-list"
+              >
                 <div
                   style="border-bottom: 1px solid #a1a197"
                   *ngFor="
@@ -250,7 +254,7 @@
                 </div>
               </div>
             </div>
-            <div style="margin-top: 15px;" class="comment-input">
+            <div style="margin-top: 15px" class="comment-input">
               <form (submit)="addComment2(comentario)" #commentForm="ngForm">
                 <ion-list>
                   <ion-item>

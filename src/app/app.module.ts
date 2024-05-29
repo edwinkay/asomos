@@ -1,4 +1,4 @@
-import { NgModule} from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -32,7 +32,7 @@ import { ActivateVideoComponent } from './components/grupos/activate-video/activ
     RecuperarComponent,
     ActivateComponent,
     ActivateMusicaComponent,
-    ActivateVideoComponent
+    ActivateVideoComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,5 +58,6 @@ import { ActivateVideoComponent } from './components/grupos/activate-video/activ
     provideStorage(() => getStorage()),
   ],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

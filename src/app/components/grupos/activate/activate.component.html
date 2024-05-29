@@ -1,37 +1,75 @@
 <ion-header>
   <ion-toolbar>
-    <div style="padding-left: 1rem;
-    display: flex;
-    align-items: center;">
-      <ion-icon (click)="goBack()" style="font-size: 22px;" name="arrow-back-outline"></ion-icon>
+    <div style="padding-left: 1rem; display: flex; align-items: center">
+      <ion-icon
+        (click)="goBack()"
+        style="font-size: 22px"
+        name="arrow-back-outline"
+      ></ion-icon>
       <ion-title>Activate</ion-title>
     </div>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-  <div *ngIf="mn">
-    <h1>hola mundo</h1>
+  <div>
+    <div [hidden]="!mn">
+      <div class="contenedor">
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            row-gap: 4rem;
+          "
+        >
+          <div style="text-align: center">
+            <h2 class="move">Bienvenidos a Activate</h2>
+            <span class="move2">Sesión de Actividad Física Musicalizada</span>
+          </div>
+          <div style="display: contents">
+            <img
+              class="img-fondo"
+              src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Factivate-logo.jpeg?alt=media&token=28baeec7-81b9-42a8-845d-3e226031f3ba"
+              alt=""
+            />
+          </div>
+          <a
+            style="
+              user-select: none;
+              cursor: pointer;
+              position: absolute;
+              bottom: 6%;
+              text-decoration: none;
+            "
+            href="https://www.facebook.com/profile.php?id=100061274895674"
+            ><i class="fab fa-facebook-square"></i> Unete a nuestro grupo de
+            Facebook.
+          </a>
+        </div>
+      </div>
+    </div>
+    <div [hidden]="!im">
+      <app-activate-musica></app-activate-musica>
+    </div>
+    <div [hidden]="!vd">
+      <app-activate-video></app-activate-video>
+    </div>
   </div>
-  <app-activate-musica *ngIf="im"></app-activate-musica>
-  <app-activate-video *ngIf="vd"></app-activate-video>
 </ion-content>
 
-<ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button (click)="main()">
-      <ion-icon name="heart-half-outline"></ion-icon>
-      <ion-label>Principal</ion-label>
-    </ion-tab-button>
+<ion-tab-bar slot="bottom">
+  <ion-tab-button (click)="main()" [ngClass]="{ 'tab-selected': mn }">
+    <ion-icon name="heart-half-outline"></ion-icon>
+    <ion-label>Principal</ion-label>
+  </ion-tab-button>
 
-    <ion-tab-button (click)="images()">
-      <ion-icon name="musical-notes-outline"></ion-icon>
-      <ion-label>Imagenes</ion-label>
-    </ion-tab-button>
+  <ion-tab-button (click)="images()" [ngClass]="{ 'tab-selected': im }">
+    <ion-icon name="musical-notes-outline"></ion-icon>
+    <ion-label>Imagenes</ion-label>
+  </ion-tab-button>
 
-    <ion-tab-button (click)="videos()">
-      <ion-icon name="videocam-outline"></ion-icon>
-      <ion-label>Videos</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-tabs>
+  <ion-tab-button (click)="videos()" [ngClass]="{ 'tab-selected': vd }">
+    <ion-icon name="videocam-outline"></ion-icon>
+    <ion-label>Videos</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

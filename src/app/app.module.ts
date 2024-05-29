@@ -21,6 +21,8 @@ import { LoginComponent } from './components/initial/login/login.component';
 import { RegistrarComponent } from './components/initial/registrar/registrar.component';
 import { RecuperarComponent } from './components/initial/recuperar/recuperar.component';
 import { ActivateComponent } from './components/grupos/activate/activate.component';
+import { ActivateMusicaComponent } from './components/grupos/activate-musica/activate-musica.component';
+import { ActivateVideoComponent } from './components/grupos/activate-video/activate-video.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { ActivateComponent } from './components/grupos/activate/activate.compone
     RegistrarComponent,
     RecuperarComponent,
     ActivateComponent,
+    ActivateMusicaComponent,
+    ActivateVideoComponent
   ],
   imports: [
     BrowserModule,

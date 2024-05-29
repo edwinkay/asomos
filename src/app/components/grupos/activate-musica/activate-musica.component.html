@@ -1,15 +1,22 @@
 <div class="contenedor">
   <div class="box">
+    <app-navbar-activate></app-navbar-activate>
     <div *ngIf="adm" class="subir">
       <p style="cursor: pointer" (click)="subirArchivo()">+ Agregar imagen</p>
     </div>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" *ngFor="let image of images">
+          <img [src]="image.url" alt="Image" />
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+
     <div class="gallery-lightbox-container">
       <div class="gallery">
-
         <div *ngFor="let image of images; let i = index" class="gallery-img">
           <img
-            (mouseenter)="onMouseEnter(i)"
-            (mouseleave)="onMouseLeave(i)"
             class="zoomable-image"
             (click)="onPreviewImage(i)"
             [src]="image.url"
@@ -17,7 +24,11 @@
           />
         </div>
       </div>
-      <div *ngIf="showMask" class="lightbox">
+      <div
+        *ngIf="showMask"
+        class="lightbox"
+        [ngClass]="{ active: previewImage }"
+      >
         <span *ngIf="showCount" class="count">
           {{ currentIndex + 1 }}/{{ totalImageCount }}
         </span>
@@ -26,7 +37,7 @@
           class="close-btn"
           (click)="onClosePreview()"
         >
-          <i class="far fa-times"></i>
+          <ion-icon name="close-outline"></ion-icon>
         </button>
         <button
           *ngIf="controls"
@@ -89,6 +100,7 @@
     </div>
   </div>
 </div>
+<div></div>
 <div class="modalcom" *ngIf="modalcom">
   <div style="text-align: justify" class="modal-com">
     <span *ngIf="ocultarx" (click)="close()" class="fas fa-times lax2"></span>
@@ -139,50 +151,52 @@
                 <span>{{ comment.likesCountComment }}</span>
               </div>
               <div style="gap: 1rem; display: flex; align-items: center">
-                <div style="gap: 1rem; display: flex">
-                  <i
-                    (click)="abrirEditar(comment)"
-                    style="cursor: pointer; color: blue"
-                    class="fas fa-pencil-alt"
-                  ></i>
-                  <i
-                    (click)="deleteModal(comment)"
-                    style="cursor: pointer; color: red"
-                    class="fas fa-trash"
-                  ></i>
+                <div [ngClass]="{ activar: !(i === capIndex && option) }">
+                  <div style="gap: 1rem; display: flex">
+                    <i
+                      (click)="abrirEditar(comment)"
+                      style="cursor: pointer; color: blue"
+                      class="fas fa-pencil-alt"
+                    ></i>
+                    <i
+                      (click)="deleteModal(comment)"
+                      style="cursor: pointer; color: red"
+                      class="fas fa-trash"
+                    ></i>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <span (click)="opciones(i, comment)" style="font-size: 26px"
-                  >&#8942;</span
-                >
+                <div>
+                  <span (click)="opciones(i, comment)" style="font-size: 26px"
+                    >&#8942;</span
+                  >
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="comment-input">
-    <form (submit)="addComment(comentario)" #commentForm="ngForm">
-      <label for="comentario">Agregar comentario:</label><br />
-      <textarea
-        id="comentario"
-        name="comentario"
-        rows="4"
-        cols="50"
-        [(ngModel)]="comentario"
-        required
-      ></textarea
-      ><br />
-      <button
-        style="padding: 4px; border-radius: 7px"
-        type="submit"
-        [disabled]="!commentForm.valid"
-      >
-        Comentar
-      </button>
-    </form>
+    <div class="comment-input">
+      <form (submit)="addComment(comentario)" #commentForm="ngForm">
+        <label for="comentario">Agregar comentario:</label><br />
+        <textarea
+          id="comentario"
+          name="comentario"
+          rows="4"
+          cols="50"
+          [(ngModel)]="comentario"
+          required
+        ></textarea
+        ><br />
+        <button
+          style="padding: 4px; border-radius: 7px"
+          type="submit"
+          [disabled]="!commentForm.valid"
+        >
+          Comentar
+        </button>
+      </form>
+    </div>
   </div>
 </div>
 <div>

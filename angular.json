@@ -34,7 +34,8 @@
             "styles": [
               "src/global.scss",
               "src/theme/variables.scss",
-              "node_modules/toastr/build/toastr.min.css"
+              "node_modules/toastr/build/toastr.min.css",
+              "node_modules/swiper/swiper-bundle.css"
             ],
             "scripts": []
           },

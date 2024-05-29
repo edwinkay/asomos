@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { UsersService } from 'src/app/services/users.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Router } from '@angular/router';
+import Swiper from 'swiper';
 
 @Component({
   selector: 'app-activate-musica',
@@ -14,7 +15,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./activate-musica.component.scss'],
 })
 export class ActivateMusicaComponent implements OnInit {
-
   images: any[] = [];
   currentUser: any | null;
   showCount = false;
@@ -66,6 +66,18 @@ export class ActivateMusicaComponent implements OnInit {
       ) {
         this.adm = true;
       }
+    });
+  }
+  ngAfterViewInit() {
+    const swiper = new Swiper('.swiper-container', {
+      loop: true,
+      pagination: {
+        el: '.swiper-pagination',
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
     });
   }
 
@@ -203,6 +215,7 @@ export class ActivateMusicaComponent implements OnInit {
     }
   }
   onPreviewImage(index: number): void {
+    console.log('click', index);
     this.showMask = true;
     this.previewImage = true;
     this.currentIndex = index;

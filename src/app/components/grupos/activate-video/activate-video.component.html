@@ -18,13 +18,13 @@
           *ngFor="let video of filteredVideos"
         >
           <div
-            style="height: 97%"
+            style="height: 95%"
             class="thumbnail-container"
             (click)="playVideo(video)"
           >
             <img
               style="height: 95%"
-              src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Factivate-logo.jpeg?alt=media&token=28baeec7-81b9-42a8-845d-3e226031f3ba"
+              [src]="video.th || 'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Factivate-logo.jpeg?alt=media&token=28baeec7-81b9-42a8-845d-3e226031f3ba'"
               alt="{{ video.nombre }}"
               class="thumbnail"
             />
@@ -65,34 +65,36 @@
               </div>
             </div>
           </div>
-          <div style="position: relative;
-    z-index: 999;
-    bottom: 100%;" *ngIf="video.playing" class="section">
-              <div class="title">
-                <p style="margin: 0">
-                  {{ video.nombre }}
-                </p>
+          <div
+            style="position: relative; z-index: 999; bottom: 100%"
+            *ngIf="video.playing"
+            class="section"
+          >
+            <div class="title">
+              <p style="margin: 0">
+                {{ video.nombre }}
+              </p>
+            </div>
+            <div class="bocadillos">
+              <div class="comment">
+                <ion-icon
+                  name="chatbubble-ellipses-outline"
+                  style="cursor: pointer"
+                  (click)="abrirCom(video)"
+                ></ion-icon>
+                <span>{{ video.commentsVideo.length }}</span>
               </div>
-              <div class="bocadillos">
-                <div class="comment">
-                  <ion-icon
-                    name="chatbubble-ellipses-outline"
-                    style="cursor: pointer"
-                    (click)="abrirCom(video)"
-                  ></ion-icon>
-                  <span>{{ video.commentsVideo.length }}</span>
-                </div>
-                <div class="likes">
-                  <ion-icon
-                    style="cursor: pointer"
-                    name="heart-outline"
-                    [class.liked]="video.likedByVideo.includes(currentUser.uid)"
-                    (click)="likeVideo(video)"
-                  ></ion-icon>
-                  <span>{{ video.likesCountVideo }}</span>
-                </div>
+              <div class="likes">
+                <ion-icon
+                  style="cursor: pointer"
+                  name="heart-outline"
+                  [class.liked]="video.likedByVideo.includes(currentUser.uid)"
+                  (click)="likeVideo(video)"
+                ></ion-icon>
+                <span>{{ video.likesCountVideo }}</span>
               </div>
             </div>
+          </div>
         </div>
       </div>
     </div>

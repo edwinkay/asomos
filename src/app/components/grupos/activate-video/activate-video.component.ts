@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { VideosActivateService } from 'src/app/services/videos-activate.service';
@@ -18,6 +18,7 @@ import { IonModal } from '@ionic/angular';
 })
 export class ActivateVideoComponent implements OnInit {
   @ViewChild('modal') modal2: IonModal | undefined;
+  @ViewChild('videoPlayer') videoPlayer: ElementRef| undefined;
 
   videos: any[] = [];
   currentUser: any | null;
@@ -87,6 +88,7 @@ export class ActivateVideoComponent implements OnInit {
           likedByVideo: videoData.likedByVideo || [],
           userVideoLikes: videoData.userVideoLikes || [],
           commentsVideo: videoData.commentsVideo || [],
+          playing: false,
         });
         // console.log(this.videos)
       });
@@ -94,6 +96,18 @@ export class ActivateVideoComponent implements OnInit {
       // console.log(this.filteredVideos)
     });
   }
+  playVideo(video: any) {
+    this.filteredVideos.forEach((v) => (v.playing = false)); // Detener cualquier video que se esté reproduciendo
+    video.playing = true;
+    this.videoPlayer?.nativeElement.play(); // Iniciar la reproducción del video
+  }
+  videoEnded(videoId: string) {
+    const video = this.filteredVideos.find((v) => v.id === videoId);
+    if (video) {
+      video.playing = false;
+    }
+  }
+
   async likeVideo(video: any) {
     const user = await this.afAuth.currentUser;
     if (user && !this.esInvitado) {
@@ -383,7 +397,8 @@ export class ActivateVideoComponent implements OnInit {
           const videox: any = {
             commentsVideo: this.dataVideoId.commentsVideo,
           };
-          this._videosService.updateActVideo(videoId, videox)
+          this._videosService
+            .updateActVideo(videoId, videox)
             .then(() => {
               this.modalDelete = false;
               this.ocultarx = true;
@@ -438,7 +453,8 @@ export class ActivateVideoComponent implements OnInit {
               const videox: any = {
                 commentsVideo: this.dataVideoId.commentsVideo,
               };
-              this._videosService.updateActVideo(videoId, videox)
+              this._videosService
+                .updateActVideo(videoId, videox)
                 .then(() => {
                   this.modalEditar = false;
                   this.ocultarx = true;

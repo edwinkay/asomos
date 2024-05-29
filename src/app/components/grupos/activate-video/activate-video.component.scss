@@ -105,6 +105,25 @@ nav {
 .activar.active {
   display: flex;
 }
+.thumbnail-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.thumbnail {
+  width: 100%;
+  height: auto;
+}
+
+.play-button-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: white;
+  opacity: 0.8;
+}
 
 
 @media screen and (max-width: 900px) {

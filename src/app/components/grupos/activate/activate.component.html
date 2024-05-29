@@ -10,22 +10,26 @@
 </ion-header>
 
 <ion-content>
-
+  <div *ngIf="mn">
+    <h1>hola mundo</h1>
+  </div>
+  <app-activate-musica *ngIf="im"></app-activate-musica>
+  <app-activate-video *ngIf="vd"></app-activate-video>
 </ion-content>
 
 <ion-tabs>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button routerLink="/activate">
+    <ion-tab-button (click)="main()">
       <ion-icon name="heart-half-outline"></ion-icon>
       <ion-label>Principal</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button  routerLink="/imagenes-activate">
+    <ion-tab-button (click)="images()">
       <ion-icon name="musical-notes-outline"></ion-icon>
       <ion-label>Imagenes</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button routerLink="/videos-activate">
+    <ion-tab-button (click)="videos()">
       <ion-icon name="videocam-outline"></ion-icon>
       <ion-label>Videos</ion-label>
     </ion-tab-button>

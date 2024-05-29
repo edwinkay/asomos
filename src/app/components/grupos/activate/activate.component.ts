@@ -7,6 +7,9 @@ import { Location } from '@angular/common';
   styleUrls: ['./activate.component.scss'],
 })
 export class ActivateComponent  implements OnInit {
+  mn = true
+  im = false
+  vd = false
 
   constructor(private location: Location) { }
 
@@ -14,6 +17,21 @@ export class ActivateComponent  implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+  main(){
+    this.mn = true;
+    this.im = false;
+    this.vd = false;
+  }
+  images(){
+    this.mn = false;
+    this.im = true;
+    this.vd = false;
+  }
+  videos(){
+    this.mn = false;
+    this.im = false;
+    this.vd = true;
   }
 
 }

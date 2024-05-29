@@ -21,9 +21,6 @@ export class TabsPage {
     } else {
     }
   }
-  // tabChanged(tabName: string) {
-  //   this.router.navigateByUrl(`/tabs/${tabName}`);
-  // }
 
   openMenu() {
     this.menu.open();

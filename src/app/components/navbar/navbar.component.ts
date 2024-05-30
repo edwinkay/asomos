@@ -18,6 +18,10 @@ export class NavbarComponent implements OnInit {
   objetoUsuario: any;
   foto: any;
 
+  mn = true;
+  im = false;
+  vd = false;
+
   constructor(
     private afAuth: AngularFireAuth,
     private router: Router,
@@ -32,10 +36,9 @@ export class NavbarComponent implements OnInit {
       if (this.usuarioActual === 'Invitad@') {
         this.esInvitado = true;
       }
-      this.getUsers(); // Asegurarse de obtener los usuarios después de establecer la información del usuario actual
+      this.getUsers();
     });
 
-    // Asegurarse de que el menú esté cerrado al iniciar
     this.menu.close();
   }
 
@@ -45,16 +48,31 @@ export class NavbarComponent implements OnInit {
       usuarios.forEach((element: any) => {
         const data = element.payload.doc.data();
         this.usuariosInfo.push({
-          id: element.payload.doc.id, // Corregir esto para obtener el ID correcto
+          id: element.payload.doc.id,
           ...data,
         });
       });
       const userData = this.usuariosInfo.find(
-        (obj) => obj.id === this.usuario?.uid
+        (obj) => obj.idUser === this.usuario?.uid
       );
       this.objetoUsuario = userData;
       this.foto = this.objetoUsuario?.foto;
     });
+  }
+  main() {
+    this.mn = true;
+    this.im = false;
+    this.vd = false;
+  }
+  images() {
+    this.mn = false;
+    this.im = true;
+    this.vd = false;
+  }
+  videos() {
+    this.mn = false;
+    this.im = false;
+    this.vd = true;
   }
 
   async salir() {

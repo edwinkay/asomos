@@ -6,9 +6,10 @@ import { RegistrarComponent } from './components/initial/registrar/registrar.com
 import { RecuperarComponent } from './components/initial/recuperar/recuperar.component';
 import { ActivateMusicaComponent } from './components/grupos/activate-musica/activate-musica.component';
 import { ActivateVideoComponent } from './components/grupos/activate-video/activate-video.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'main', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {
     path: 'registrar',
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'recuperar',
     component: RecuperarComponent,
+  },
+  {
+    path: 'main',
+    component: NavbarComponent,
   },
   {
     path: 'activate',

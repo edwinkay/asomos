@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
-        this.router.navigate(['/tabs/tab1']);
+        this.router.navigate(['/main']);
         this.loading = false;
       })
       .catch((error) => {
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         this.loading = false;
-        this.router.navigate(['/tabs/tab2']);
+        this.router.navigate(['/main']);
       })
       .catch((error) => {
         this.loading = false;

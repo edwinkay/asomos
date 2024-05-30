@@ -23,6 +23,9 @@ import { RecuperarComponent } from './components/initial/recuperar/recuperar.com
 import { ActivateComponent } from './components/grupos/activate/activate.component';
 import { ActivateMusicaComponent } from './components/grupos/activate-musica/activate-musica.component';
 import { ActivateVideoComponent } from './components/grupos/activate-video/activate-video.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FeaturesComponent } from './components/main/features/features.component';
+import { GruposComponent } from './components/main/grupos/grupos.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,9 @@ import { ActivateVideoComponent } from './components/grupos/activate-video/activ
     ActivateComponent,
     ActivateMusicaComponent,
     ActivateVideoComponent,
+    NavbarComponent,
+    FeaturesComponent,
+    GruposComponent,
   ],
   imports: [
     BrowserModule,

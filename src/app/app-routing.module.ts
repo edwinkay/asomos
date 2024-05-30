@@ -4,12 +4,10 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/initial/login/login.component';
 import { RegistrarComponent } from './components/initial/registrar/registrar.component';
 import { RecuperarComponent } from './components/initial/recuperar/recuperar.component';
-import { ActivateMusicaComponent } from './components/grupos/activate-musica/activate-musica.component';
-import { ActivateVideoComponent } from './components/grupos/activate-video/activate-video.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'main', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {
     path: 'registrar',
@@ -27,19 +25,7 @@ const routes: Routes = [
     path: 'activate',
     component: ActivateComponent,
   },
-  {
-    path: 'imagenes-activate',
-    component: ActivateMusicaComponent,
-  },
-  {
-    path: 'videos-activate',
-    component: ActivateVideoComponent,
-  },
-  {
-    path: '',
-    loadChildren: () =>
-      import('./tabs/tabs.module').then((m) => m.TabsPageModule),
-  },
+  { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 @NgModule({
   imports: [

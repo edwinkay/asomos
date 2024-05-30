@@ -26,6 +26,7 @@ import { ActivateVideoComponent } from './components/grupos/activate-video/activ
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FeaturesComponent } from './components/main/features/features.component';
 import { GruposComponent } from './components/main/grupos/grupos.component';
+import { PerfilComponent } from './components/main/perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { GruposComponent } from './components/main/grupos/grupos.component';
     NavbarComponent,
     FeaturesComponent,
     GruposComponent,
+    PerfilComponent,
   ],
   imports: [
     BrowserModule,

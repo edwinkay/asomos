@@ -40,7 +40,9 @@
         <app-grupos></app-grupos>
       </div>
     </div>
-    <div [hidden]="!vd">perfil</div>
+    <div [hidden]="!vd">
+      <app-perfil></app-perfil>
+    </div>
   </ion-content>
   <ion-tab-bar slot="bottom">
     <ion-tab-button (click)="main()" [ngClass]="{ 'tab-selected': mn }">

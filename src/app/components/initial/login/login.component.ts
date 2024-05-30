@@ -60,8 +60,8 @@ export class LoginComponent implements OnInit {
     this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        this.loading = false;
         this.router.navigate(['/main']);
+        this.loading = false;
       })
       .catch((error) => {
         this.loading = false;

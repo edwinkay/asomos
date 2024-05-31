@@ -1,3 +1,4 @@
+import { AsomosMainComponent } from './components/grupo2/asomos-main/asomos-main.component';
 import { ActivateComponent } from './components/grupos/activate/activate.component';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path: 'activate',
     component: ActivateComponent,
+  },
+  {
+    path: 'asomos',
+    component: AsomosMainComponent,
   },
   {
     path: 'perfil-editar',

@@ -1,3 +1,7 @@
+import { AsomosMusicaComponent } from './components/grupo2/asomos-musica/asomos-musica.component';
+import { AsomosVideosComponent } from './components/grupo2/asomos-videos/asomos-videos.component';
+import { AsomosImagenesComponent } from './components/grupo2/asomos-imagenes/asomos-imagenes.component';
+import { AsomosMainComponent } from './components/grupo2/asomos-main/asomos-main.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -48,7 +52,11 @@ import { EmoticonsComponent } from './shared/emoticons/emoticons.component';
     PerfilEditarComponent,
     BandejaComponent,
     SendingComponent,
-    EmoticonsComponent
+    EmoticonsComponent,
+    AsomosMainComponent,
+    AsomosImagenesComponent,
+    AsomosVideosComponent,
+    AsomosMusicaComponent
   ],
   imports: [
     BrowserModule,

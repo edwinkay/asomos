@@ -14,4 +14,7 @@ export class GruposComponent implements OnInit {
   navegarActivate() {
     this.router.navigate(['/activate']);
   }
+  navegarAsomos() {
+    this.router.navigate(['/asomos']);
+  }
 }

@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <div style="padding-left: 1rem; display: flex; align-items: center">
+      <ion-icon
+        (click)="goBack()"
+        style="font-size: 22px"
+        name="arrow-back-outline"
+      ></ion-icon>
+      <ion-title>Asi somos asi bailamos</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h1 [hidden]="!mn">Estamos trabajando Asomos ...</h1>
+  <!-- <div>
+    <app-asomos-main></app-asomos-main>
+  </div> -->
+  <div [hidden]="!im">
+    <app-asomos-imagenes></app-asomos-imagenes>
+  </div>
+  <div [hidden]="!vd">
+    <app-asomos-videos></app-asomos-videos>
+  </div>
+  <div [hidden]="!ms">
+    <app-asomos-musica></app-asomos-musica>
+  </div>
+</ion-content>
+
+<ion-tab-bar slot="bottom">
+  <ion-tab-button (click)="main()" [ngClass]="{ 'tab-selected': mn }">
+    <ion-icon name="heart-half-outline"></ion-icon>
+    <ion-label>Principal</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button (click)="images()" [ngClass]="{ 'tab-selected': im }">
+    <ion-icon name="images-outline"></ion-icon>
+    <ion-label>Imagenes</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button (click)="videos()" [ngClass]="{ 'tab-selected': vd }">
+    <ion-icon name="videocam-outline"></ion-icon>
+    <ion-label>Videos</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button (click)="musica()" [ngClass]="{ 'tab-selected': ms }">
+    <ion-icon name="musical-notes-outline"></ion-icon>
+    <ion-label>Musica</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

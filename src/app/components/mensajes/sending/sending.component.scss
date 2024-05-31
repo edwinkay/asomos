@@ -1,0 +1,119 @@
+.container-element {
+  gap: 1rem;
+    padding: 2px;
+    bottom: 1rem;
+    width: 90%;
+    position: absolute;
+    border-radius: 20px;
+    background-color: #aa9ea896;
+    display: flex;
+    align-items: center;
+}
+
+.container-element textarea {
+  width: 80%;
+    height: 20px;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    outline: none;
+    resize: vertical;
+}
+
+.container-element i {
+  font-size: 20px;
+  color: #555;
+}
+
+.container-info {
+  display: flex;
+  flex-direction: row;
+  gap: 37px;
+}
+
+.mensajes-container {
+  overflow-y: auto;
+    max-height: 75vh;
+    margin-top: 20px;
+}
+
+.mensaje-saliente {
+  background-color: #cccce9;
+  color: #3e3737;
+  border-radius: 15px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  width: 50%;
+    position: relative;
+}
+
+.mensaje-entrante {
+  text-align: end;
+  background-color: #c6e8f8;
+  color: #3e3737;
+  border-radius: 15px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  width: 50%;
+    position: relative;
+    left: 50%;
+}
+.mensaje-e{
+  color:red
+}
+.mensaje-s{
+  color:blue
+}
+.emoticon-section{
+  border-radius: 14px;
+    width: 82%;
+    bottom: 9%;
+    left: 6%;
+    position: fixed;
+    background-color: beige;
+    padding: 12px;
+}
+.emoticon{
+  gap: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    height: 16vh;
+}
+.zoom{
+  background-color: #00000070;
+    display: flex;
+    position: fixed;
+    top: 0%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+.cerrar{
+  font-size: 68px;
+    color: white;
+    position: absolute;
+    top: 6rem;
+    right: 6%;
+}
+.delete{
+    opacity: 0;
+    gap: 8px;
+    display: flex;
+    align-items: center;
+}
+.mensaje-seleccionado{
+  background-color: #8a2be2a6;
+  color: white;
+}
+.cabecera{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.delete.active {
+  opacity: 1;
+}

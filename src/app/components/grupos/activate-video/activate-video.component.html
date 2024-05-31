@@ -1,13 +1,15 @@
 <div class="contenedor">
   <div class="box">
-    <div style="margin-top: 15px; display: flex; justify-content: flex-end">
-      <input
-        style="width: 50%; padding: 8px; border-radius: 5px"
-        type="text"
+    <div style="display: flex; justify-content: flex-end">
+      <ion-input
+        style="width: max-content;"
+        label="Buscar videos"
+        label-placement="floating"
+        fill="solid"
         placeholder="Buscar videos..."
         [(ngModel)]="searchTerm"
         (keyup)="filterVideos()"
-      />
+      ></ion-input>
     </div>
 
     <div class="video-container">
@@ -24,7 +26,10 @@
           >
             <img
               style="height: 95%"
-              [src]="video.th || 'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Factivate-logo.jpeg?alt=media&token=28baeec7-81b9-42a8-845d-3e226031f3ba'"
+              [src]="
+                video.th ||
+                'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Factivate-logo.jpeg?alt=media&token=28baeec7-81b9-42a8-845d-3e226031f3ba'
+              "
               alt="{{ video.nombre }}"
               class="thumbnail"
             />

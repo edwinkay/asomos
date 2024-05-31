@@ -28,6 +28,8 @@ import { FeaturesComponent } from './components/main/features/features.component
 import { GruposComponent } from './components/main/grupos/grupos.component';
 import { PerfilComponent } from './components/main/perfil/perfil.component';
 import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-editar.component';
+import { BandejaComponent } from './components/mensajes/bandeja/bandeja.component';
+import { SendingComponent } from './components/mensajes/sending/sending.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,8 @@ import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-ed
     GruposComponent,
     PerfilComponent,
     PerfilEditarComponent,
+    BandejaComponent,
+    SendingComponent
   ],
   imports: [
     BrowserModule,

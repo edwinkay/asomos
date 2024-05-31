@@ -18,9 +18,9 @@ export class NavbarComponent implements OnInit {
   objetoUsuario: any;
   foto: any;
 
-  mn = false;
+  mn = true;
   im = false;
-  vd = true;
+  vd = false;
 
   constructor(
     private afAuth: AngularFireAuth,

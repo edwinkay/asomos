@@ -38,10 +38,11 @@
             "
             class="lap user"
           >
-            {{ objetoUsuario?.usuario }}
+            {{ objetoUsuario?.usuario || usuarioActual}}
           </p>
         </div>
         <div
+          *ngIf="!esInvitado"
           style="
             display: flex;
             border-radius: 50%;
@@ -83,7 +84,7 @@
 </div>
 
 <div class="contenedor-img">
-  <div class="subir">
+  <div *ngIf="!esInvitado" class="subir">
     <ion-button (click)="misImages()" color="tertiary"
       >+ Agregar imagen</ion-button
     >

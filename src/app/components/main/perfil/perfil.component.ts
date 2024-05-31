@@ -577,13 +577,37 @@ export class PerfilComponent implements OnInit {
       this.modal = true;
     }
   }
-  deleteImgModal(id: string) {
-    this._imageUser.delete(id).then(() =>{
-      this.modalDeleteImage = true;
-      this.ocultarx = true;
-      this.toastr.error('Imagen eliminida');
-      this.onClosePreview()
-    })
+  async deleteImgModal(id: string) {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Acciones',
+      buttons: [
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          data: {
+            action: 'delete',
+          },
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ],
+    });
+    await actionSheet.present();
+    const { data } = await actionSheet.onDidDismiss();
+
+    if (data && data.action === 'delete') {
+      this._imageUser.delete(id).then(() => {
+        this.modalDeleteImage = true;
+        this.ocultarx = true;
+        this.toastr.error('Imagen eliminida');
+        this.onClosePreview();
+      });
+    }
   }
   closeModal() {
     this.modal2?.dismiss();

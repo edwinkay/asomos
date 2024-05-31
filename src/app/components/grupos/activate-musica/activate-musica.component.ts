@@ -478,18 +478,39 @@ export class ActivateMusicaComponent implements OnInit {
       this.router.navigate(['/usuario/', id]);
     }
   }
-  deleteImgModal(id: string) {
-    this.idDelete = id;
-    this.modalDeleteImage = true;
-    this.ocultarx = true;
-  }
-  eliminarImagen() {
-    this._image.delete(this.idDelete).then(() => {
-      this.images = this.images.filter((image) => image.id !== this.idDelete);
-      this.toastr.error('Imagen eliminida');
-      this.modalDeleteImage = false;
-      this.previewImage = false;
-    });
+  async deleteImgModal(id: string) {
+        const actionSheet = await this.actionSheetCtrl.create({
+          header: 'Acciones',
+          buttons: [
+            {
+              text: 'Eliminar',
+              role: 'destructive',
+              data: {
+                action: 'delete',
+              },
+            },
+            {
+              text: 'Cancelar',
+              role: 'cancel',
+              data: {
+                action: 'cancel',
+              },
+            },
+          ],
+        });
+        await actionSheet.present();
+        const { data } = await actionSheet.onDidDismiss();
+
+        if (data && data.action === 'delete') {
+          this._image.delete(id).then(() => {
+            this.images = this.images.filter(
+              (image) => image.id !== this.idDelete
+            );
+            this.toastr.error('Imagen eliminida');
+            this.modalDeleteImage = false;
+            this.previewImage = false;
+          });
+        }
   }
   async opciones(i: any, comentario: any) {
     this.comentarioDel = comentario

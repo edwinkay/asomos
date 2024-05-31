@@ -6,6 +6,9 @@ import { RegistrarComponent } from './components/initial/registrar/registrar.com
 import { RecuperarComponent } from './components/initial/recuperar/recuperar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-editar.component';
+import { BandejaComponent } from './components/mensajes/bandeja/bandeja.component';
+import { SendingComponent } from './components/mensajes/sending/sending.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,6 +24,14 @@ const routes: Routes = [
   {
     path: 'main',
     component: NavbarComponent,
+  },
+  {
+    path: 'bandeja',
+    component: BandejaComponent,
+  },
+  {
+    path: 'enviar-mensaje/:id',
+    component: SendingComponent,
   },
   {
     path: 'activate',

@@ -2,7 +2,7 @@
     padding: 0px 10px 0 10px;" id="container">
   <div>
     <div>
-      <div style="margin-bottom: 18px">
+      <div *ngIf="!esInvitado" style="margin-bottom: 18px">
         <form (ngSubmit)="publicar()">
           <ion-list style="border-radius: 12px">
             <ion-item>
@@ -143,7 +143,7 @@
                   </div>
                   <div style="display: flex; align-items: center">
                     <ion-icon
-                      [class.liked]="p.likedByImage.includes(currentUser.uid)"
+                      [class.liked]="p.likedByImage.includes(currentUser?.uid)"
                       name="heart-outline"
                       (click)="likeImage2(p)"
                     ></ion-icon>

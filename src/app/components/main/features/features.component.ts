@@ -150,14 +150,14 @@ export class FeaturesComponent implements OnInit {
     return !!pattern.test(str);
   }
   async verUsuario(id: any) {
-    console.log(id);
     const adm = 'QxwJYfG0c2MwfjnJR70AdmmKOIz2';
-    if (id == adm) {
+    const inv = 'rm01jawdLvYSObMPDc8BTBasbJp2';
+    if (id == adm || id == inv) {
     } else {
       const user = await this.afAuth.currentUser;
       const userId = user?.uid;
       if (userId === id) {
-        this.router.navigate(['/perfil']);
+        this.router.navigate(['/main']);
       } else {
         this.router.navigate(['/usuario/', id]);
       }

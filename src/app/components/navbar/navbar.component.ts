@@ -76,7 +76,6 @@ export class NavbarComponent implements OnInit {
   }
 
   async salir() {
-    console.log('click');
     await this.menu.close(); // Cerrar el menú
     this.afAuth.signOut().then(() => {
       this.router.navigate(['/login']);

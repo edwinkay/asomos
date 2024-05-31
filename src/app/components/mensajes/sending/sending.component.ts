@@ -2,7 +2,7 @@ import {
   Component,
   ChangeDetectorRef,
   ElementRef,
-  OnInit,
+  OnInit, ViewChild
 } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -13,6 +13,12 @@ import { UsuariosImgService } from 'src/app/services/usuarios-img.service';
 import { ComunicationService } from 'src/app/services/comunication.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
+import {
+  ActionSheetController,
+  AlertController,
+  AlertInput,
+} from '@ionic/angular';
+import { IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-sending',
@@ -20,6 +26,8 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./sending.component.scss'],
 })
 export class SendingComponent implements OnInit {
+  @ViewChild('modal') modal2: IonModal | undefined;
+
   mensaje: string = '';
   usuario: any | null;
   id: any;
@@ -53,7 +61,9 @@ export class SendingComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private location: Location,
     private _msj: ComunicationService,
-    private storagex: AngularFireStorage
+    private storagex: AngularFireStorage,
+    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit(): void {
@@ -308,27 +318,52 @@ export class SendingComponent implements OnInit {
     this.optionDelete = false;
   }
 
-  options(mensaje: any, i: any) {
+  async options(mensaje: any, i: any) {
     this.capId = i;
     this.mensajeSeleccionado = mensaje;
-    this.optionDelete = true;
-  }
-  eliminar() {
-    if (this.objetoMensaje2 == undefined) {
-      this.capture = this.objetoMensaje;
-    } else {
-      this.capture = this.objetoMensaje2;
-    }
-    this.optionDelete = false;
-    const index = this.capture?.mensaje.indexOf(this.mensajeSeleccionado);
-    if (index !== -1) {
-      this.capture.mensaje.splice(index, 1);
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Acciones',
+      buttons: [
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          data: {
+            action: 'delete',
+          },
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ],
+    });
+    await actionSheet.present();
+    const { data } = await actionSheet.onDidDismiss();
 
-      const id = this.capture?.id;
-      const dato = {
-        mensaje: this.capture?.mensaje,
-      };
-      this._msj.update(id, dato).then(() => {});
+    if (data && data.action === 'delete') {
+      if (this.objetoMensaje2 == undefined) {
+        this.capture = this.objetoMensaje;
+      } else {
+        this.capture = this.objetoMensaje2;
+      }
+      this.optionDelete = false;
+      const index = this.capture?.mensaje.indexOf(this.mensajeSeleccionado);
+      if (index !== -1) {
+        this.capture.mensaje.splice(index, 1);
+
+        const id = this.capture?.id;
+        const dato = {
+          mensaje: this.capture?.mensaje,
+        };
+        this._msj.update(id, dato).then(() => {
+          this.abrirImg = false;
+          this.optionDelete = false;
+        });
+      }
     }
   }
+
 }

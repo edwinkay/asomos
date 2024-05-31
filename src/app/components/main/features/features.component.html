@@ -1,5 +1,4 @@
-<div style="text-align: center;
-    padding: 0px 10px 0 10px;" id="container">
+<div style="text-align: center; padding: 0px 10px 0 10px" id="container">
   <div>
     <div>
       <div *ngIf="!esInvitado" style="margin-bottom: 18px">
@@ -7,13 +6,13 @@
           <ion-list style="border-radius: 12px">
             <ion-item>
               <ion-textarea
-                aria-label="Comments"
+                labelPlacement="floating"
+                fill="solid"
                 placeholder="Publicar Nota..."
                 name="infoText"
                 [(ngModel)]="infoText"
                 cols="40"
                 rows="3"
-                class="textarea"
               ></ion-textarea>
             </ion-item>
           </ion-list>
@@ -49,7 +48,7 @@
                 <div style="display: flex; justify-content: space-between">
                   <span
                     (click)="opciones(i, p)"
-                    style="font-size: 26px; cursor: pointer;"
+                    style="font-size: 26px; cursor: pointer"
                     >&#8942;</span
                   >
                 </div>
@@ -295,4 +294,3 @@
     ></ion-alert>
   </div>
 </div>
-

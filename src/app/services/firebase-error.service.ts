@@ -25,6 +25,9 @@ export class FirebaseErrorService {
       case 'auth/invalid-login-credentials':
         this.toastr.error('El correo o contraseña no son correctos', 'Error');
         break;
+      case 'auth/invalid-credential':
+        this.toastr.error('El correo o contraseña no son correctos', 'Error');
+        break;
       case 'auth/missing-password':
         this.toastr.error('Digita la contraseña', 'Error');
         break;

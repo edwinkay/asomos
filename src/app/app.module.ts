@@ -30,6 +30,7 @@ import { PerfilComponent } from './components/main/perfil/perfil.component';
 import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-editar.component';
 import { BandejaComponent } from './components/mensajes/bandeja/bandeja.component';
 import { SendingComponent } from './components/mensajes/sending/sending.component';
+import { EmoticonsComponent } from './shared/emoticons/emoticons.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { SendingComponent } from './components/mensajes/sending/sending.componen
     PerfilComponent,
     PerfilEditarComponent,
     BandejaComponent,
-    SendingComponent
+    SendingComponent,
+    EmoticonsComponent
   ],
   imports: [
     BrowserModule,

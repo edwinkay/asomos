@@ -33,11 +33,6 @@
   gap: 37px;
 }
 
-.mensajes-container {
-  overflow-y: auto;
-    max-height: 75vh;
-    margin-top: 20px;
-}
 
 .mensaje-saliente {
   background-color: #cccce9;
@@ -68,9 +63,7 @@
 }
 .emoticon-section{
   border-radius: 14px;
-    width: 82%;
     bottom: 9%;
-    left: 6%;
     position: fixed;
     background-color: beige;
     padding: 12px;
@@ -89,6 +82,7 @@
     position: fixed;
     top: 0%;
     height: 100vh;
+    width: 100%;
     justify-content: center;
     align-items: center;
 }
@@ -116,4 +110,10 @@
 }
 .delete.active {
   opacity: 1;
+}
+.txt{
+    --border-radius: 4px;
+    --padding-end: 16px;
+    height: 3px;
+    min-height: 45px;
 }

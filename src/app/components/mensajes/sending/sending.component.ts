@@ -55,6 +55,8 @@ export class SendingComponent implements OnInit {
   capture: any;
   capId: any;
 
+  infoText: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private _user: UsersService,
@@ -149,66 +151,72 @@ export class SendingComponent implements OnInit {
   }
 
   addMessage(mensaje: string) {
-    this.showEmoticonSection = false;
-    this.mensaje = '';
+     if (mensaje.trim() === '') {
+     } else {
+         this.showEmoticonSection = false;
+         this.mensaje = '';
 
-    if (this.objetoMensaje == undefined && this.objetoMensaje2 == undefined) {
-      const para = this.info?.usuario;
-      const de = this.usuario?.displayName;
-      let foto1 = this.usuario?.photoURL;
-      if (foto1 == undefined) {
-        foto1 =
-          'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
-      }
-      let foto = this.info?.foto;
-      if (foto == undefined) {
-        foto =
-          'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
-      }
-      const encapsular = [];
-      encapsular.push({ mensaje, foto, para, de });
-      const datos = {
-        de: de,
-        para: para,
-        foto,
-        foto1,
-        idEmisor: this.id,
-        idReceptor: this.idUserActual,
-        mensaje: encapsular,
-      };
-      this._msj.addMessage(datos).then(() => {});
-    }
-    // metodo para actualizar el mensaje
-    else {
-      let foto1 = this.usuario?.photoURL;
-      if (foto1 == undefined) {
-        foto1 =
-          'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
-      }
-      let foto = this.info?.foto;
-      if (foto == undefined) {
-        foto =
-          'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
-      }
-      const para = this.info?.usuario;
-      const de = this.usuario?.displayName;
+         if (
+           this.objetoMensaje == undefined &&
+           this.objetoMensaje2 == undefined
+         ) {
+           const para = this.info?.usuario;
+           const de = this.usuario?.displayName;
+           let foto1 = this.usuario?.photoURL;
+           if (foto1 == undefined) {
+             foto1 =
+               'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
+           }
+           let foto = this.info?.foto;
+           if (foto == undefined) {
+             foto =
+               'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
+           }
+           const encapsular = [];
+           encapsular.push({ mensaje, foto, para, de });
+           const datos = {
+             de: de,
+             para: para,
+             foto,
+             foto1,
+             idEmisor: this.id,
+             idReceptor: this.idUserActual,
+             mensaje: encapsular,
+           };
+           this._msj.addMessage(datos).then(() => {});
+         }
+         // metodo para actualizar el mensaje
+         else {
+           let foto1 = this.usuario?.photoURL;
+           if (foto1 == undefined) {
+             foto1 =
+               'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
+           }
+           let foto = this.info?.foto;
+           if (foto == undefined) {
+             foto =
+               'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
+           }
+           const para = this.info?.usuario;
+           const de = this.usuario?.displayName;
 
-      if (this.objetoMensaje?.mensaje == undefined) {
-        const nuevoMensaje = this.objetoMensaje2?.mensaje;
-        nuevoMensaje.push({ mensaje, de, para, foto });
-        const datos = {
-          mensaje: nuevoMensaje,
-        };
-        this._msj.update(this.idBody, datos).then(() => {});
-      } else {
-        const nuevoMensaje = this.objetoMensaje?.mensaje;
-        nuevoMensaje.push({ mensaje, de, para, foto });
-        const datos = {
-          mensaje: nuevoMensaje,
-        };
-        this._msj.update(this.idBody, datos).then(() => {});
-      }
-    }
+           if (this.objetoMensaje?.mensaje == undefined) {
+             const nuevoMensaje = this.objetoMensaje2?.mensaje;
+             nuevoMensaje.push({ mensaje, de, para, foto });
+             const datos = {
+               mensaje: nuevoMensaje,
+             };
+             this._msj.update(this.idBody, datos).then(() => {});
+           } else {
+             const nuevoMensaje = this.objetoMensaje?.mensaje;
+             nuevoMensaje.push({ mensaje, de, para, foto });
+             const datos = {
+               mensaje: nuevoMensaje,
+             };
+             this._msj.update(this.idBody, datos).then(() => {});
+           }
+         }
+     }
   }
   toggleEmoticonSection() {
     this.showEmoticonSection = !this.showEmoticonSection;
@@ -365,5 +373,4 @@ export class SendingComponent implements OnInit {
       }
     }
   }
-
 }

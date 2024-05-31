@@ -121,16 +121,21 @@
 
     <div style="width: 69%">
       <ion-textarea
-      class="txt"
+        class="txt"
         [(ngModel)]="mensaje"
         name="mensaje"
         labelPlacement="floating"
         fill="solid"
         placeholder="Enviar mensaje"
+        required
+        rows="4"
+        cols="50"
       ></ion-textarea>
     </div>
     <div>
-      <ion-icon (click)="addMessage(mensaje)" name="send-outline"></ion-icon>
+      <ion-button [disabled]="!mensaje" (click)="addMessage(mensaje)">
+        <ion-icon name="send-outline"></ion-icon>
+      </ion-button>
     </div>
   </div>
 </ion-tab-bar>
@@ -461,27 +466,3 @@
     <span (click)="addEmoji('👨‍❤️‍👩')">👨‍❤️‍👩</span>
   </div>
 </div>
-
-<!-- <div *ngIf="showEmoticonSection" class="emoticon-section">
-
-  </div>
-  <form >
-    <div class="container-element">
-      <div style="gap: 1em; display: flex; padding: 0px 0 0 11px">
-
-
-
-      </div>
-      <div style="padding: 0px 10px 0 0px">
-        <button
-          style="background-color: #0000ff00; border: none; border-radius: 14px"
-          type="submit"
-          [disabled]="!mensaje"
-        >
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-    </div>
-  </form>
-</div>
- -->

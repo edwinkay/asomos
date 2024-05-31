@@ -104,6 +104,7 @@ export class PerfilComponent implements OnInit {
     this.crearUsuario();
     this.router.navigate(['/bandeja']);
   }
+  showEmoticonSection: boolean = false;
   getUsers() {
     this._user.getUsers().subscribe((usuarios) => {
       this.usuariosInfo = [];
@@ -151,6 +152,12 @@ export class PerfilComponent implements OnInit {
         });
       });
     } else console.log('el usuario ya esta registrado');
+  }
+  toggleEmoticonSection() {
+    this.showEmoticonSection = !this.showEmoticonSection;
+  }
+  addEmoji(emoji: string) {
+    this.comentario += emoji;
   }
   changeProfilePicture(): void {
     if (!this.esInvitado) {
@@ -800,26 +807,39 @@ export class PerfilComponent implements OnInit {
     await alert.present();
   }
   async addComment(comentario: string) {
-    // Obtener el usuario actual
-    const user = await this.afAuth.currentUser;
-
-    if (user) {
-      const image = this.dataVideoId;
-      // Obtener el ID del video
-      const imageId = this.dataVideoId.id;
-      const usuario = user.displayName;
-      const correo = user.email;
-      const imagen = user.photoURL;
-      const idUser = user.uid;
-      // Crear el comentario
-      image.commentsVideo.push({ usuario, correo, comentario, imagen, idUser });
-
-      const imagex: any = {
-        commentsVideo: image.commentsVideo,
-      };
-      // Actualizar los comentarios en Firestore
-      await this._imageUser.updateImgUsuario(imageId, imagex);
-      this.comentario = '';
+    this.showEmoticonSection = false;
+    if (comentario.trim() === '') {
     }
+    // Obtener el usuario actual
+    else{
+      const user = await this.afAuth.currentUser;
+
+      if (user) {
+        const image = this.dataVideoId;
+        // Obtener el ID del video
+        const imageId = this.dataVideoId.id;
+        const usuario = user.displayName;
+        const correo = user.email;
+        const imagen = user.photoURL;
+        const idUser = user.uid;
+        // Crear el comentario
+        image.commentsVideo.push({
+          usuario,
+          correo,
+          comentario,
+          imagen,
+          idUser,
+        });
+
+        const imagex: any = {
+          commentsVideo: image.commentsVideo,
+        };
+        // Actualizar los comentarios en Firestore
+        await this._imageUser.updateImgUsuario(imageId, imagex);
+        this.comentario = '';
+      }
+    }
+
+
   }
 }

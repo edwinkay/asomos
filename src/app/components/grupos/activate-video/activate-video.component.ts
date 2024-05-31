@@ -18,7 +18,7 @@ import { IonModal } from '@ionic/angular';
 })
 export class ActivateVideoComponent implements OnInit {
   @ViewChild('modal') modal2: IonModal | undefined;
-  @ViewChild('videoPlayer') videoPlayer: ElementRef| undefined;
+  @ViewChild('videoPlayer') videoPlayer: ElementRef | undefined;
 
   videos: any[] = [];
   currentUser: any | null;
@@ -41,6 +41,7 @@ export class ActivateVideoComponent implements OnInit {
   capIndex: any;
 
   presentingElement: any = null;
+  showEmoticonSection: boolean = false;
 
   alertButtons = ['OK'];
   alertInputs: AlertInput[] = [
@@ -107,7 +108,12 @@ export class ActivateVideoComponent implements OnInit {
       video.playing = false;
     }
   }
-
+  addEmoji(emoji: string) {
+    this.comentario += emoji;
+  }
+  toggleEmoticonSection() {
+    this.showEmoticonSection = !this.showEmoticonSection;
+  }
   async likeVideo(video: any) {
     const user = await this.afAuth.currentUser;
     if (user && !this.esInvitado) {
@@ -252,27 +258,39 @@ export class ActivateVideoComponent implements OnInit {
     this.comentarioDel = comentario;
   }
   async addComment(comentario: string) {
-    // Obtener el usuario actual
-    const user = await this.afAuth.currentUser;
-
-    if (user) {
-      const video = this.dataVideoId;
-      // Obtener el ID del video
-      const videoId = this.dataVideoId.id;
-      const usuario = user.displayName;
-      const correo = user.email;
-      const imagen = user.photoURL;
-      const idUser = user.uid;
-      // Crear el comentario
-      video.commentsVideo.push({ usuario, correo, comentario, imagen, idUser });
-
-      const videox: any = {
-        commentsVideo: video.commentsVideo,
-      };
-      // Actualizar los comentarios en Firestore
-      await this._videosService.updateActVideo(videoId, videox);
-      this.comentario = '';
+    this.showEmoticonSection = false;
+    if (comentario.trim() === '') {
     }
+    // Obtener el usuario actual
+    else{
+      const user = await this.afAuth.currentUser;
+
+      if (user) {
+        const video = this.dataVideoId;
+        // Obtener el ID del video
+        const videoId = this.dataVideoId.id;
+        const usuario = user.displayName;
+        const correo = user.email;
+        const imagen = user.photoURL;
+        const idUser = user.uid;
+        // Crear el comentario
+        video.commentsVideo.push({
+          usuario,
+          correo,
+          comentario,
+          imagen,
+          idUser,
+        });
+
+        const videox: any = {
+          commentsVideo: video.commentsVideo,
+        };
+        // Actualizar los comentarios en Firestore
+        await this._videosService.updateActVideo(videoId, videox);
+        this.comentario = '';
+      }
+    }
+
   }
   borrarComentario() {
     // Encuentra el índice del comentario en el array commentsVideo

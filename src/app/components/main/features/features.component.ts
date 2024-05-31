@@ -35,6 +35,7 @@ export class FeaturesComponent implements OnInit {
   esteComentario: any;
   modalDelete = false;
   comentario: any = '';
+  showEmoticonSection: boolean = false;
 
   presentingElement: any = null;
 
@@ -102,6 +103,9 @@ export class FeaturesComponent implements OnInit {
     } else {
       console.log('El texto está vacío o solo contiene espacios en blanco.');
     }
+  }
+  addEmoji(emoji: string) {
+    this.comentario += emoji;
   }
   obtPost() {
     this._post.getPost().subscribe((post) => {
@@ -261,6 +265,9 @@ export class FeaturesComponent implements OnInit {
     } else {
       this.modal = true;
     }
+  }
+  toggleEmoticonSection() {
+    this.showEmoticonSection = !this.showEmoticonSection;
   }
   close() {
     this.modal = false;
@@ -465,26 +472,36 @@ export class FeaturesComponent implements OnInit {
   }
 
   async addComment2(comentario: string) {
-    // Obtener el usuario actual
-    const user = await this.afAuth.currentUser;
+    this.showEmoticonSection = false
+    if (comentario.trim() === '') {
+    } else {
+      // Obtener el usuario actual
+      const user = await this.afAuth.currentUser;
 
-    if (user) {
-      const image = this.dataVideoId2;
-      // Obtener el ID del video
-      const imageId = this.dataVideoId2?.id;
-      const usuario = user?.displayName;
-      const correo = user?.email;
-      const imagen = user?.photoURL;
-      const idUser = user?.uid;
-      // Crear el comentario
-      image.commentsVideo.push({ usuario, correo, comentario, imagen, idUser });
+      if (user) {
+        const image = this.dataVideoId2;
+        // Obtener el ID del video
+        const imageId = this.dataVideoId2?.id;
+        const usuario = user?.displayName;
+        const correo = user?.email;
+        const imagen = user?.photoURL;
+        const idUser = user?.uid;
+        // Crear el comentario
+        image.commentsVideo.push({
+          usuario,
+          correo,
+          comentario,
+          imagen,
+          idUser,
+        });
 
-      const imagex: any = {
-        commentsVideo: image.commentsVideo,
-      };
-      // Actualizar los comentarios en Firestore
-      await this._post.update(imageId, imagex);
-      this.comentario = '';
+        const imagex: any = {
+          commentsVideo: image.commentsVideo,
+        };
+        // Actualizar los comentarios en Firestore
+        await this._post.update(imageId, imagex);
+        this.comentario = '';
+      }
     }
   }
 }

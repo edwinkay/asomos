@@ -56,6 +56,7 @@ export class ActivateMusicaComponent implements OnInit {
   capIndex: any;
 
   presentingElement: any = null;
+  showEmoticonSection: boolean = false;
 
   alertButtons = ['OK'];
   alertInputs: AlertInput[] = [
@@ -117,7 +118,12 @@ export class ActivateMusicaComponent implements OnInit {
       });
     });
   }
-
+  toggleEmoticonSection() {
+    this.showEmoticonSection = !this.showEmoticonSection;
+  }
+  addEmoji(emoji: string) {
+    this.comentario += emoji;
+  }
   subirArchivo() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -308,27 +314,39 @@ export class ActivateMusicaComponent implements OnInit {
     this.comentarioDel = comentario;
   }
   async addComment(comentario: string) {
-    // Obtener el usuario actual
-    const user = await this.afAuth.currentUser;
+    this.showEmoticonSection = false;
+    if (comentario.trim() === ''){
 
-    if (user) {
-      const image = this.dataVideoId;
-      // Obtener el ID del video
-      const imageId = this.dataVideoId.id;
-      const usuario = user.displayName;
-      const correo = user.email;
-      const imagen = user.photoURL;
-      const idUser = user.uid;
-      // Crear el comentario
-      image.commentsVideo.push({ usuario, correo, comentario, imagen, idUser });
+    }else{
+      // Obtener el usuario actual
+      const user = await this.afAuth.currentUser;
 
-      const imagex: any = {
-        commentsVideo: image.commentsVideo,
-      };
-      // Actualizar los comentarios en Firestore
-      await this._image.updateImgAc(imageId, imagex);
-      this.comentario = '';
+      if (user) {
+        const image = this.dataVideoId;
+        // Obtener el ID del video
+        const imageId = this.dataVideoId.id;
+        const usuario = user.displayName;
+        const correo = user.email;
+        const imagen = user.photoURL;
+        const idUser = user.uid;
+        // Crear el comentario
+        image.commentsVideo.push({
+          usuario,
+          correo,
+          comentario,
+          imagen,
+          idUser,
+        });
+
+        const imagex: any = {
+          commentsVideo: image.commentsVideo,
+        };
+        // Actualizar los comentarios en Firestore
+        await this._image.updateImgAc(imageId, imagex);
+        this.comentario = '';
+      }
     }
+
   }
   async abrirCom(image: any) {
     this.dataVideoId = image;
@@ -479,42 +497,40 @@ export class ActivateMusicaComponent implements OnInit {
     }
   }
   async deleteImgModal(id: string) {
-        const actionSheet = await this.actionSheetCtrl.create({
-          header: 'Acciones',
-          buttons: [
-            {
-              text: 'Eliminar',
-              role: 'destructive',
-              data: {
-                action: 'delete',
-              },
-            },
-            {
-              text: 'Cancelar',
-              role: 'cancel',
-              data: {
-                action: 'cancel',
-              },
-            },
-          ],
-        });
-        await actionSheet.present();
-        const { data } = await actionSheet.onDidDismiss();
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Acciones',
+      buttons: [
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          data: {
+            action: 'delete',
+          },
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ],
+    });
+    await actionSheet.present();
+    const { data } = await actionSheet.onDidDismiss();
 
-        if (data && data.action === 'delete') {
-          this._image.delete(id).then(() => {
-            this.images = this.images.filter(
-              (image) => image.id !== this.idDelete
-            );
-            this.toastr.error('Imagen eliminida');
-            this.modalDeleteImage = false;
-            this.previewImage = false;
-          });
-        }
+    if (data && data.action === 'delete') {
+      this._image.delete(id).then(() => {
+        this.images = this.images.filter((image) => image.id !== this.idDelete);
+        this.toastr.error('Imagen eliminida');
+        this.modalDeleteImage = false;
+        this.previewImage = false;
+      });
+    }
   }
   async opciones(i: any, comentario: any) {
-    this.comentarioDel = comentario
-    this.esteComentario =comentario.comentario
+    this.comentarioDel = comentario;
+    this.esteComentario = comentario.comentario;
     const user = await this.afAuth.currentUser;
 
     if (
@@ -565,7 +581,8 @@ export class ActivateMusicaComponent implements OnInit {
           const videox: any = {
             commentsVideo: this.dataVideoId.commentsVideo,
           };
-          this._image.updateImgAc(videoId, videox)
+          this._image
+            .updateImgAc(videoId, videox)
             .then(() => {
               this.modalDelete = false;
               this.ocultarx = true;

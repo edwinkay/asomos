@@ -268,4 +268,15 @@ nav {
   height: auto;
 }
 
-
+.comm{
+  --padding-top: 18%;
+}
+.emoticon-section{
+  overflow: auto;
+    height: 25vh;
+  border-radius: 14px;
+    bottom: 9%;
+    position: fixed;
+    background-color: beige;
+    padding: 12px;
+}

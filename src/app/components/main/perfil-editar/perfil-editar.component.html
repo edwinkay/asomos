@@ -1,0 +1,146 @@
+<ion-header>
+  <ion-toolbar>
+    <div style="padding-left: 1rem; display: flex; align-items: center">
+      <ion-icon
+        (click)="goBack()"
+        style="font-size: 22px"
+        name="arrow-back-outline"
+      ></ion-icon>
+      <ion-title>Editar perfil</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="container" *ngIf="usuario">
+    <div
+      style="row-gap: 1rem; display: flex; flex-direction: column"
+      class="per-con"
+    >
+      <div class="form-group">
+        <ion-input
+          label="Nombre de usuario"
+          label-placement="floating"
+          fill="solid"
+          placeholder="Usuario"
+          required
+          name="displayName"
+          [(ngModel)]="displayNameValue"
+        ></ion-input>
+      </div>
+      <div class="form-group">
+        <ion-input
+          label="Lugar actual"
+          label-placement="floating"
+          fill="solid"
+          placeholder="Ciudad"
+          required
+          name="ciudad"
+          [(ngModel)]="ciudad"
+        ></ion-input>
+      </div>
+      <div class="form-group">
+        <ion-input
+          type="email"
+          fill="solid"
+          label="Email"
+          name="email"
+          labelPlacement="floating"
+          [(ngModel)]="usuario.email"
+          [disabled]="true"
+          email
+        ></ion-input>
+      </div>
+      <div class="form-group">
+        <ion-input
+          label="Celular"
+          label-placement="floating"
+          fill="solid"
+          placeholder="Ciudad"
+          required
+          name="phoneNumber"
+          [(ngModel)]="phoneNumberValue"
+          type="number"
+        ></ion-input>
+      </div>
+      <div class="form-group">
+        <ion-select
+          label="Genero"
+          label-placement="floating"
+          fill="solid"
+          [(ngModel)]="genderValue"
+          name="gender"
+        >
+          <ion-select-option value="hombre">Hombre</ion-select-option>
+          <ion-select-option value="mujer">Mujer</ion-select-option>
+          <ion-select-option value="no_definido">No definido</ion-select-option>
+        </ion-select>
+      </div>
+      <div class="form-group">
+        <ion-select
+          label="Estado"
+          label-placement="floating"
+          fill="solid"
+          [(ngModel)]="estado"
+          name="estado"
+        >
+          <ion-select-option value="soltero(a)">Soltero(a)</ion-select-option>
+          <ion-select-option value="en una relacion"
+            >En una relacion</ion-select-option
+          >
+          <ion-select-option value="casado(a)">Casado(a)</ion-select-option>
+          <ion-select-option value="pareja de hecho"
+            >Pareja de hecho</ion-select-option
+          >
+          <ion-select-option value="relacion abierta"
+            >Relacion abierta</ion-select-option
+          >
+          <ion-select-option value="comprometido(a)"
+            >Comprometido(a)</ion-select-option
+          >
+          <ion-select-option value="es complicado"
+            >Es complicado</ion-select-option
+          >
+          <ion-select-option value="separado(a)">Separado(a)</ion-select-option>
+          <ion-select-option value="divorciado(a)"
+            >Divorciado(a)</ion-select-option
+          >
+          <ion-select-option value="viudo(a)">Viudo(a)</ion-select-option>
+        </ion-select>
+      </div>
+
+      <div style="position: relative; left: 12px">
+        <label>Fecha de cumpleaños:</label>
+        <ion-datetime-button
+          style="width: fit-content"
+          datetime="datetime"
+        ></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime
+              name="birthday"
+              [(ngModel)]="birthdayValue"
+              [showDefaultButtons]="true"
+              presentation="date"
+              id="datetime"
+            ></ion-datetime>
+          </ng-template>
+        </ion-modal>
+      </div>
+      <div style="position: relative; left: 12px">
+        <ion-textarea
+          [(ngModel)]="aboutMeValue"
+          name="aboutMe"
+          maxlength="50"
+          label="Sobre mí (máximo 50 caracteres):"
+          labelPlacement="floating"
+          placeholder="Sobre mi"
+        ></ion-textarea>
+      </div>
+      <div style="text-align: center;">
+        <ion-button (click)="actualizarPerfil()" color="tertiary"
+          >Guardar cambios</ion-button
+        >
+      </div>
+    </div>
+  </div>
+</ion-content>

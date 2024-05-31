@@ -27,6 +27,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FeaturesComponent } from './components/main/features/features.component';
 import { GruposComponent } from './components/main/grupos/grupos.component';
 import { PerfilComponent } from './components/main/perfil/perfil.component';
+import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-editar.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { PerfilComponent } from './components/main/perfil/perfil.component';
     FeaturesComponent,
     GruposComponent,
     PerfilComponent,
+    PerfilEditarComponent,
   ],
   imports: [
     BrowserModule,

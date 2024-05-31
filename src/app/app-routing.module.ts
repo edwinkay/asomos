@@ -5,6 +5,7 @@ import { LoginComponent } from './components/initial/login/login.component';
 import { RegistrarComponent } from './components/initial/registrar/registrar.component';
 import { RecuperarComponent } from './components/initial/recuperar/recuperar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-editar.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: 'activate',
     component: ActivateComponent,
+  },
+  {
+    path: 'perfil-editar',
+    component: PerfilEditarComponent,
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];

@@ -14,7 +14,6 @@ export class AsomosMainComponent implements OnInit {
 
   backgroundImage: string | undefined;
   imagenesFondo: string[] = [
-    // 'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Ffondo.png?alt=media&token=bd6155e5-660d-4611-96e7-4951d7429367',
     'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/images%2Ffoto.jpg?alt=media&token=c9dc6d47-fc21-4695-b090-35a8d15279be',
     'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/images%2Ffoto1.jpg?alt=media&token=144909e5-fa88-4785-a196-a9e829d644ee',
     'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/images%2Ffoto.jpg?alt=media&token=c9dc6d47-fc21-4695-b090-35a8d15279be',

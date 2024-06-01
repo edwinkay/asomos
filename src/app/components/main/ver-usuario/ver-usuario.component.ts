@@ -1,25 +1,26 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { UsersService } from 'src/app/services/users.service';
 import { finalize } from 'rxjs/operators';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { UsersService } from 'src/app/services/users.service';
+import { Location } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 import { UsuariosImgService } from 'src/app/services/usuarios-img.service';
-import { PostService } from 'src/app/services/post.service';
 import {
   ActionSheetController,
   AlertController,
   AlertInput,
 } from '@ionic/angular';
 import { IonModal } from '@ionic/angular';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { PostService } from 'src/app/services/post.service';
 
 @Component({
-  selector: 'app-perfil',
-  templateUrl: './perfil.component.html',
-  styleUrls: ['./perfil.component.scss'],
+  selector: 'app-ver-usuario',
+  templateUrl: './ver-usuario.component.html',
+  styleUrls: ['./ver-usuario.component.scss'],
 })
-export class PerfilComponent implements OnInit {
+export class VerUsuarioComponent implements OnInit {
   @ViewChild('modal') modal2: IonModal | undefined;
 
   usuario: any | null;
@@ -31,6 +32,7 @@ export class PerfilComponent implements OnInit {
   idInfo: any[] = [];
   objetoUsuario: any;
   id: any;
+  id2: any;
   phoneNumberValue: any;
   genderValue: any;
   birthdayValue: any;
@@ -59,6 +61,8 @@ export class PerfilComponent implements OnInit {
   modalDelete = false;
   modalEditar = false;
   option: boolean = false;
+  user: any;
+  isModalOpen = false;
   alertButtons = ['OK'];
   alertInputs: AlertInput[] = [
     {
@@ -77,10 +81,14 @@ export class PerfilComponent implements OnInit {
     private el: ElementRef,
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
   ngOnInit() {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.id2 = params.get('id');
+    });
     this.afAuth.user.subscribe((user) => {
       this.usuario = user;
       this.currentUser = user;
@@ -101,9 +109,12 @@ export class PerfilComponent implements OnInit {
     this.obtPost();
   }
 
+  goBack() {
+    this.location.back();
+  }
   abrirBandeja() {
     this.crearUsuario();
-    this.router.navigate(['/bandeja']);
+    this.router.navigate(['enviar-mensaje', this.id2]);
   }
   showEmoticonSection: boolean = false;
   getUsers() {
@@ -130,6 +141,10 @@ export class PerfilComponent implements OnInit {
         const id = this.idInfo.find(
           (obj) => obj.idUser === this.usuario?.uid
         )?.id;
+        const buscarObjeto = this.usuariosInfo.find(
+          (obj) => obj.idUser === this.id2
+        );
+        this.user = buscarObjeto;
         this.id = id;
         this.phoneNumberValue = userData?.telefono;
         this.genderValue = userData?.Genero;
@@ -262,9 +277,9 @@ export class PerfilComponent implements OnInit {
       // Código para usuarios invitados
     }
   }
-  editarPerfil() {
+  editarPerfil(isOpen: boolean) {
     this.crearUsuario();
-    this.router.navigate(['/perfil-editar']);
+    this.isModalOpen = isOpen;
   }
   changePortada(): void {
     if (!this.esInvitado) {
@@ -512,7 +527,7 @@ export class PerfilComponent implements OnInit {
           commentsVideo: imageData.commentsVideo || [],
         });
         const imagenFiltrada = this.imageZ.filter(
-          (item) => item.idUser === this.usuario?.uid
+          (item) => item.idUser === this.id2
         );
         this.imageX = imagenFiltrada;
       });

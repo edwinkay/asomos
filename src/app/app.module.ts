@@ -1,3 +1,4 @@
+import { VerUsuarioComponent } from './components/main/ver-usuario/ver-usuario.component';
 import { AsomosMusicaComponent } from './components/grupo2/asomos-musica/asomos-musica.component';
 import { AsomosVideosComponent } from './components/grupo2/asomos-videos/asomos-videos.component';
 import { AsomosImagenesComponent } from './components/grupo2/asomos-imagenes/asomos-imagenes.component';
@@ -56,7 +57,8 @@ import { EmoticonsComponent } from './shared/emoticons/emoticons.component';
     AsomosMainComponent,
     AsomosImagenesComponent,
     AsomosVideosComponent,
-    AsomosMusicaComponent
+    AsomosMusicaComponent,
+    VerUsuarioComponent
   ],
   imports: [
     BrowserModule,

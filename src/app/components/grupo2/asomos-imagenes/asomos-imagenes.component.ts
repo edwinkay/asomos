@@ -534,8 +534,7 @@ export class AsomosImagenesComponent implements OnInit {
 
     if (
       user?.email === comentario.correo ||
-      user?.email == 'administrador.sistema@gmail.com' ||
-      user?.email == 'jeestrada377@gmail.com'
+      user?.email == 'administrador.sistema@gmail.com'
     ) {
       const actionSheet = await this.actionSheetCtrl.create({
         header: 'Acciones',

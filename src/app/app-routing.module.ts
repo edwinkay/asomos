@@ -9,6 +9,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-editar.component';
 import { BandejaComponent } from './components/mensajes/bandeja/bandeja.component';
 import { SendingComponent } from './components/mensajes/sending/sending.component';
+import { VerUsuarioComponent } from './components/main/ver-usuario/ver-usuario.component';
 
 
 const routes: Routes = [
@@ -45,6 +46,10 @@ const routes: Routes = [
   {
     path: 'perfil-editar',
     component: PerfilEditarComponent,
+  },
+  {
+    path: 'usuario/:id',
+    component: VerUsuarioComponent,
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];

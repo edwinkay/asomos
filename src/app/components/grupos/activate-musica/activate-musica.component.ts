@@ -20,6 +20,7 @@ import {
   AlertInput,
 } from '@ionic/angular';
 import { IonModal } from '@ionic/angular';
+import { PostService } from 'src/app/services/post.service';
 
 @Component({
   selector: 'app-activate-musica',
@@ -29,6 +30,10 @@ import { IonModal } from '@ionic/angular';
 export class ActivateMusicaComponent implements OnInit {
   @ViewChild('modal') modal2: IonModal | undefined;
 
+  usuario: any | null;
+  usuariosInfo: any[] = [];
+  idInfo: any[] = [];
+  objetoUsuario: any;
   images: any[] = [];
   currentIndex = 0;
   currentUser: any | null;
@@ -54,6 +59,7 @@ export class ActivateMusicaComponent implements OnInit {
   idDelete: string = '';
   option: boolean = false;
   capIndex: any;
+  usuarioActual: any;
 
   presentingElement: any = null;
   showEmoticonSection: boolean = false;
@@ -75,13 +81,16 @@ export class ActivateMusicaComponent implements OnInit {
     private _user: UsersService,
     private storagex: AngularFireStorage,
     private actionSheetCtrl: ActionSheetController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private _post: PostService
   ) {}
 
   ngOnInit() {
     this.getImages();
     this.afAuth.authState.subscribe((user) => {
+      this.usuario = user;
       this.currentUser = user;
+      this.usuarioActual = user?.displayName;
       const comprobar = user?.uid;
       if (comprobar == 'rm01jawdLvYSObMPDc8BTBasbJp2') {
         this.esInvitado = true;
@@ -92,6 +101,29 @@ export class ActivateMusicaComponent implements OnInit {
       ) {
         this.adm = true;
       }
+    });
+  }
+  getUsers() {
+    this._user.getUsers().subscribe((usuarios) => {
+      this.usuariosInfo = [];
+      this.idInfo = [];
+      usuarios.forEach((element: any) => {
+        const data = element.payload.doc.data();
+        this.usuariosInfo.push({
+          id: element.payload.doc.data(),
+          ...element.payload.doc.data(),
+          // likesCountImage: data.likesCountImage || 0,
+          // likedByImage: data.likedByImage || [],
+        });
+        const userData = this.usuariosInfo.find(
+          (obj) => obj.id.idUser === this.usuario?.uid
+        );
+        this.objetoUsuario = userData;
+        const userData2 = {
+          id: element.payload.doc.id, // Aquí obtenemos el ID del documento
+          ...element.payload.doc.data(),
+        };
+      });
     });
   }
 
@@ -182,6 +214,31 @@ export class ActivateMusicaComponent implements OnInit {
                           this._image.addImagenInfo(dato).then(() => {
                             console.log('actualizando');
                             this.toastr.info('Actualizando lista de Imagenes');
+
+                            //compartir mensaje en features
+
+                            const idUser = this.usuario?.uid;
+                            let foto = this.objetoUsuario?.foto;
+                            if (foto == undefined) {
+                              foto =
+                                'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
+                            }
+                            let nombre =
+                              this.objetoUsuario?.usuario ??
+                              this.usuario?.displayName;
+                            if (!nombre) {
+                              console.error('Nombre de usuario no disponible');
+                              return;
+                            }
+                            const data = {
+                              foto,
+                              usuario: nombre,
+                              post: url,
+                              uid: idUser,
+                              timestamp: new Date(),
+                            };
+                            this._post.addPost(data).then(() => {});
+                            this.toastr.info('imagen actualizada a features');
                           });
                         });
                       })
@@ -315,9 +372,8 @@ export class ActivateMusicaComponent implements OnInit {
   }
   async addComment(comentario: string) {
     this.showEmoticonSection = false;
-    if (comentario.trim() === ''){
-
-    }else{
+    if (comentario.trim() === '') {
+    } else {
       // Obtener el usuario actual
       const user = await this.afAuth.currentUser;
 
@@ -346,7 +402,6 @@ export class ActivateMusicaComponent implements OnInit {
         this.comentario = '';
       }
     }
-
   }
   async abrirCom(image: any) {
     this.dataVideoId = image;

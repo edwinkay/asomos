@@ -7,7 +7,11 @@
       class="form-contenedor"
     >
       <div class="title-login">
-        <img class="img-login" src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Fasomos.png?alt=media&token=ffa9b6c1-4157-4a5a-b588-95a267abe602" alt="">
+        <img
+          class="img-login"
+          src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Fasomos.png?alt=media&token=ffa9b6c1-4157-4a5a-b588-95a267abe602"
+          alt=""
+        />
         <ion-title>Iniciar sesión</ion-title>
       </div>
       <div class="input-login">
@@ -22,6 +26,7 @@
             errorText="El correo electronico no es valido"
             email
             formControlName="email"
+            (input)="verificarDatosIngresados()"
           ></ion-input>
         </div>
         <div>
@@ -35,6 +40,7 @@
             placeholder="Contraseña"
             formControlName="password"
             password
+            (input)="verificarDatosIngresados()"
             ><ion-input-password-toggle slot="end"></ion-input-password-toggle
           ></ion-input>
           <span
@@ -59,9 +65,15 @@
         <a class="enlace" routerLink="/registrar">Registrarse</a>
       </div>
       <div class="btn-login">
-        <ion-button color="tertiary" type="submit" class="submit-button"
-          >Iniciar sesión</ion-button
+        <ion-button
+          color="tertiary"
+          type="submit"
+          class="submit-button"
+          [disabled]="!datosIngresados"
         >
+          Iniciar sesión
+        </ion-button>
+
         <div>
           <a (click)="loginAsGuest()" class="register-link"
             >Iniciar sesión como invitado</a
@@ -72,12 +84,12 @@
   </div>
   <div class="loading-container" *ngIf="loading">
     <img
-          style="width: 90%;"
-          class="img-login"
-          src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Fasomos.png?alt=media&token=ffa9b6c1-4157-4a5a-b588-95a267abe602"
-          alt=""
-        />
-      <ion-spinner color="tertiary"></ion-spinner>
+      style="width: 90%"
+      class="img-login"
+      src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Fasomos.png?alt=media&token=ffa9b6c1-4157-4a5a-b588-95a267abe602"
+      alt=""
+    />
+    <ion-spinner color="tertiary"></ion-spinner>
     <span>Iniciando sesion...</span>
   </div>
 </div>

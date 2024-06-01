@@ -4,7 +4,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseErrorService } from 'src/app/services/firebase-error.service';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,6 +14,7 @@ export class LoginComponent implements OnInit {
   loading: boolean = false;
   verificar: boolean = false;
   message: any;
+  datosIngresados: boolean = false; // Esta propiedad verifica si los datos están ingresados o no
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +51,7 @@ export class LoginComponent implements OnInit {
         }, 2000);
       });
   }
+
   loginAsGuest() {
     const email = 'soyinvitado@gmail.com';
     const password = '123456';
@@ -67,5 +68,12 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         console.error('Error al iniciar sesión con invitado:', error);
       });
+  }
+
+  // Método para verificar si los datos están ingresados
+  verificarDatosIngresados() {
+    const email = this.loginUsuario.value.email;
+    const password = this.loginUsuario.value.password;
+    this.datosIngresados = email !== '' && password !== '';
   }
 }

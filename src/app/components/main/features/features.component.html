@@ -5,14 +5,16 @@
         <form (ngSubmit)="publicar()">
           <ion-list style="border-radius: 12px">
             <ion-item>
-              <ion-textarea
+               <ion-textarea
+                label="Publicar nota..."
                 labelPlacement="floating"
                 fill="solid"
-                placeholder="Publicar Nota..."
+                placeholder="Escribe una publicacion"
                 name="infoText"
-                [(ngModel)]="infoText"
                 rows="0"
                 cols="50"
+                [(ngModel)]="infoText"
+                required
               ></ion-textarea>
             </ion-item>
           </ion-list>

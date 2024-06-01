@@ -1,3 +1,12 @@
-<p>
-  asomos-musica works!
-</p>
+<div class="contenedor">
+  <div class="box">
+    <div class="musica-container">
+      <div *ngFor="let music of musica" class="musica">
+        <p style="margin-bottom: 10px; color: white;">{{ music.title }}</p>
+        <audio controls>
+          <source [src]="music.url" type="audio/mp3" />
+        </audio>
+      </div>
+    </div>
+  </div>
+</div>

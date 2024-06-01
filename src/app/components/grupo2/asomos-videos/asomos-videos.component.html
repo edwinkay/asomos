@@ -1,3 +1,536 @@
-<p>
-  asomos-videos works!
-</p>
+<div class="contenedor">
+  <div class="box">
+    <div style="display: flex; justify-content: flex-end">
+      <ion-input
+        style="width: max-content;"
+        label="Buscar videos"
+        label-placement="floating"
+        fill="solid"
+        placeholder="Buscar videos..."
+        [(ngModel)]="searchTerm"
+        (keyup)="filterVideos()"
+      ></ion-input>
+    </div>
+
+    <div class="video-container">
+      <div style="row-gap: 4rem; display: flex; flex-direction: column">
+        <div
+          style="height: 20rem"
+          class="gallery-video"
+          *ngFor="let video of filteredVideos"
+        >
+          <div
+            style="height: 95%"
+            class="thumbnail-container"
+            (click)="playVideo(video)"
+          >
+            <img
+              style="height: 95%"
+              [src]="
+                video.th ||
+                'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Ffondo.png?alt=media&token=bd6155e5-660d-4611-96e7-4951d7429367'
+              "
+              alt="{{ video.nombre }}"
+              class="thumbnail"
+            />
+            <div class="play-button-overlay">
+              <ion-icon name="play-circle-outline"></ion-icon>
+            </div>
+          </div>
+          <div style="position: relative; bottom: 96%" class="video-player">
+            <div *ngIf="video.playing">
+              <video controls #videoPlayer>
+                <source [src]="video.url" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+          <div *ngIf="!video.playing" class="section">
+            <div class="title">
+              <p style="margin: 0">
+                {{ video.nombre }}
+              </p>
+            </div>
+            <div class="bocadillos">
+              <div class="comment">
+                <ion-icon
+                  name="chatbubble-ellipses-outline"
+                  style="cursor: pointer"
+                  (click)="abrirCom(video)"
+                ></ion-icon>
+                <span>{{ video.commentsVideo.length }}</span>
+              </div>
+              <div class="likes">
+                <ion-icon
+                  style="cursor: pointer"
+                  name="heart-outline"
+                  [class.liked]="video.likedByVideo.includes(currentUser.uid)"
+                  (click)="likeVideo(video)"
+                ></ion-icon>
+                <span>{{ video.likesCountVideo }}</span>
+              </div>
+            </div>
+          </div>
+          <div
+            style="position: relative; z-index: 999; bottom: 100%"
+            *ngIf="video.playing"
+            class="section"
+          >
+            <div class="title">
+              <p style="margin: 0">
+                {{ video.nombre }}
+              </p>
+            </div>
+            <div class="bocadillos">
+              <div class="comment">
+                <ion-icon
+                  name="chatbubble-ellipses-outline"
+                  style="cursor: pointer"
+                  (click)="abrirCom(video)"
+                ></ion-icon>
+                <span>{{ video.commentsVideo.length }}</span>
+              </div>
+              <div class="likes">
+                <ion-icon
+                  style="cursor: pointer"
+                  name="heart-outline"
+                  [class.liked]="video.likedByVideo.includes(currentUser.uid)"
+                  (click)="likeVideo(video)"
+                ></ion-icon>
+                <span>{{ video.likesCountVideo }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- abrir modal comentarios -->
+<ion-modal #modal trigger="open-modal" [presentingElement]="presentingElement">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Comentarios</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div style="text-align: justify" class="modal-com">
+        <span (click)="close()" class="fas fa-times lax2"></span>
+        <div class="comments-container">
+          <div class="comments-list">
+            <div
+              style="border-bottom: 1px solid #a1a197; margin-top: 13px"
+              *ngFor="let comment of dataVideoId.commentsVideo; let i = index"
+            >
+              <div style="display: flex; flex-direction: column">
+                <img
+                  (click)="ir(comment.idUser)"
+                  style="cursor: pointer; border-radius: 50%"
+                  [src]="
+                    comment.imagen ||
+                    'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg'
+                  "
+                  alt="Foto de perfil"
+                  width="50"
+                  height="50"
+                />
+                <span>{{ comment.usuario }}</span>
+              </div>
+
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  border: 1px solid #80808054;
+                  border-radius: 9px;
+                  padding: 3px;
+                "
+              >
+                <p style="padding: 16px; width: 86%">
+                  {{ comment.comentario }}
+                </p>
+                <div style="display: flex; gap: 1rem">
+                  <div style="display: flex; align-items: center">
+                    <ion-icon
+                      name="heart-outline"
+                      [class.liked]="
+                        comment.likedByComment &&
+                        comment.likedByComment.includes(currentUser.uid)
+                      "
+                      (click)="likeComment(comment)"
+                    ></ion-icon>
+                    <span>{{ comment.likesCountComment }}</span>
+                  </div>
+                  <div style="gap: 1rem; display: flex; align-items: center">
+                    <div>
+                      <span
+                        (click)="opciones(i, comment)"
+                        style="font-size: 26px"
+                        >&#8942;</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+    <div *ngIf="showEmoticonSection" class="emoticon-section">
+      <div class="emoticon">
+        <span (click)="addEmoji('😊')">😊</span>
+        <span (click)="addEmoji('😂')">😂</span>
+        <span (click)="addEmoji('😁')">😁</span>
+        <span (click)="addEmoji('🙂')">🙂</span>
+        <span (click)="addEmoji('😎')">😎</span>
+        <span (click)="addEmoji('😉')">😉</span>
+        <span (click)="addEmoji('😌')">😌</span>
+        <span (click)="addEmoji('🥰')">🥰</span>
+        <span (click)="addEmoji('😘')">😘</span>
+        <span (click)="addEmoji('😍')">😍</span>
+        <span (click)="addEmoji('😅')">😅</span>
+        <span (click)="addEmoji('😜')">😜</span>
+        <span (click)="addEmoji('😝')">😝</span>
+        <span (click)="addEmoji('🤪')">🤪</span>
+        <span (click)="addEmoji('🤗')">🤗</span>
+        <span (click)="addEmoji('😚')">😚</span>
+        <span (click)="addEmoji('🤓')">🤓</span>
+        <span (click)="addEmoji('😤')">😤</span>
+        <span (click)="addEmoji('🤬')">🤬</span>
+        <span (click)="addEmoji('😡')">😡</span>
+        <span (click)="addEmoji('😢')">😢</span>
+        <span (click)="addEmoji('😭')">😭</span>
+        <span (click)="addEmoji('😱')">😱</span>
+        <span (click)="addEmoji('😳')">😳</span>
+        <span (click)="addEmoji('😋')">😋</span>
+        <span (click)="addEmoji('🥳')">🥳</span>
+        <span (click)="addEmoji('😴')">😴</span>
+        <span (click)="addEmoji('😇')">😇</span>
+        <span (click)="addEmoji('😈')">😈</span>
+        <span (click)="addEmoji('🤯')">🤯</span>
+        <span (click)="addEmoji('🤩')">🤩</span>
+        <span (click)="addEmoji('🥺')">🥺</span>
+        <span (click)="addEmoji('😐')">😐</span>
+        <span (click)="addEmoji('😬')">😬</span>
+        <span (click)="addEmoji('😵')">😵</span>
+        <span (click)="addEmoji('🤔')">🤔</span>
+        <span (click)="addEmoji('😖')">😖</span>
+        <span (click)="addEmoji('😣')">😣</span>
+        <span (click)="addEmoji('😞')">😞</span>
+        <span (click)="addEmoji('😔')">😔</span>
+        <span (click)="addEmoji('😓')">😓</span>
+        <span (click)="addEmoji('🙄')">🙄</span>
+        <span (click)="addEmoji('😪')">😪</span>
+        <span (click)="addEmoji('🤤')">🤤</span>
+        <span (click)="addEmoji('😷')">😷</span>
+        <span (click)="addEmoji('🤒')">🤒</span>
+        <span (click)="addEmoji('🤕')">🤕</span>
+        <span (click)="addEmoji('🤢')">🤢</span>
+        <span (click)="addEmoji('🤮')">🤮</span>
+        <span (click)="addEmoji('🤧')">🤧</span>
+        <span (click)="addEmoji('🥴')">🥴</span>
+        <span (click)="addEmoji('🤑')">🤑</span>
+        <span (click)="addEmoji('🤠')">🤠</span>
+        <span (click)="addEmoji('🤙')">🤙</span>
+        <span (click)="addEmoji('🤘')">🤘</span>
+        <span (click)="addEmoji('👍')">👍</span>
+        <span (click)="addEmoji('👎')">👎</span>
+        <span (click)="addEmoji('🤞')">🤞</span>
+        <span (click)="addEmoji('✌️')">✌️</span>
+        <span (click)="addEmoji('🤟')">🤟</span>
+        <span (click)="addEmoji('👌')">👌</span>
+        <span (click)="addEmoji('👋')">👋</span>
+        <span (click)="addEmoji('🤚')">🤚</span>
+        <span (click)="addEmoji('🖐️')">🖐️</span>
+        <span (click)="addEmoji('✋')">✋</span>
+        <span (click)="addEmoji('🖖')">🖖</span>
+        <span (click)="addEmoji('👊')">👊</span>
+        <span (click)="addEmoji('✊')">✊</span>
+        <span (click)="addEmoji('🤛')">🤛</span>
+        <span (click)="addEmoji('🤜')">🤜</span>
+        <span (click)="addEmoji('🤝')">🤝</span>
+        <span (click)="addEmoji('💪')">💪</span>
+        <span (click)="addEmoji('🦾')">🦾</span>
+        <span (click)="addEmoji('🦿')">🦿</span>
+        <span (click)="addEmoji('🦵')">🦵</span>
+        <span (click)="addEmoji('🦶')">🦶</span>
+        <span (click)="addEmoji('👂')">👂</span>
+        <span (click)="addEmoji('🦻')">🦻</span>
+        <span (click)="addEmoji('👃')">👃</span>
+        <span (click)="addEmoji('🐻')">🐻</span>
+        <span (click)="addEmoji('🐰')">🐰</span>
+        <span (click)="addEmoji('🐱')">🐱</span>
+        <span (click)="addEmoji('🐶')">🐶</span>
+        <span (click)="addEmoji('🐭')">🐭</span>
+        <span (click)="addEmoji('🐹')">🐹</span>
+        <span (click)="addEmoji('🐷')">🐷</span>
+        <span (click)="addEmoji('🐮')">🐮</span>
+        <span (click)="addEmoji('🐯')">🐯</span>
+        <span (click)="addEmoji('🐨')">🐨</span>
+        <span (click)="addEmoji('🧠')">🧠</span>
+        <span (click)="addEmoji('🦷')">🦷</span>
+        <span (click)="addEmoji('🦴')">🦴</span>
+        <span (click)="addEmoji('👀')">👀</span>
+        <span (click)="addEmoji('👁️')">👁️</span>
+        <span (click)="addEmoji('🧿')">🧿</span>
+        <span (click)="addEmoji('👅')">👅</span>
+        <span (click)="addEmoji('👄')">👄</span>
+        <span (click)="addEmoji('👶')">👶</span>
+        <span (click)="addEmoji('🧒')">🧒</span>
+        <span (click)="addEmoji('👦')">👦</span>
+        <span (click)="addEmoji('👧')">👧</span>
+        <span (click)="addEmoji('🧑')">🧑</span>
+        <span (click)="addEmoji('👱‍♂️')">👱‍♂️</span>
+        <span (click)="addEmoji('👱')">👱</span>
+        <span (click)="addEmoji('👨')">👨</span>
+        <span (click)="addEmoji('🧔')">🧔</span>
+        <span (click)="addEmoji('👨‍🦰')">👨‍🦰</span>
+        <span (click)="addEmoji('👨‍🦱')">👨‍🦱</span>
+        <span (click)="addEmoji('👨‍🦳')">👨‍🦳</span>
+        <span (click)="addEmoji('👨‍🦲')">👨‍🦲</span>
+        <span (click)="addEmoji('🧔')">🧔</span>
+        <span (click)="addEmoji('👩')">👩</span>
+        <span (click)="addEmoji('👩‍🦰')">👩‍🦰</span>
+        <span (click)="addEmoji('👩‍🦱')">👩‍🦱</span>
+        <span (click)="addEmoji('👩‍🦳')">👩‍🦳</span>
+        <span (click)="addEmoji('👩‍🦲')">👩‍🦲</span>
+        <span (click)="addEmoji('👱‍♀️')">👱‍♀️</span>
+        <span (click)="addEmoji('👱‍♀️')">👱‍♀️</span>
+        <span (click)="addEmoji('👱‍♀️')">👱‍♀️</span>
+        <span (click)="addEmoji('🧑‍🦰')">🧑‍🦰</span>
+        <span (click)="addEmoji('🧑‍🦱')">🧑‍🦱</span>
+        <span (click)="addEmoji('🧑‍🦳')">🧑‍🦳</span>
+        <span (click)="addEmoji('🧑‍🦲')">🧑‍🦲</span>
+        <span (click)="addEmoji('👦')">👦</span>
+        <span (click)="addEmoji('👦')">👦</span>
+        <span (click)="addEmoji('👦')">👦</span>
+        <span (click)="addEmoji('👦')">👦</span>
+        <span (click)="addEmoji('👧')">👧</span>
+        <span (click)="addEmoji('👧')">👧</span>
+        <span (click)="addEmoji('👧')">👧</span>
+        <span (click)="addEmoji('👧')">👧</span>
+        <span (click)="addEmoji('🧒')">🧒</span>
+        <span (click)="addEmoji('🧒')">🧒</span>
+        <span (click)="addEmoji('🧒')">🧒</span>
+        <span (click)="addEmoji('🧒')">🧒</span>
+        <span (click)="addEmoji('👶')">👶</span>
+        <span (click)="addEmoji('👶')">👶</span>
+        <span (click)="addEmoji('👶')">👶</span>
+        <span (click)="addEmoji('👶')">👶</span>
+        <span (click)="addEmoji('👨')">👨</span>
+        <span (click)="addEmoji('👨')">👨</span>
+        <span (click)="addEmoji('👨')">👨</span>
+        <span (click)="addEmoji('👨')">👨</span>
+        <span (click)="addEmoji('👩')">👩</span>
+        <span (click)="addEmoji('👩')">👩</span>
+        <span (click)="addEmoji('👩')">👩</span>
+        <span (click)="addEmoji('👩')">👩</span>
+        <span (click)="addEmoji('🧑')">🧑</span>
+        <span (click)="addEmoji('🧑')">🧑</span>
+        <span (click)="addEmoji('🧑')">🧑</span>
+        <span (click)="addEmoji('🧑')">🧑</span>
+        <span (click)="addEmoji('👨‍🦰')">👨‍🦰</span>
+        <span (click)="addEmoji('👨‍🦰')">👨‍🦰</span>
+        <span (click)="addEmoji('👨‍🦰')">👨‍🦰</span>
+        <span (click)="addEmoji('👨‍🦱')">👨‍🦱</span>
+        <span (click)="addEmoji('👨‍🦱')">👨‍🦱</span>
+        <span (click)="addEmoji('👨‍🦱')">👨‍🦱</span>
+        <span (click)="addEmoji('👨‍🦳')">👨‍🦳</span>
+        <span (click)="addEmoji('👨‍🦳')">👨‍🦳</span>
+        <span (click)="addEmoji('👨‍🦳')">👨‍🦳</span>
+        <span (click)="addEmoji('👨‍🦲')">👨‍🦲</span>
+        <span (click)="addEmoji('👨‍🦲')">👨‍🦲</span>
+        <span (click)="addEmoji('👨‍🦲')">👨‍🦲</span>
+        <span (click)="addEmoji('👱‍♂️')">👱‍♂️</span>
+        <span (click)="addEmoji('👱‍♂️')">👱‍♂️</span>
+        <span (click)="addEmoji('👱‍♂️')">👱‍♂️</span>
+        <span (click)="addEmoji('👱‍♀️')">👱‍♀️</span>
+        <span (click)="addEmoji('👱‍♀️')">👱‍♀️</span>
+        <span (click)="addEmoji('👱‍♀️')">👱‍♀️</span>
+        <span (click)="addEmoji('🧓')">🧓</span>
+        <span (click)="addEmoji('🧔')">🧔</span>
+        <span (click)="addEmoji('👴')">👴</span>
+        <span (click)="addEmoji('👵')">👵</span>
+        <span (click)="addEmoji('👨‍⚕️')">👨‍⚕️</span>
+        <span (click)="addEmoji('👩‍⚕️')">👩‍⚕️</span>
+        <span (click)="addEmoji('👨‍🎓')">👨‍🎓</span>
+        <span (click)="addEmoji('👩‍🎓')">👩‍🎓</span>
+        <span (click)="addEmoji('👨‍🏫')">👨‍🏫</span>
+        <span (click)="addEmoji('👩‍🏫')">👩‍🏫</span>
+        <span (click)="addEmoji('👨‍⚖️')">👨‍⚖️</span>
+        <span (click)="addEmoji('👩‍⚖️')">👩‍⚖️</span>
+        <span (click)="addEmoji('👨‍🌾')">👨‍🌾</span>
+        <span (click)="addEmoji('👩‍🌾')">👩‍🌾</span>
+        <span (click)="addEmoji('👨‍🍳')">👨‍🍳</span>
+        <span (click)="addEmoji('👩‍🍳')">👩‍🍳</span>
+        <span (click)="addEmoji('👨‍🔧')">👨‍🔧</span>
+        <span (click)="addEmoji('👩‍🔧')">👩‍🔧</span>
+        <span (click)="addEmoji('👨‍🏭')">👨‍🏭</span>
+        <span (click)="addEmoji('👩‍🏭')">👩‍🏭</span>
+        <span (click)="addEmoji('👨‍💼')">👨‍💼</span>
+        <span (click)="addEmoji('👩‍💼')">👩‍💼</span>
+        <span (click)="addEmoji('👨‍🔬')">👨‍🔬</span>
+        <span (click)="addEmoji('👩‍🔬')">👩‍🔬</span>
+        <span (click)="addEmoji('👨‍💻')">👨‍💻</span>
+        <span (click)="addEmoji('👩‍💻')">👩‍💻</span>
+        <span (click)="addEmoji('👨‍🎤')">👨‍🎤</span>
+        <span (click)="addEmoji('👩‍🎤')">👩‍🎤</span>
+        <span (click)="addEmoji('👨‍🎨')">👨‍🎨</span>
+        <span (click)="addEmoji('👩‍🎨')">👩‍🎨</span>
+        <span (click)="addEmoji('👨‍✈️')">👨‍✈️</span>
+        <span (click)="addEmoji('👩‍✈️')">👩‍✈️</span>
+        <span (click)="addEmoji('👨‍🚀')">👨‍🚀</span>
+        <span (click)="addEmoji('👩‍🚀')">👩‍🚀</span>
+        <span (click)="addEmoji('👨‍🚒')">👨‍🚒</span>
+        <span (click)="addEmoji('👩‍🚒')">👩‍🚒</span>
+        <span (click)="addEmoji('👮')">👮</span>
+        <span (click)="addEmoji('👮‍♂️')">👮‍♂️</span>
+        <span (click)="addEmoji('👮‍♀️')">👮‍♀️</span>
+        <span (click)="addEmoji('🕵️')">🕵️</span>
+        <span (click)="addEmoji('🕵️‍♂️')">🕵️‍♂️</span>
+        <span (click)="addEmoji('🕵️‍♀️')">🕵️‍♀️</span>
+        <span (click)="addEmoji('💂')">💂</span>
+        <span (click)="addEmoji('💂‍♂️')">💂‍♂️</span>
+        <span (click)="addEmoji('💂‍♀️')">💂‍♀️</span>
+        <span (click)="addEmoji('👷')">👷</span>
+        <span (click)="addEmoji('👷‍♂️')">👷‍♂️</span>
+        <span (click)="addEmoji('👷‍♀️')">👷‍♀️</span>
+        <span (click)="addEmoji('🤴')">🤴</span>
+        <span (click)="addEmoji('👸')">👸</span>
+        <span (click)="addEmoji('👳')">👳</span>
+        <span (click)="addEmoji('👳‍♂️')">👳‍♂️</span>
+        <span (click)="addEmoji('👳‍♀️')">👳‍♀️</span>
+        <span (click)="addEmoji('👲')">👲</span>
+        <span (click)="addEmoji('🧕')">🧕</span>
+        <span (click)="addEmoji('🤵')">🤵</span>
+        <span (click)="addEmoji('🤵‍♂️')">🤵‍♂️</span>
+        <span (click)="addEmoji('🤵‍♀️')">🤵‍♀️</span>
+        <span (click)="addEmoji('👰')">👰</span>
+        <span (click)="addEmoji('👰‍♂️')">👰‍♂️</span>
+        <span (click)="addEmoji('👰‍♀️')">👰‍♀️</span>
+        <span (click)="addEmoji('🤰')">🤰</span>
+        <span (click)="addEmoji('🤱')">🤱</span>
+        <span (click)="addEmoji('👩‍🍼')">👩‍🍼</span>
+        <span (click)="addEmoji('👨‍🍼')">👨‍🍼</span>
+        <span (click)="addEmoji('🧑‍🍼')">🧑‍🍼</span>
+        <span (click)="addEmoji('👼')">👼</span>
+        <span (click)="addEmoji('🎅')">🎅</span>
+        <span (click)="addEmoji('🤶')">🤶</span>
+        <span (click)="addEmoji('🦸')">🦸</span>
+        <span (click)="addEmoji('🦸‍♂️')">🦸‍♂️</span>
+        <span (click)="addEmoji('🦸‍♀️')">🦸‍♀️</span>
+        <span (click)="addEmoji('🦹')">🦹</span>
+        <span (click)="addEmoji('🦹‍♂️')">🦹‍♂️</span>
+        <span (click)="addEmoji('🦹‍♀️')">🦹‍♀️</span>
+        <span (click)="addEmoji('🧙')">🧙</span>
+        <span (click)="addEmoji('🧙‍♂️')">🧙‍♂️</span>
+        <span (click)="addEmoji('🧙‍♀️')">🧙‍♀️</span>
+        <span (click)="addEmoji('🧚')">🧚</span>
+        <span (click)="addEmoji('🧚‍♂️')">🧚‍♂️</span>
+        <span (click)="addEmoji('🧚‍♀️')">🧚‍♀️</span>
+        <span (click)="addEmoji('🧛')">🧛</span>
+        <span (click)="addEmoji('🧛‍♂️')">🧛‍♂️</span>
+        <span (click)="addEmoji('🧛‍♀️')">🧛‍♀️</span>
+        <span (click)="addEmoji('🧜')">🧜</span>
+        <span (click)="addEmoji('🧜‍♂️')">🧜‍♂️</span>
+        <span (click)="addEmoji('🧜‍♀️')">🧜‍♀️</span>
+        <span (click)="addEmoji('🧝')">🧝</span>
+        <span (click)="addEmoji('🧝‍♂️')">🧝‍♂️</span>
+        <span (click)="addEmoji('🧝‍♀️')">🧝‍♀️</span>
+        <span (click)="addEmoji('🧞')">🧞</span>
+        <span (click)="addEmoji('🧞‍♂️')">🧞‍♂️</span>
+        <span (click)="addEmoji('🧞‍♀️')">🧞‍♀️</span>
+        <span (click)="addEmoji('🧟')">🧟</span>
+        <span (click)="addEmoji('🧟‍♂️')">🧟‍♂️</span>
+        <span (click)="addEmoji('🧟‍♀️')">🧟‍♀️</span>
+        <span (click)="addEmoji('💆')">💆</span>
+        <span (click)="addEmoji('💆‍♂️')">💆‍♂️</span>
+        <span (click)="addEmoji('💆‍♀️')">💆‍♀️</span>
+        <span (click)="addEmoji('💇')">💇</span>
+        <span (click)="addEmoji('💇‍♂️')">💇‍♂️</span>
+        <span (click)="addEmoji('💇‍♀️')">💇‍♀️</span>
+        <span (click)="addEmoji('🚶')">🚶</span>
+        <span (click)="addEmoji('🚶‍♂️')">🚶‍♂️</span>
+        <span (click)="addEmoji('🚶‍♀️')">🚶‍♀️</span>
+        <span (click)="addEmoji('🧍')">🧍</span>
+        <span (click)="addEmoji('🧍‍♂️')">🧍‍♂️</span>
+        <span (click)="addEmoji('🧍‍♀️')">🧍‍♀️</span>
+        <span (click)="addEmoji('🧎')">🧎</span>
+        <span (click)="addEmoji('🧎‍♂️')">🧎‍♂️</span>
+        <span (click)="addEmoji('🧎‍♀️')">🧎‍♀️</span>
+        <span (click)="addEmoji('🧑‍🦯')">🧑‍🦯</span>
+        <span (click)="addEmoji('👨‍🦯')">👨‍🦯</span>
+        <span (click)="addEmoji('👩‍🦯')">👩‍🦯</span>
+        <span (click)="addEmoji('🧑‍🦼')">🧑‍🦼</span>
+        <span (click)="addEmoji('👨‍🦼')">👨‍🦼</span>
+        <span (click)="addEmoji('👩‍🦼')">👩‍🦼</span>
+        <span (click)="addEmoji('🧑‍🦽')">🧑‍🦽</span>
+        <span (click)="addEmoji('👨‍🦽')">👨‍🦽</span>
+        <span (click)="addEmoji('👩‍🦽')">👩‍🦽</span>
+        <span (click)="addEmoji('🏃')">🏃</span>
+        <span (click)="addEmoji('🏃‍♂️')">🏃‍♂️</span>
+        <span (click)="addEmoji('🏃‍♀️')">🏃‍♀️</span>
+        <span (click)="addEmoji('💃')">💃</span>
+        <span (click)="addEmoji('💃‍♂️')">💃‍♂️</span>
+        <span (click)="addEmoji('💃‍♀️')">💃‍♀️</span>
+        <span (click)="addEmoji('🕺')">🕺</span>
+        <span (click)="addEmoji('🕺')">🕺</span>
+        <span (click)="addEmoji('🕺')">🕺</span>
+        <span (click)="addEmoji('👯')">👯</span>
+        <span (click)="addEmoji('👯‍♂️')">👯‍♂️</span>
+        <span (click)="addEmoji('👯‍♀️')">👯‍♀️</span>
+        <span (click)="addEmoji('🧖')">🧖</span>
+        <span (click)="addEmoji('🧖‍♂️')">🧖‍♂️</span>
+        <span (click)="addEmoji('🧖‍♀️')">🧖‍♀️</span>
+        <span (click)="addEmoji('🧘')">🧘</span>
+        <span (click)="addEmoji('🧘‍♂️')">🧘‍♂️</span>
+        <span (click)="addEmoji('🧘‍♀️')">🧘‍♀️</span>
+        <span (click)="addEmoji('🛀')">🛀</span>
+        <span (click)="addEmoji('🛌')">🛌</span>
+        <span (click)="addEmoji('🧑‍🤝‍🧑')">🧑‍🤝‍🧑</span>
+        <span (click)="addEmoji('👭')">👭</span>
+        <span (click)="addEmoji('👬')">👬</span>
+        <span (click)="addEmoji('👫')">👫</span>
+        <span (click)="addEmoji('👩‍❤️‍👩')">👩‍❤️‍👩</span>
+        <span (click)="addEmoji('💑')">💑</span>
+        <span (click)="addEmoji('👩‍❤️‍💋‍👩')">👩‍❤️‍💋‍👩</span>
+        <span (click)="addEmoji('👨‍❤️‍💋‍👨')">👨‍❤️‍💋‍👨</span>
+        <span (click)="addEmoji('👩‍❤️‍💋‍👨')">👩‍❤️‍💋‍👨</span>
+        <span (click)="addEmoji('💏')">💏</span>
+        <span (click)="addEmoji('👨‍❤️‍👨')">👨‍❤️‍👨</span>
+        <span (click)="addEmoji('👨‍❤️‍👨')">👨‍❤️‍👨</span>
+        <span (click)="addEmoji('👩‍❤️‍👩')">👩‍❤️‍👩</span>
+        <span (click)="addEmoji('👨‍❤️‍👩')">👨‍❤️‍👩</span>
+      </div>
+    </div>
+    <ion-tab-bar slot="bottom">
+      <div style="display: flex">
+        <ion-button (click)="toggleEmoticonSection()" style="cursor: pointer">
+          <ion-icon name="happy-outline"></ion-icon>
+        </ion-button>
+        <div>
+          <ion-textarea
+            class="comm"
+            aria-label="Comments"
+            placeholder="Agregar un comentario"
+            id="comentario"
+            name="comentario"
+            rows="4"
+            cols="50"
+            [(ngModel)]="comentario"
+            required
+          ></ion-textarea>
+        </div>
+        <ion-button [disabled]="!comentario" (click)="addComment(comentario)">
+          <ion-icon name="send-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-tab-bar>
+  </ng-template>
+</ion-modal>

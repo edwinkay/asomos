@@ -56,7 +56,8 @@
               (click)="abrirBandeja()"
               name="mail-unread-outline"
             ></ion-icon>
-            <span
+            <div *ngIf="!nohaymensaje">
+              <span
               style="
                 right: 2%;
                 position: absolute;
@@ -66,8 +67,9 @@
                 background-color: red;
               "
               span
-              >{{mensajes.length}}</span
+              >{{mensajesNoVistos}}</span
             >
+            </div>
           </div>
         </div>
       </div>

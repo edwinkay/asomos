@@ -96,10 +96,21 @@ export class BandejaComponent implements OnInit {
         );
         this.mensajes = misMsjs;
         this.mensajes3 = misMsjs2;
+        // const mensajesNoVistos = misMsjs.filter(mensaje => !mensaje.vioelmsj)
       });
     });
   }
   abrirMensaje(id: string) {
+    console.log('msj 1')
+    this.router.navigate(['enviar-mensaje', id]);
+  }
+  abrirMensaje3(id: string, idObj:any) {
+    const vioelmsj = true
+    const datos = {
+      vioelmsj
+    }
+    this._msj.update(idObj, datos).then(()=>{
+    })
     this.router.navigate(['enviar-mensaje', id]);
   }
   volver() {

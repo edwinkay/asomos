@@ -65,6 +65,8 @@ export class PerfilComponent implements OnInit {
   mensajes2: any[] = [];
   mensajes3: any[] = [];
   alertButtons = ['OK'];
+  mensajesNoVistos:any
+  nohaymensaje = false
   alertInputs: AlertInput[] = [
     {
       type: 'textarea',
@@ -125,7 +127,11 @@ export class PerfilComponent implements OnInit {
         );
         this.mensajes = misMsjs;
         this.mensajes3 = misMsjs2;
-        console.log(misMsjs.length,'msj1')
+        const mensajesNoVistos = misMsjs2.filter((mensaje) => !mensaje.vioelmsj);
+        this.mensajesNoVistos = mensajesNoVistos.length
+        if (mensajesNoVistos.length <= 0) {
+          this.nohaymensaje = true
+        }
       });
     });
   }

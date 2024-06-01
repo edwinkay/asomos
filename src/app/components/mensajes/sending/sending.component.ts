@@ -160,6 +160,7 @@ export class SendingComponent implements OnInit {
            this.objetoMensaje == undefined &&
            this.objetoMensaje2 == undefined
          ) {
+          const vioelmsj = false
            const para = this.info?.usuario;
            const de = this.usuario?.displayName;
            let foto1 = this.usuario?.photoURL;
@@ -175,6 +176,7 @@ export class SendingComponent implements OnInit {
            const encapsular = [];
            encapsular.push({ mensaje, foto, para, de });
            const datos = {
+             vioelmsj,
              de: de,
              para: para,
              foto,
@@ -208,9 +210,11 @@ export class SendingComponent implements OnInit {
              };
              this._msj.update(this.idBody, datos).then(() => {});
            } else {
+            const vioelmsj = false
              const nuevoMensaje = this.objetoMensaje?.mensaje;
              nuevoMensaje.push({ mensaje, de, para, foto });
              const datos = {
+               vioelmsj,
                mensaje: nuevoMensaje,
              };
              this._msj.update(this.idBody, datos).then(() => {});

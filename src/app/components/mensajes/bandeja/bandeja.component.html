@@ -12,7 +12,6 @@
     </ion-toolbar>
   </ion-header>
   <div class="option" [ngClass]="{ active: optionDelete }">
-
     <span class="close" [ngClass]="{ active: close }" (click)="cerrar()"
       >&times;</span
     >
@@ -93,12 +92,11 @@
     </div>
   </div>
   <div style="width: 100%" class="inbox-messages">
-    <div *ngFor="let message of mensajes3" class="message">
-      <div>
-        <div>
+    <div *ngFor="let message of mensajes3; let i = index" class="message">
+      <div style="display: flex; justify-content: space-between">
+        <div style="width: -webkit-fill-available;" (click)="abrirMensaje3(message.idReceptor, message.id)">
           <span
             style="display: flex; gap: 1rem; align-items: center"
-            (click)="abrirMensaje(message.idReceptor)"
           >
             <img
               [src]="
@@ -113,6 +111,18 @@
             />
             <strong>{{ message.de }}</strong>
           </span>
+        </div>
+        <div style="display: flex; align-items: center">
+          <div *ngIf="message.vioelmsj == false">
+            <span (click)="abrirMensaje3(message.idReceptor, message.id)" style="height: 22px; border-radius: 50%; background: #4fba39"
+            >Nuevo!</span
+          >
+          </div>
+          <div>
+            <span (click)="abrirEliminar(message.id, i)" style="font-size: 26px"
+              >&#8942;</span
+            >
+          </div>
         </div>
       </div>
     </div>

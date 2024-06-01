@@ -38,7 +38,7 @@
             "
             class="lap user"
           >
-            {{ objetoUsuario?.usuario || usuarioActual}}
+            {{ objetoUsuario?.usuario || usuarioActual }}
           </p>
         </div>
         <div
@@ -50,11 +50,25 @@
             height: max-content;
           "
         >
-          <ion-icon
-            style="color: white; font-size: 30px"
-            (click)="abrirBandeja()"
-            name="mail-unread-outline"
-          ></ion-icon>
+          <div style="display: contents">
+            <ion-icon
+              style="color: white; font-size: 30px"
+              (click)="abrirBandeja()"
+              name="mail-unread-outline"
+            ></ion-icon>
+            <span
+              style="
+                right: 2%;
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background-color: red;
+              "
+              span
+              >{{mensajes.length}}</span
+            >
+          </div>
         </div>
       </div>
       <div style="display: flex; justify-content: space-around">
@@ -117,10 +131,7 @@
             class="close-btn"
             (click)="onClosePreview()"
           >
-            <ion-icon
-              style="font-size: 30px;"
-              name="close-outline"
-            ></ion-icon>
+            <ion-icon style="font-size: 30px" name="close-outline"></ion-icon>
           </button>
           <button
             *ngIf="controls"

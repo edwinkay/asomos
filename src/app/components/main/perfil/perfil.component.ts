@@ -13,6 +13,7 @@ import {
   AlertInput,
 } from '@ionic/angular';
 import { IonModal } from '@ionic/angular';
+import { ComunicationService } from 'src/app/services/comunication.service';
 
 @Component({
   selector: 'app-perfil',
@@ -25,6 +26,7 @@ export class PerfilComponent implements OnInit {
   usuario: any | null;
   currentUser: any | null;
   usuarioActual: any;
+  usuarioActual2: any;
   esInvitado = false;
   adm = false;
   usuariosInfo: any[] = [];
@@ -59,6 +61,9 @@ export class PerfilComponent implements OnInit {
   modalDelete = false;
   modalEditar = false;
   option: boolean = false;
+  mensajes: any[] = [];
+  mensajes2: any[] = [];
+  mensajes3: any[] = [];
   alertButtons = ['OK'];
   alertInputs: AlertInput[] = [
     {
@@ -77,7 +82,8 @@ export class PerfilComponent implements OnInit {
     private el: ElementRef,
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private _msj: ComunicationService
   ) {}
 
   ngOnInit() {
@@ -86,6 +92,7 @@ export class PerfilComponent implements OnInit {
       this.currentUser = user;
       this.getUsers();
       this.usuarioActual = user?.displayName;
+      this.usuarioActual2 = user?.uid;
       const comprobar = user?.uid;
       if (this.usuarioActual == 'Invitad@') {
         this.esInvitado = true;
@@ -99,8 +106,29 @@ export class PerfilComponent implements OnInit {
     });
     this.getUserImages();
     this.obtPost();
+    this.getMessages()
   }
-
+  getMessages() {
+    this._msj.getUMessage().subscribe((msj) => {
+      this.mensajes2 = [];
+      msj.forEach((element: any) => {
+        const soloData = {
+          id: element.payload.doc.id,
+          ...element.payload.doc.data(),
+        };
+        this.mensajes2.push(soloData);
+        const misMsjs = this.mensajes2.filter(
+          (obj) => obj.idReceptor == this.usuarioActual2
+        );
+        const misMsjs2 = this.mensajes2.filter(
+          (obj) => obj.idEmisor == this.usuarioActual2
+        );
+        this.mensajes = misMsjs;
+        this.mensajes3 = misMsjs2;
+        console.log(misMsjs.length,'msj1')
+      });
+    });
+  }
   abrirBandeja() {
     this.crearUsuario();
     this.router.navigate(['/bandeja']);

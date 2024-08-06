@@ -6,6 +6,8 @@ import { ActionSheetController, AlertController, AlertInput } from '@ionic/angul
 import { IonModal } from '@ionic/angular';
 import { UsersService } from 'src/app/services/users.service';
 import { PostService } from 'src/app/services/post.service';
+import { GaleriaActivateService } from 'src/app/services/galeria-activate.service';
+import { UsuariosImgService } from 'src/app/services/usuarios-img.service';
 
 @Component({
   selector: 'app-features',
@@ -20,6 +22,7 @@ export class FeaturesComponent implements OnInit {
   esInvitado = false;
   adm = false;
   post: any[] = [];
+  images: any[] = [];
   usuariosInfo: any[] = [];
   infoText: string = '';
   objetoUsuario: any;
@@ -36,8 +39,13 @@ export class FeaturesComponent implements OnInit {
   modalDelete = false;
   comentario: any = '';
   showEmoticonSection: boolean = false;
+  imageZ: any[] = [];
 
   presentingElement: any = null;
+  feature = 1;
+  idPost: any;
+  idImg: any;
+  idUsuario:any
 
   alertButtons = ['OK'];
   alertInputs: AlertInput[] = [
@@ -52,6 +60,8 @@ export class FeaturesComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private _post: PostService,
+    private _imageUser: UsuariosImgService,
+    private _image: GaleriaActivateService,
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController
   ) {}
@@ -62,6 +72,8 @@ export class FeaturesComponent implements OnInit {
       this.currentUser = user;
       this.getUsers();
       this.obtPost();
+      this.getImages();
+      this.getUserImages()
       this.usuarioActual = user?.displayName;
       const comprobar = user?.uid;
       if (this.usuarioActual == 'Invitad@') {
@@ -123,6 +135,38 @@ export class FeaturesComponent implements OnInit {
       });
     });
   }
+  getImages() {
+    this._image.getim().subscribe((data) => {
+      this.images = [];
+      data.forEach((element: any) => {
+        const imageData = element.payload.doc.data();
+        this.images.push({
+          id: element.payload.doc.id,
+          ...imageData,
+          likesCountImage: imageData.likesCountImage || 0,
+          likedByImage: imageData.likedByImage || [],
+          userImageLikes: imageData.userImageLikes || [],
+          commentsVideo: imageData.commentsVideo || [],
+        });
+      });
+    });
+  }
+  getUserImages() {
+    this._imageUser.getUsuarioImagen().subscribe((imagen) => {
+      this.imageZ = [];
+      imagen.forEach((element: any) => {
+        const imageData = element.payload.doc.data();
+        this.imageZ.push({
+          id: element.payload.doc.id,
+          ...imageData,
+          likesCountImage: imageData.likesCountImage || 0,
+          likedByImage: imageData.likedByImage || [],
+          userImageLikes: imageData.userImageLikes || [],
+          commentsVideo: imageData.commentsVideo || [],
+        });
+      });
+    });
+  }
   getUsers() {
     this._user.getUsers().subscribe((usuarios) => {
       this.usuariosInfo = [];
@@ -162,6 +206,8 @@ export class FeaturesComponent implements OnInit {
       const userId = user?.uid;
       if (userId === id) {
         this.router.navigate(['/main']);
+      } else if (id == 'activate') {
+        this.router.navigate(['/activate']);
       } else {
         this.router.navigate(['/usuario/', id]);
       }
@@ -175,8 +221,8 @@ export class FeaturesComponent implements OnInit {
   }
 
   async opciones(i: any, comentario: any) {
+    console.log(comentario)
     const user = await this.afAuth.currentUser;
-
     if (
       user?.uid === comentario.uid ||
       user?.email == 'administrador.sistema@gmail.com'
@@ -207,18 +253,34 @@ export class FeaturesComponent implements OnInit {
       const { data } = await actionSheet.onDidDismiss();
 
       if (data && data.action === 'delete') {
-        this._post.delete(id).then(() => {
+       this._post.delete(id).then(() => {
           this.toastr.info('publicacion eliminada');
         });
       }
-    } else {
     }
   }
   openModal() {
     this.modal2?.present();
   }
   async abrirCom2(p: any) {
-    this.dataVideoId2 = p;
+    this.idPost = p.id;
+    const postUrl = p.post;
+    const imgen = this.images.find((image: any) => image.url == postUrl);
+    const usuario = this.imageZ.find((image: any) => image.url == postUrl);
+    this.idImg = imgen?.id;
+    this.idUsuario = usuario?.id;
+    if (postUrl === imgen?.url) {
+      this.dataVideoId2 = imgen;
+      this.feature = 2;
+    }else if (postUrl === usuario?.url) {
+      this.dataVideoId2 = usuario
+      this.feature = 3;
+    }
+    else {
+      this.dataVideoId2 = p;
+      this.feature = 1;
+    }
+
     const user = await this.afAuth.currentUser;
 
     if (user && !this.esInvitado) {
@@ -236,6 +298,10 @@ export class FeaturesComponent implements OnInit {
     return true;
   }
   async likeImage2(p: any) {
+    const postUrl = p.post;
+    const imgen = this.images.find((image: any) => image.url == postUrl);
+    const data = this.imageZ.find((image: any) => image.url == postUrl);
+
     const user = await this.afAuth.currentUser;
     if (user && !this.esInvitado) {
       const userId = user.uid;
@@ -255,13 +321,22 @@ export class FeaturesComponent implements OnInit {
         p.userImageLikes.push({ usuario, correo });
       }
 
+      const id3 = data?.id
+      const id2 = imgen?.id;
       const id = p.id;
       const imagex: any = {
         likesCountImage: p.likesCountImage,
         likedByImage: p.likedByImage,
         userImageLikes: p.userImageLikes,
       };
-      await this._post.update(id, imagex);
+      this._post.update(id, imagex).then(() => {
+        if (imgen != undefined) {
+          this._image.updateImgAc(id2, imagex);
+        }
+        else if (data != undefined) {
+          this._imageUser.updateImgUsuario(id3, imagex)
+        }
+      });
     } else {
       this.modal = true;
     }
@@ -312,7 +387,13 @@ export class FeaturesComponent implements OnInit {
         const videox: any = {
           commentsVideo: this.dataVideoId2.commentsVideo,
         };
-        await this._post.update(videoId, videox);
+        this._post.update(this.idPost, videox).then(() => {
+          if (this.idImg != undefined) {
+            this._image.updateImgAc(this.idImg, videox);
+          }else if (this.idUsuario != undefined) {
+            this._imageUser.updateImgUsuario(this.idUsuario, videox)
+          }
+        });
       }
     } else {
       this.modal = true;
@@ -390,17 +471,22 @@ export class FeaturesComponent implements OnInit {
           this.dataVideoId2.commentsVideo.splice(index, 1);
 
           // Actualiza los comentarios en Firestore
-          const videoId = this.dataVideoId2.id;
+
           const videox: any = {
             commentsVideo: this.dataVideoId2.commentsVideo,
           };
           this._post
-            .update(videoId, videox)
+            .update(this.idPost, videox)
             .then(() => {
               this.modalDelete = false;
               this.ocultarx = true;
               this.option = false;
               console.log('Comentario eliminado correctamente');
+              if (this.idImg != undefined) {
+                this._image.updateImgAc(this.idImg, videox);
+              } else if (this.idUsuario != undefined) {
+                this._imageUser.updateImgUsuario(this.idUsuario, videox)
+              }
             })
             .catch((error) => {
               console.error('Error al eliminar el comentario:', error);
@@ -446,16 +532,20 @@ export class FeaturesComponent implements OnInit {
                 comentarioModificado;
 
               // Actualiza los comentarios en Firestore
-              const videoId = this.dataVideoId2.id;
               const videox: any = {
                 commentsVideo: this.dataVideoId2.commentsVideo,
               };
               this._post
-                .update(videoId, videox)
+                .update(this.idPost, videox)
                 .then(() => {
                   this.modalEditar = false;
                   this.ocultarx = true;
                   console.log('Comentario editado correctamente');
+                  if (this.idImg != undefined) {
+                    this._image.updateImgAc(this.idImg, videox);
+                  }else if (this.idUsuario != undefined) {
+                    this._imageUser.updateImgUsuario(this.idUsuario, videox)
+                  }
                 })
                 .catch((error) => {
                   console.error('Error al editar el comentario:', error);
@@ -472,7 +562,7 @@ export class FeaturesComponent implements OnInit {
   }
 
   async addComment2(comentario: string) {
-    this.showEmoticonSection = false
+    this.showEmoticonSection = false;
     if (comentario.trim() === '') {
     } else {
       // Obtener el usuario actual
@@ -482,11 +572,13 @@ export class FeaturesComponent implements OnInit {
         const image = this.dataVideoId2;
         // Obtener el ID del video
         const imageId = this.dataVideoId2?.id;
+        const nuevoId = this.idPost;
+        const idUsuario = this.idUsuario;
         const usuario = user?.displayName;
         const correo = user?.email;
         const imagen = user?.photoURL;
         const idUser = user?.uid;
-        // Crear el comentario
+        // Crear el comentario para post
         image.commentsVideo.push({
           usuario,
           correo,
@@ -499,7 +591,18 @@ export class FeaturesComponent implements OnInit {
           commentsVideo: image.commentsVideo,
         };
         // Actualizar los comentarios en Firestore
-        await this._post.update(imageId, imagex);
+        if (this.feature == 2) {
+          await this._image.updateImgAc(imageId, imagex);
+          await this._post.update(nuevoId, imagex);
+        }else if (this.feature == 3) {
+          await this._post.update(nuevoId, imagex);
+          await this._imageUser.updateImgUsuario(idUsuario, imagex)
+        }
+
+        else {
+          await this._post.update(imageId, imagex);
+        }
+
         this.comentario = '';
       }
     }

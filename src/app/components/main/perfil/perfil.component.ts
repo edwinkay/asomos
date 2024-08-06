@@ -65,8 +65,9 @@ export class PerfilComponent implements OnInit {
   mensajes2: any[] = [];
   mensajes3: any[] = [];
   alertButtons = ['OK'];
-  mensajesNoVistos:any
-  nohaymensaje = false
+  mensajesNoVistos: any;
+  nohaymensaje = false;
+  idPost: any;
   alertInputs: AlertInput[] = [
     {
       type: 'textarea',
@@ -108,7 +109,7 @@ export class PerfilComponent implements OnInit {
     });
     this.getUserImages();
     this.obtPost();
-    this.getMessages()
+    this.getMessages();
   }
   getMessages() {
     this._msj.getUMessage().subscribe((msj) => {
@@ -127,10 +128,12 @@ export class PerfilComponent implements OnInit {
         );
         this.mensajes = misMsjs;
         this.mensajes3 = misMsjs2;
-        const mensajesNoVistos = misMsjs2.filter((mensaje) => !mensaje.vioelmsj);
-        this.mensajesNoVistos = mensajesNoVistos.length
+        const mensajesNoVistos = misMsjs2.filter(
+          (mensaje) => !mensaje.vioelmsj
+        );
+        this.mensajesNoVistos = mensajesNoVistos.length;
         if (mensajesNoVistos.length <= 0) {
-          this.nohaymensaje = true
+          this.nohaymensaje = true;
         }
       });
     });
@@ -581,6 +584,10 @@ export class PerfilComponent implements OnInit {
     this.dataVideoId = image;
     const user = await this.afAuth.currentUser;
 
+    const imgUrl = image?.url;
+    const post = this.post.find((post: any) => post.post == imgUrl);
+    this.idPost = post?.id;
+
     if (user && !this.esInvitado) {
       // this.modalcom = true;
       this.modal2?.present();
@@ -589,6 +596,9 @@ export class PerfilComponent implements OnInit {
     }
   }
   async likeImage(image: any) {
+    const imgUrl = image?.url;
+    const post = this.post.find((post: any) => post.post == imgUrl);
+
     const user = await this.afAuth.currentUser;
     if (user && !this.esInvitado) {
       const userId = user.uid;
@@ -615,11 +625,15 @@ export class PerfilComponent implements OnInit {
         userImageLikes: image.userImageLikes,
       };
       await this._imageUser.updateImgUsuario(id, imagex);
+      await this._post.update(post.id, imagex);
     } else {
       this.modal = true;
     }
   }
-  async deleteImgModal(id: string) {
+  async deleteImgModal(id: string, com:any) {
+    const imgUrl = com.url;
+    const post = this.post.find((post: any) => post.post == imgUrl);
+
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Acciones',
       buttons: [
@@ -648,6 +662,7 @@ export class PerfilComponent implements OnInit {
         this.ocultarx = true;
         this.toastr.error('Imagen eliminida');
         this.onClosePreview();
+        this._post.delete(post?.id);
       });
     }
   }
@@ -707,6 +722,7 @@ export class PerfilComponent implements OnInit {
           commentsVideo: this.dataVideoId.commentsVideo,
         };
         await this._imageUser.updateImgUsuario(videoId, videox);
+        await this._post.update(this.idPost, videox);
       }
     } else {
       this.modal = true;
@@ -772,6 +788,7 @@ export class PerfilComponent implements OnInit {
               this.ocultarx = true;
               this.option = false;
               console.log('Comentario eliminado correctamente');
+              this._post.update(this.idPost, videox);
             })
             .catch((error) => {
               console.error('Error al eliminar el comentario:', error);
@@ -827,6 +844,7 @@ export class PerfilComponent implements OnInit {
                   this.modalEditar = false;
                   this.ocultarx = true;
                   console.log('Comentario editado correctamente');
+                  this._post.update(this.idPost, videox);
                 })
                 .catch((error) => {
                   console.error('Error al editar el comentario:', error);
@@ -871,6 +889,7 @@ export class PerfilComponent implements OnInit {
         };
         // Actualizar los comentarios en Firestore
         await this._imageUser.updateImgUsuario(imageId, imagex);
+        await this._post.update(this.idPost, imagex);
         this.comentario = '';
       }
     }

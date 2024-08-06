@@ -35,6 +35,7 @@ export class ActivateMusicaComponent implements OnInit {
   idInfo: any[] = [];
   objetoUsuario: any;
   images: any[] = [];
+  post: any[] = [];
   currentIndex = 0;
   currentUser: any | null;
   showCount = false;
@@ -63,6 +64,7 @@ export class ActivateMusicaComponent implements OnInit {
 
   presentingElement: any = null;
   showEmoticonSection: boolean = false;
+  idPost:any
 
   alertButtons = ['OK'];
   alertInputs: AlertInput[] = [
@@ -87,6 +89,7 @@ export class ActivateMusicaComponent implements OnInit {
 
   ngOnInit() {
     this.getImages();
+    this.obtPost()
     this.afAuth.authState.subscribe((user) => {
       this.usuario = user;
       this.currentUser = user;
@@ -147,6 +150,22 @@ export class ActivateMusicaComponent implements OnInit {
           commentsVideo: imageData.commentsVideo || [],
         });
         // console.log(this.images);
+      });
+    });
+  }
+   obtPost() {
+    this._post.getPost().subscribe((post) => {
+      this.post = [];
+      post.forEach((element: any) => {
+        const postData = element.payload.doc.data();
+        this.post.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data(),
+          likesCountImage: postData.likesCountImage || 0,
+          likedByImage: postData.likedByImage || [],
+          userImageLikes: postData.userImageLikes || [],
+          commentsVideo: postData.commentsVideo || [],
+        });
       });
     });
   }
@@ -231,14 +250,13 @@ export class ActivateMusicaComponent implements OnInit {
                               return;
                             }
                             const data = {
-                              foto,
-                              usuario: nombre,
+                              foto: 'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/chatsImg%2Fcfg4EqTUsyaeHUBfQA96izlfnw82%2Factivate-logo.jpeg?alt=media&token=c11df322-a0ce-4a4c-982b-d79761e1d57e',
+                              usuario: 'Activate agrego una imagen',
                               post: url,
-                              uid: idUser,
+                              uid: 'activate',
                               timestamp: new Date(),
                             };
                             this._post.addPost(data).then(() => {});
-                            this.toastr.info('imagen actualizada a features');
                           });
                         });
                       })
@@ -263,6 +281,9 @@ export class ActivateMusicaComponent implements OnInit {
     input.click();
   }
   async likeImage(image: any) {
+    const imgUrl = image?.url;
+    const post = this.post.find((post: any) => post.post == imgUrl);
+
     const user = await this.afAuth.currentUser;
     if (user && !this.esInvitado) {
       const userId = user.uid;
@@ -289,6 +310,7 @@ export class ActivateMusicaComponent implements OnInit {
         userImageLikes: image.userImageLikes,
       };
       await this._image.updateImgAc(id, imagex);
+      await this._post.update(post.id, imagex)
     } else {
       this.modal = true;
     }
@@ -399,6 +421,7 @@ export class ActivateMusicaComponent implements OnInit {
         };
         // Actualizar los comentarios en Firestore
         await this._image.updateImgAc(imageId, imagex);
+        await this._post.update(this.idPost, imagex)
         this.comentario = '';
       }
     }
@@ -406,6 +429,10 @@ export class ActivateMusicaComponent implements OnInit {
   async abrirCom(image: any) {
     this.dataVideoId = image;
     const user = await this.afAuth.currentUser;
+
+    const imgUrl = image?.url
+    const post = this.post.find((post:any)=> post.post == imgUrl)
+    this.idPost = post?.id
 
     if (user && !this.esInvitado) {
       // this.modalcom = true;
@@ -438,6 +465,7 @@ export class ActivateMusicaComponent implements OnInit {
           this.modalDelete = false;
           this.ocultarx = true;
           console.log('Comentario eliminado correctamente');
+          this._post.update(this.idPost, videox)
         })
         .catch((error) => {
           console.error('Error al eliminar el comentario:', error);
@@ -469,6 +497,7 @@ export class ActivateMusicaComponent implements OnInit {
           this.modalEditar = false;
           this.ocultarx = true;
           console.log('Comentario editado correctamente');
+          this._post.update(this.idPost, videox)
         })
         .catch((error) => {
           console.error('Error al editar el comentario:', error);
@@ -531,6 +560,7 @@ export class ActivateMusicaComponent implements OnInit {
           commentsVideo: this.dataVideoId.commentsVideo,
         };
         await this._image.updateImgAc(videoId, videox);
+        await this._post.update(this.idPost, videox);
       }
     } else {
       this.modal = true;
@@ -551,7 +581,10 @@ export class ActivateMusicaComponent implements OnInit {
       this.router.navigate(['/usuario/', id]);
     }
   }
-  async deleteImgModal(id: string) {
+  async deleteImgModal(id: string, com:any) {
+    const imgUrl = com.url
+    const post = this.post.find((post: any) => post.post == imgUrl);
+
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Acciones',
       buttons: [
@@ -580,6 +613,7 @@ export class ActivateMusicaComponent implements OnInit {
         this.toastr.error('Imagen eliminida');
         this.modalDeleteImage = false;
         this.previewImage = false;
+        this._post.delete(post?.id)
       });
     }
   }
@@ -643,6 +677,7 @@ export class ActivateMusicaComponent implements OnInit {
               this.ocultarx = true;
               this.option = false;
               console.log('Comentario eliminado correctamente');
+              this._post.update(this.idPost, videox)
             })
             .catch((error) => {
               console.error('Error al eliminar el comentario:', error);
@@ -698,6 +733,7 @@ export class ActivateMusicaComponent implements OnInit {
                   this.modalEditar = false;
                   this.ocultarx = true;
                   console.log('Comentario editado correctamente');
+                  this._post.update(this.idPost, videox)
                 })
                 .catch((error) => {
                   console.error('Error al editar el comentario:', error);

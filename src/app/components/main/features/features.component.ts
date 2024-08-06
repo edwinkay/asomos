@@ -40,6 +40,7 @@ export class FeaturesComponent implements OnInit {
   comentario: any = '';
   showEmoticonSection: boolean = false;
   imageZ: any[] = [];
+  abrirFoto = false
 
   presentingElement: any = null;
   feature = 1;
@@ -118,6 +119,12 @@ export class FeaturesComponent implements OnInit {
   }
   addEmoji(emoji: string) {
     this.comentario += emoji;
+  }
+  abrir(){
+    this.abrirFoto = true
+  }
+  cerrar(){
+    this.abrirFoto = false
   }
   obtPost() {
     this._post.getPost().subscribe((post) => {

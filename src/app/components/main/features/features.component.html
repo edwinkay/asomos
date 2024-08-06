@@ -5,7 +5,7 @@
         <form (ngSubmit)="publicar()">
           <ion-list style="border-radius: 12px">
             <ion-item>
-               <ion-textarea
+              <ion-textarea
                 label="Publicar nota..."
                 labelPlacement="floating"
                 fill="solid"
@@ -58,6 +58,7 @@
               <div>
                 <div>
                   <img
+                    (click)="abrir()"
                     style="width: 93%"
                     [src]="p.post"
                     alt="Imagen del mensaje"
@@ -88,6 +89,14 @@
                     <span>{{ p.likesCountImage }}</span>
                   </div>
                 </div>
+              </div>
+              <div *ngIf="abrirFoto" class="full-screen-container">
+                <span class="close-button" (click)="cerrar()">X</span>
+                <img
+                  [src]="p.post"
+                  alt="Imagen del mensaje"
+                  class="full-screen-image"
+                />
               </div>
             </div>
           </div>

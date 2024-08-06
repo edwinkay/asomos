@@ -221,7 +221,6 @@ export class FeaturesComponent implements OnInit {
   }
 
   async opciones(i: any, comentario: any) {
-    console.log(comentario)
     const user = await this.afAuth.currentUser;
     if (
       user?.uid === comentario.uid ||

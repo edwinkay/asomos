@@ -68,6 +68,8 @@ export class PerfilComponent implements OnInit {
   mensajesNoVistos: any;
   nohaymensaje = false;
   idPost: any;
+  cerrarFoto = false
+  cerrarPortada = false
   alertInputs: AlertInput[] = [
     {
       type: 'textarea',
@@ -727,6 +729,65 @@ export class PerfilComponent implements OnInit {
     } else {
       this.modal = true;
     }
+  }
+  async opcionesPortada(){
+        const actionSheet = await this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: 'Ver portada',
+          data: {
+            action: 'ver',
+          },
+        },
+        {
+          text: 'Cambiar portada',
+          data: {
+            action: 'cambiar',
+          },
+        },
+      ],
+    });
+
+    await actionSheet.present();
+
+    const { data } = await actionSheet.onDidDismiss();
+    if (data && data.action === 'cambiar'){
+      this.changePortada();
+    }else if (data && data.action === 'ver') {
+      this.cerrarPortada = true
+    }
+
+  }
+  async opcionesProfile(){
+    const actionSheet = await this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: 'Ver foto de perfil',
+          data: {
+            action: 'ver',
+          },
+        },
+        {
+          text: 'Cambiar foto',
+          data: {
+            action: 'cambiar',
+          },
+        },
+      ],
+    });
+
+    await actionSheet.present();
+
+    const { data } = await actionSheet.onDidDismiss();
+    if (data && data.action === 'cambiar'){
+      this.changeProfilePicture();
+    }else if (data && data.action === 'ver') {
+      this.cerrarFoto = true
+    }
+  }
+  cerrar(){
+    this.cerrarFoto = false
+    this.cerrarPortada = false
   }
   async opciones(i: any, comentario: any) {
     this.comentarioDel = comentario;

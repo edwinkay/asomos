@@ -18,7 +18,7 @@
               user-select: none;
               border-radius: 28px;
             "
-            (click)="changeProfilePicture()"
+            (click)="opcionesProfile()"
             [src]="
               usuario?.photoURL ||
               'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg'
@@ -58,17 +58,17 @@
             ></ion-icon>
             <div *ngIf="!nohaymensaje">
               <span
-              style="
-                right: 2%;
-                position: absolute;
-                width: 18px;
-                height: 18px;
-                border-radius: 50%;
-                background-color: red;
-              "
-              span
-              >{{mensajesNoVistos}}</span
-            >
+                style="
+                  right: 2%;
+                  position: absolute;
+                  width: 18px;
+                  height: 18px;
+                  border-radius: 50%;
+                  background-color: red;
+                "
+                span
+                >{{ mensajesNoVistos }}</span
+              >
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@
         >
           <ion-icon
             style="color: white; font-size: 33px"
-            (click)="changePortada()"
+            (click)="opcionesPortada()"
             name="add-circle-outline"
           ></ion-icon>
         </div>
@@ -194,7 +194,12 @@
               </div>
               <div>
                 <ion-icon
-                  (click)="deleteImgModal(currentLightboxImage.id, currentLightboxImage)"
+                  (click)="
+                    deleteImgModal(
+                      currentLightboxImage.id,
+                      currentLightboxImage
+                    )
+                  "
                   style="cursor: pointer; color: red"
                   name="trash-outline"
                 ></ion-icon>
@@ -633,3 +638,27 @@
     </ion-tab-bar>
   </ng-template>
 </ion-modal>
+<div *ngIf="cerrarFoto" class="fixed-container">
+  <span class="close-button" (click)="cerrar()">X</span>
+  <img
+    [src]="
+      usuario?.photoURL ||
+      'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg'
+    "
+    alt="Foto de perfil"
+    class="centered-image"
+  />
+</div>
+<div *ngIf="cerrarPortada" class="fixed-container">
+  <span class="close-button" (click)="cerrar()">X</span>
+  <img
+    [src]="
+          urlPortada ||
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Starsinthesky.jpg/1024px-Starsinthesky.jpg'
+        "
+    alt="Foto de perfil"
+    class="centered-image"
+  />
+</div>
+
+

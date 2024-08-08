@@ -58,7 +58,7 @@
               <div>
                 <div>
                   <img
-                    (click)="abrir()"
+                    (click)="abrir(p.post)"
                     style="width: 93%"
                     [src]="p.post"
                     alt="Imagen del mensaje"
@@ -93,7 +93,7 @@
               <div *ngIf="abrirFoto" class="full-screen-container">
                 <span class="close-button" (click)="cerrar()">X</span>
                 <img
-                  [src]="p.post"
+                  [src]="lafoto"
                   alt="Imagen del mensaje"
                   class="full-screen-image"
                 />

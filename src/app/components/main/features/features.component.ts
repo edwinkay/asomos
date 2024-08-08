@@ -41,6 +41,7 @@ export class FeaturesComponent implements OnInit {
   showEmoticonSection: boolean = false;
   imageZ: any[] = [];
   abrirFoto = false
+  lafoto:any
 
   presentingElement: any = null;
   feature = 1;
@@ -120,7 +121,8 @@ export class FeaturesComponent implements OnInit {
   addEmoji(emoji: string) {
     this.comentario += emoji;
   }
-  abrir(){
+  abrir(p:any){
+    this.lafoto = p
     this.abrirFoto = true
   }
   cerrar(){

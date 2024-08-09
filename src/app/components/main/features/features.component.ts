@@ -40,14 +40,16 @@ export class FeaturesComponent implements OnInit {
   comentario: any = '';
   showEmoticonSection: boolean = false;
   imageZ: any[] = [];
-  abrirFoto = false
-  lafoto:any
+  abrirFoto = false;
+  lafoto: any;
+  lastVisible: any = null;
+  limit = 10;
 
   presentingElement: any = null;
   feature = 1;
   idPost: any;
   idImg: any;
-  idUsuario:any
+  idUsuario: any;
 
   alertButtons = ['OK'];
   alertInputs: AlertInput[] = [
@@ -75,7 +77,7 @@ export class FeaturesComponent implements OnInit {
       this.getUsers();
       this.obtPost();
       this.getImages();
-      this.getUserImages()
+      this.getUserImages();
       this.usuarioActual = user?.displayName;
       const comprobar = user?.uid;
       if (this.usuarioActual == 'Invitad@') {
@@ -121,29 +123,76 @@ export class FeaturesComponent implements OnInit {
   addEmoji(emoji: string) {
     this.comentario += emoji;
   }
-  abrir(p:any){
-    this.lafoto = p
-    this.abrirFoto = true
+  abrir(p: any) {
+    this.lafoto = p;
+    this.abrirFoto = true;
   }
-  cerrar(){
-    this.abrirFoto = false
+  cerrar() {
+    this.abrirFoto = false;
   }
   obtPost() {
-    this._post.getPost().subscribe((post) => {
+    this._post.getPostByPage(this.limit, null).subscribe((post) => {
       this.post = [];
+      let newLastVisible: any = null;
+
       post.forEach((element: any) => {
         const postData = element.payload.doc.data();
         this.post.push({
           id: element.payload.doc.id,
-          ...element.payload.doc.data(),
+          ...postData,
           likesCountImage: postData.likesCountImage || 0,
           likedByImage: postData.likedByImage || [],
           userImageLikes: postData.userImageLikes || [],
           commentsVideo: postData.commentsVideo || [],
         });
+
+        // Actualiza el último documento visible para la próxima página
+        newLastVisible = element.payload.doc;
       });
+
+      // Inicializa `lastVisible` para la próxima página
+      this.lastVisible = newLastVisible;
     });
   }
+
+  loadMore() {
+    if (!this.lastVisible) {
+      // Si lastVisible es null, no hay más publicaciones para cargar
+      return;
+    }
+
+    this._post.getPostByPage(this.limit, this.lastVisible).subscribe((post) => {
+      let newLastVisible: any = null;
+      let newPosts: any[] = [];
+      const existingPostIds = new Set(this.post.map((p) => p.id)); // Conjunto de IDs existentes
+
+      post.forEach((element: any) => {
+        const postData = element.payload.doc.data();
+        const postId = element.payload.doc.id;
+        if (!existingPostIds.has(postId)) {
+          // Verifica si la publicación no existe
+          newPosts.push({
+            id: postId,
+            ...postData,
+            likesCountImage: postData.likesCountImage || 0,
+            likedByImage: postData.likedByImage || [],
+            userImageLikes: postData.userImageLikes || [],
+            commentsVideo: postData.commentsVideo || [],
+          });
+        }
+
+        // Actualiza el último documento visible para la próxima página
+        newLastVisible = element.payload.doc;
+      });
+
+      // Agrega las nuevas publicaciones al final del arreglo existente
+      this.post = [...this.post, ...newPosts];
+
+      // Actualiza el `lastVisible` para la próxima página
+      this.lastVisible = newLastVisible;
+    });
+  }
+
   getImages() {
     this._image.getim().subscribe((data) => {
       this.images = [];
@@ -261,7 +310,7 @@ export class FeaturesComponent implements OnInit {
       const { data } = await actionSheet.onDidDismiss();
 
       if (data && data.action === 'delete') {
-       this._post.delete(id).then(() => {
+        this._post.delete(id).then(() => {
           this.toastr.info('publicacion eliminada');
         });
       }
@@ -280,11 +329,10 @@ export class FeaturesComponent implements OnInit {
     if (postUrl === imgen?.url) {
       this.dataVideoId2 = imgen;
       this.feature = 2;
-    }else if (postUrl === usuario?.url) {
-      this.dataVideoId2 = usuario
+    } else if (postUrl === usuario?.url) {
+      this.dataVideoId2 = usuario;
       this.feature = 3;
-    }
-    else {
+    } else {
       this.dataVideoId2 = p;
       this.feature = 1;
     }
@@ -329,7 +377,7 @@ export class FeaturesComponent implements OnInit {
         p.userImageLikes.push({ usuario, correo });
       }
 
-      const id3 = data?.id
+      const id3 = data?.id;
       const id2 = imgen?.id;
       const id = p.id;
       const imagex: any = {
@@ -340,9 +388,8 @@ export class FeaturesComponent implements OnInit {
       this._post.update(id, imagex).then(() => {
         if (imgen != undefined) {
           this._image.updateImgAc(id2, imagex);
-        }
-        else if (data != undefined) {
-          this._imageUser.updateImgUsuario(id3, imagex)
+        } else if (data != undefined) {
+          this._imageUser.updateImgUsuario(id3, imagex);
         }
       });
     } else {
@@ -398,8 +445,8 @@ export class FeaturesComponent implements OnInit {
         this._post.update(this.idPost, videox).then(() => {
           if (this.idImg != undefined) {
             this._image.updateImgAc(this.idImg, videox);
-          }else if (this.idUsuario != undefined) {
-            this._imageUser.updateImgUsuario(this.idUsuario, videox)
+          } else if (this.idUsuario != undefined) {
+            this._imageUser.updateImgUsuario(this.idUsuario, videox);
           }
         });
       }
@@ -493,7 +540,7 @@ export class FeaturesComponent implements OnInit {
               if (this.idImg != undefined) {
                 this._image.updateImgAc(this.idImg, videox);
               } else if (this.idUsuario != undefined) {
-                this._imageUser.updateImgUsuario(this.idUsuario, videox)
+                this._imageUser.updateImgUsuario(this.idUsuario, videox);
               }
             })
             .catch((error) => {
@@ -551,8 +598,8 @@ export class FeaturesComponent implements OnInit {
                   console.log('Comentario editado correctamente');
                   if (this.idImg != undefined) {
                     this._image.updateImgAc(this.idImg, videox);
-                  }else if (this.idUsuario != undefined) {
-                    this._imageUser.updateImgUsuario(this.idUsuario, videox)
+                  } else if (this.idUsuario != undefined) {
+                    this._imageUser.updateImgUsuario(this.idUsuario, videox);
                   }
                 })
                 .catch((error) => {
@@ -602,12 +649,10 @@ export class FeaturesComponent implements OnInit {
         if (this.feature == 2) {
           await this._image.updateImgAc(imageId, imagex);
           await this._post.update(nuevoId, imagex);
-        }else if (this.feature == 3) {
+        } else if (this.feature == 3) {
           await this._post.update(nuevoId, imagex);
-          await this._imageUser.updateImgUsuario(idUsuario, imagex)
-        }
-
-        else {
+          await this._imageUser.updateImgUsuario(idUsuario, imagex);
+        } else {
           await this._post.update(imageId, imagex);
         }
 

@@ -166,7 +166,14 @@
           </div>
         </div>
       </div>
-      <a style="color:#306cd3; cursor: pointer;" (click)="loadMore()">Cargar mas...</a>
+      <div *ngIf="mostrarBotonCargarMas">
+        <a style="color: #306cd3; cursor: pointer" (click)="loadMore()"
+          >Cargar más...</a
+        >
+      </div>
+      <div *ngIf="mostrarMensajeNoMasPublicaciones" style="color: #808080">
+        No hay más publicaciones.
+      </div>
     </div>
     <ion-modal
       #modal

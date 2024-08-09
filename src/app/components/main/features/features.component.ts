@@ -17,6 +17,9 @@ import { UsuariosImgService } from 'src/app/services/usuarios-img.service';
 export class FeaturesComponent implements OnInit {
   @ViewChild('modal') modal2: IonModal | undefined;
 
+  mostrarBotonCargarMas: boolean = false;
+  mostrarMensajeNoMasPublicaciones: boolean = false;
+
   usuario: any;
   usuarioActual: any;
   esInvitado = false;
@@ -152,6 +155,11 @@ export class FeaturesComponent implements OnInit {
 
       // Inicializa `lastVisible` para la próxima página
       this.lastVisible = newLastVisible;
+
+      // Controla la visibilidad del botón y mensaje
+      this.mostrarBotonCargarMas = post.length >= this.limit;
+      this.mostrarMensajeNoMasPublicaciones =
+        post.length < this.limit && this.post.length > 0;
     });
   }
 
@@ -190,6 +198,11 @@ export class FeaturesComponent implements OnInit {
 
       // Actualiza el `lastVisible` para la próxima página
       this.lastVisible = newLastVisible;
+
+      // Controla la visibilidad del botón y mensaje
+      this.mostrarBotonCargarMas = newPosts.length >= this.limit;
+      this.mostrarMensajeNoMasPublicaciones =
+        newPosts.length < this.limit && this.post.length > 0;
     });
   }
 

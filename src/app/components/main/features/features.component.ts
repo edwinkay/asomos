@@ -278,7 +278,7 @@ export class FeaturesComponent implements OnInit {
       if (userId === id) {
         this.router.navigate(['/main']);
       } else if (id == 'activate') {
-        this.router.navigate(['/activate']);
+        this.router.navigate(['/activate'], { state: { activate: true } });
       } else {
         this.router.navigate(['/usuario/', id]);
       }

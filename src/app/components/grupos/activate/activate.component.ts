@@ -1,37 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-activate',
   templateUrl: './activate.component.html',
   styleUrls: ['./activate.component.scss'],
 })
-export class ActivateComponent  implements OnInit {
-  mn = true
-  im = false
-  vd = false
+export class ActivateComponent implements OnInit, OnDestroy {
+  activate: boolean = false;
+  private navigationSubscription: Subscription | undefined;
 
-  constructor(private location: Location) { }
+  mn = true;
+  im = false;
+  vd = false;
 
-  ngOnInit() {}
+  constructor(private location: Location, private router: Router) {}
+
+  ngOnInit() {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      this.activate = navigation.extras.state['activate'] || false;
+
+      if (this.activate) {
+        this.images(); // Si activate es true, abrir la sección de imágenes
+      } else {
+        this.main(); // Si activate es false, abrir la sección principal
+      }
+    }
+
+    console.log(this.activate);
+  }
+
+  ngOnDestroy() {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+  }
 
   goBack() {
     this.location.back();
   }
-  main(){
+
+  main() {
     this.mn = true;
     this.im = false;
     this.vd = false;
   }
-  images(){
+
+  images() {
     this.mn = false;
     this.im = true;
     this.vd = false;
   }
-  videos(){
+
+  videos() {
     this.mn = false;
     this.im = false;
     this.vd = true;
   }
-
 }

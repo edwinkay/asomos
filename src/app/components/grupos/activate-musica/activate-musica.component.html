@@ -26,11 +26,13 @@
         <span *ngIf="showCount" class="count">
           {{ currentIndex + 1 }}/{{ totalImageCount }}
         </span>
-        <button
-          *ngIf="previewImage"
-          class="close-btn"
-          (click)="onClosePreview()"
-        >
+        <button disabled class="minus-btn">
+          <ion-icon style="font-size: 30px" name="remove-outline"></ion-icon>
+        </button>
+        <button class="plus-btn" (click)="zoom()">
+          <ion-icon style="font-size: 30px" name="add-outline"></ion-icon>
+        </button>
+        <button class="close-btn" (click)="onClosePreview()">
           <ion-icon style="font-size: 30px" name="close-outline"></ion-icon>
         </button>
         <button
@@ -40,9 +42,8 @@
         >
           <ion-icon
             style="
-              height: 50%;
-              border-radius: 50%;
-              border: 1px solid;
+              text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
+                -1px 1px 0 black;
               font-size: 50px;
             "
             name="caret-back-outline"
@@ -55,9 +56,8 @@
         >
           <ion-icon
             style="
-              height: 50%;
-              border-radius: 50%;
-              border: 1px solid;
+              text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
+                -1px 1px 0 black;
               font-size: 50px;
             "
             name="caret-forward-outline"
@@ -66,6 +66,7 @@
 
         <div *ngIf="previewImage" class="lightbox-img">
           <img
+            (click)="zoom()"
             style="transform: none"
             [src]="currentLightboxImage.url"
             alt="imagen"
@@ -92,7 +93,9 @@
             </div>
             <div *ngIf="adm">
               <ion-icon
-                (click)="deleteImgModal(currentLightboxImage.id, currentLightboxImage)"
+                (click)="
+                  deleteImgModal(currentLightboxImage.id, currentLightboxImage)
+                "
                 style="cursor: pointer; color: red"
                 name="trash-outline"
               ></ion-icon>
@@ -100,6 +103,35 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="aumentar" class="full-screen-container">
+  <div>
+    <div class="image-container">
+      <img
+        style="max-width: 200%"
+        (click)="zoom()"
+        [src]="currentLightboxImage.url"
+        alt="Imagen del mensaje"
+        class="full-screen-image"
+      />
+    </div>
+    <div
+      style="
+        position: absolute;
+        bottom: 4em;
+        gap: 7px;
+        display: flex;
+        justify-content: center;
+      "
+    >
+      <button (click)="zoom()">
+        <ion-icon style="font-size: 30px" name="remove-outline"></ion-icon>
+      </button>
+      <button disabled>
+        <ion-icon style="font-size: 30px" name="add-outline"></ion-icon>
+      </button>
     </div>
   </div>
 </div>

@@ -56,6 +56,8 @@ export class AsomosImagenesComponent implements OnInit {
   option: boolean = false;
   capIndex: any;
 
+  aumentar = false;
+
   presentingElement: any = null;
   showEmoticonSection: boolean = false;
 
@@ -96,6 +98,9 @@ export class AsomosImagenesComponent implements OnInit {
     });
   }
 
+  zoom() {
+    this.aumentar = !this.aumentar;
+  }
   goBack() {
     this.location.back();
   }

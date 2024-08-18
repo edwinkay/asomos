@@ -62,9 +62,11 @@ export class ActivateMusicaComponent implements OnInit {
   capIndex: any;
   usuarioActual: any;
 
+  aumentar = false
+
   presentingElement: any = null;
   showEmoticonSection: boolean = false;
-  idPost:any
+  idPost: any;
 
   alertButtons = ['OK'];
   alertInputs: AlertInput[] = [
@@ -89,7 +91,7 @@ export class ActivateMusicaComponent implements OnInit {
 
   ngOnInit() {
     this.getImages();
-    this.obtPost()
+    this.obtPost();
     this.afAuth.authState.subscribe((user) => {
       this.usuario = user;
       this.currentUser = user;
@@ -105,6 +107,9 @@ export class ActivateMusicaComponent implements OnInit {
         this.adm = true;
       }
     });
+  }
+  zoom() {
+    this.aumentar = !this.aumentar
   }
   getUsers() {
     this._user.getUsers().subscribe((usuarios) => {
@@ -153,7 +158,7 @@ export class ActivateMusicaComponent implements OnInit {
       });
     });
   }
-   obtPost() {
+  obtPost() {
     this._post.getPost().subscribe((post) => {
       this.post = [];
       post.forEach((element: any) => {
@@ -310,7 +315,7 @@ export class ActivateMusicaComponent implements OnInit {
         userImageLikes: image.userImageLikes,
       };
       await this._image.updateImgAc(id, imagex);
-      await this._post.update(post.id, imagex)
+      await this._post.update(post.id, imagex);
     } else {
       this.modal = true;
     }
@@ -323,6 +328,7 @@ export class ActivateMusicaComponent implements OnInit {
     this.currentLightboxImage = this.images[index];
     this.totalImageCount = this.images.length;
     document.body.style.overflow = 'hidden';
+    console.log(this.currentLightboxImage.url)
   }
   onClosePreview() {
     this.previewImage = false;
@@ -365,6 +371,9 @@ export class ActivateMusicaComponent implements OnInit {
   close() {
     this.modal = false;
     this.modalcom = false;
+  }
+  close2() {
+    this.aumentar = false
   }
   async abrirEditar(comentario: any) {
     const user = await this.afAuth.currentUser;
@@ -421,7 +430,7 @@ export class ActivateMusicaComponent implements OnInit {
         };
         // Actualizar los comentarios en Firestore
         await this._image.updateImgAc(imageId, imagex);
-        await this._post.update(this.idPost, imagex)
+        await this._post.update(this.idPost, imagex);
         this.comentario = '';
       }
     }
@@ -430,9 +439,9 @@ export class ActivateMusicaComponent implements OnInit {
     this.dataVideoId = image;
     const user = await this.afAuth.currentUser;
 
-    const imgUrl = image?.url
-    const post = this.post.find((post:any)=> post.post == imgUrl)
-    this.idPost = post?.id
+    const imgUrl = image?.url;
+    const post = this.post.find((post: any) => post.post == imgUrl);
+    this.idPost = post?.id;
 
     if (user && !this.esInvitado) {
       // this.modalcom = true;
@@ -465,7 +474,7 @@ export class ActivateMusicaComponent implements OnInit {
           this.modalDelete = false;
           this.ocultarx = true;
           console.log('Comentario eliminado correctamente');
-          this._post.update(this.idPost, videox)
+          this._post.update(this.idPost, videox);
         })
         .catch((error) => {
           console.error('Error al eliminar el comentario:', error);
@@ -497,7 +506,7 @@ export class ActivateMusicaComponent implements OnInit {
           this.modalEditar = false;
           this.ocultarx = true;
           console.log('Comentario editado correctamente');
-          this._post.update(this.idPost, videox)
+          this._post.update(this.idPost, videox);
         })
         .catch((error) => {
           console.error('Error al editar el comentario:', error);
@@ -581,8 +590,8 @@ export class ActivateMusicaComponent implements OnInit {
       this.router.navigate(['/usuario/', id]);
     }
   }
-  async deleteImgModal(id: string, com:any) {
-    const imgUrl = com.url
+  async deleteImgModal(id: string, com: any) {
+    const imgUrl = com.url;
     const post = this.post.find((post: any) => post.post == imgUrl);
 
     const actionSheet = await this.actionSheetCtrl.create({
@@ -613,7 +622,7 @@ export class ActivateMusicaComponent implements OnInit {
         this.toastr.error('Imagen eliminida');
         this.modalDeleteImage = false;
         this.previewImage = false;
-        this._post.delete(post?.id)
+        this._post.delete(post?.id);
       });
     }
   }
@@ -677,7 +686,7 @@ export class ActivateMusicaComponent implements OnInit {
               this.ocultarx = true;
               this.option = false;
               console.log('Comentario eliminado correctamente');
-              this._post.update(this.idPost, videox)
+              this._post.update(this.idPost, videox);
             })
             .catch((error) => {
               console.error('Error al eliminar el comentario:', error);
@@ -733,7 +742,7 @@ export class ActivateMusicaComponent implements OnInit {
                   this.modalEditar = false;
                   this.ocultarx = true;
                   console.log('Comentario editado correctamente');
-                  this._post.update(this.idPost, videox)
+                  this._post.update(this.idPost, videox);
                 })
                 .catch((error) => {
                   console.error('Error al editar el comentario:', error);

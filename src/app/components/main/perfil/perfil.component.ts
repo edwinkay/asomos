@@ -68,8 +68,9 @@ export class PerfilComponent implements OnInit {
   mensajesNoVistos: any;
   nohaymensaje = false;
   idPost: any;
-  cerrarFoto = false
-  cerrarPortada = false
+  cerrarFoto = false;
+  cerrarPortada = false;
+  aumentar = false;
   alertInputs: AlertInput[] = [
     {
       type: 'textarea',
@@ -112,6 +113,9 @@ export class PerfilComponent implements OnInit {
     this.getUserImages();
     this.obtPost();
     this.getMessages();
+  }
+  zoom() {
+    this.aumentar = !this.aumentar;
   }
   getMessages() {
     this._msj.getUMessage().subscribe((msj) => {
@@ -632,7 +636,7 @@ export class PerfilComponent implements OnInit {
       this.modal = true;
     }
   }
-  async deleteImgModal(id: string, com:any) {
+  async deleteImgModal(id: string, com: any) {
     const imgUrl = com.url;
     const post = this.post.find((post: any) => post.post == imgUrl);
 
@@ -730,8 +734,8 @@ export class PerfilComponent implements OnInit {
       this.modal = true;
     }
   }
-  async opcionesPortada(){
-        const actionSheet = await this.actionSheetCtrl.create({
+  async opcionesPortada() {
+    const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
           text: 'Ver portada',
@@ -751,14 +755,13 @@ export class PerfilComponent implements OnInit {
     await actionSheet.present();
 
     const { data } = await actionSheet.onDidDismiss();
-    if (data && data.action === 'cambiar'){
+    if (data && data.action === 'cambiar') {
       this.changePortada();
-    }else if (data && data.action === 'ver') {
-      this.cerrarPortada = true
+    } else if (data && data.action === 'ver') {
+      this.cerrarPortada = true;
     }
-
   }
-  async opcionesProfile(){
+  async opcionesProfile() {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
@@ -779,15 +782,15 @@ export class PerfilComponent implements OnInit {
     await actionSheet.present();
 
     const { data } = await actionSheet.onDidDismiss();
-    if (data && data.action === 'cambiar'){
+    if (data && data.action === 'cambiar') {
       this.changeProfilePicture();
-    }else if (data && data.action === 'ver') {
-      this.cerrarFoto = true
+    } else if (data && data.action === 'ver') {
+      this.cerrarFoto = true;
     }
   }
-  cerrar(){
-    this.cerrarFoto = false
-    this.cerrarPortada = false
+  cerrar() {
+    this.cerrarFoto = false;
+    this.cerrarPortada = false;
   }
   async opciones(i: any, comentario: any) {
     this.comentarioDel = comentario;

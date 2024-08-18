@@ -36,14 +36,21 @@
           <div *ngIf="isUrl(p.post)">
             <div>
               <div style="display: flex; justify-content: space-between">
-                <div style="gap: 7px; display: flex; align-items: center; padding-bottom: 7px;">
+                <div
+                  style="
+                    gap: 7px;
+                    display: flex;
+                    align-items: center;
+                    padding-bottom: 7px;
+                  "
+                >
                   <img
                     (click)="verUsuario(p.uid)"
                     style="border-radius: 50%; width: 40px; height: 40px"
                     [src]="p.foto"
                     alt="foto"
                   />
-                  <div style="text-align: justify; color: blue">
+                  <div (click)="verUsuario(p.uid)" style="text-align: justify; color: blue">
                     {{ p.usuario }}
                   </div>
                 </div>
@@ -92,11 +99,13 @@
               </div>
               <div *ngIf="abrirFoto" class="full-screen-container">
                 <span class="close-button" (click)="cerrar()">X</span>
-                <img
-                  [src]="lafoto"
-                  alt="Imagen del mensaje"
-                  class="full-screen-image"
-                />
+                <div class="image-container">
+                  <img
+                    [src]="lafoto"
+                    alt="Imagen del mensaje"
+                    class="full-screen-image"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -166,12 +175,17 @@
           </div>
         </div>
       </div>
-      <div style="padding: 10px 0 19px 0;" *ngIf="mostrarBotonCargarMas">
-        <a style="color: #306cd3; cursor: pointer; margin-bottom: 2rem;" (click)="loadMore()"
+      <div style="padding: 10px 0 19px 0" *ngIf="mostrarBotonCargarMas">
+        <a
+          style="color: #306cd3; cursor: pointer; margin-bottom: 2rem"
+          (click)="loadMore()"
           >Cargar más...</a
         >
       </div>
-      <div *ngIf="mostrarMensajeNoMasPublicaciones" style="color: #808080; margin-bottom: 2rem;">
+      <div
+        *ngIf="mostrarMensajeNoMasPublicaciones"
+        style="color: #808080; margin-bottom: 2rem"
+      >
         No hay más publicaciones.
       </div>
     </div>

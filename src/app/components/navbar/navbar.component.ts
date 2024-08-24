@@ -88,6 +88,12 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  abrirPerfil() {
+    this.mn = false;
+    this.im = false;
+    this.vd = true; // Mostrar el perfil
+  }
+
   main() {
     this.mn = true;
     this.im = false;

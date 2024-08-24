@@ -47,6 +47,7 @@ export class FeaturesComponent implements OnInit {
   lafoto: any;
   lastVisible: any = null;
   limit = 10;
+  hay = 0
 
   presentingElement: any = null;
   feature = 1;
@@ -81,6 +82,7 @@ export class FeaturesComponent implements OnInit {
       this.obtPost();
       this.getImages();
       this.getUserImages();
+      this.obtainAll()
       this.usuarioActual = user?.displayName;
       const comprobar = user?.uid;
       if (this.usuarioActual == 'Invitad@') {
@@ -132,6 +134,19 @@ export class FeaturesComponent implements OnInit {
   }
   cerrar() {
     this.abrirFoto = false;
+  }
+  obtainAll(){
+    this._post.getPost().subscribe((data)=>{
+      const datos = []
+      data.forEach((e:any)=>{
+        const postData = e.payload.doc.data();
+        datos.push({
+          id: e.payload.doc.id,
+          ...postData
+        })
+        this.hay = datos.length
+      })
+    })
   }
   obtPost() {
     this._post.getPostByPage(this.limit, null).subscribe((post) => {
@@ -198,11 +213,14 @@ export class FeaturesComponent implements OnInit {
 
       // Actualiza el `lastVisible` para la próxima página
       this.lastVisible = newLastVisible;
+      if (this.post.length == this.hay) {
+        this.mostrarBotonCargarMas = false;
+        this.mostrarMensajeNoMasPublicaciones = true;
+      } else {
+        this.mostrarBotonCargarMas = true;
+        this.mostrarMensajeNoMasPublicaciones = false;
+      }
 
-      // Controla la visibilidad del botón y mensaje
-      this.mostrarBotonCargarMas = newPosts.length >= this.limit;
-      this.mostrarMensajeNoMasPublicaciones =
-        newPosts.length < this.limit && this.post.length > 0;
     });
   }
 

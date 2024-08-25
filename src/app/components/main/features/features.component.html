@@ -50,9 +50,13 @@
                     [src]="p.foto"
                     alt="foto"
                   />
-                  <div (click)="verUsuario(p.uid)" style="text-align: justify; color: blue">
+                  <div>
+                    <div (click)="verUsuario(p.uid)" style="text-align: justify; color: blue">
                     {{ p.usuario }}
                   </div>
+                  <div style="text-align: justify;">{{p.date}}</div>
+                  </div>
+
                 </div>
                 <div style="display: flex; justify-content: space-between">
                   <span
@@ -129,9 +133,13 @@
                     [src]="p.foto"
                     alt="foto"
                   />
-                  <div (click)="abrirVideos(p.uid)" style="text-align: justify; color: red">
+                  <div>
+                    <div (click)="abrirVideos(p.uid)" style="text-align: justify; color: red">
                     {{ p.usuario }}
                   </div>
+                  <div style="text-align: justify;">{{p.date}}</div>
+                  </div>
+
                 </div>
                 <div style="display: flex; justify-content: space-between">
                   <span
@@ -142,7 +150,7 @@
                 </div>
               </div>
               <div>
-                <div (click)="abrirVideos(p.uid)" >
+                <div style="padding-top: 1rem;" (click)="abrirVideos(p.uid)" >
                   {{ p.post }}
                 </div>
                 <div

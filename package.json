@@ -31,6 +31,8 @@
     "@capacitor/status-bar": "6.0.0",
     "@ionic/angular": "^8.2.0",
     "@maskito/core": "^2.3.2",
+    "@types/date-fns": "^2.6.0",
+    "date-fns": "^3.6.0",
     "firebase": "^10.12.1",
     "ionicons": "^7.0.0",
     "ngx-toastr": "^18.0.0",

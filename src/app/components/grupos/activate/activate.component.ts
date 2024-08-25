@@ -28,16 +28,12 @@ export class ActivateComponent implements OnInit, OnDestroy {
 
       if (this.activate) {
         this.images(); // Si activate es true, abrir la sección de imágenes
+      }else if (this.activateVideo) {
+        this.videos();
       } else {
         this.main(); // Si activate es false, abrir la sección principal
       }
-      if (this.activateVideo) {
-        this.videos()
-      } else {
-        this.main();
-      }
     }
-
   }
 
   ngOnDestroy() {

@@ -8,6 +8,8 @@ import { UsersService } from 'src/app/services/users.service';
 import { PostService } from 'src/app/services/post.service';
 import { GaleriaActivateService } from 'src/app/services/galeria-activate.service';
 import { UsuariosImgService } from 'src/app/services/usuarios-img.service';
+import { formatDistanceToNow } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 @Component({
   selector: 'app-features',
@@ -155,6 +157,40 @@ export class FeaturesComponent implements OnInit {
 
       post.forEach((element: any) => {
         const postData = element.payload.doc.data();
+        const timestamp = postData.timestamp;
+        const date = new Date(
+          timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000
+        );
+        const now = new Date();
+        const diffInSeconds = Math.floor(
+          (now.getTime() - date.getTime()) / 1000
+        );
+
+        let timeAgo = '';
+
+        if (diffInSeconds < 60) {
+          timeAgo = `hace ${diffInSeconds} ${diffInSeconds === 1 ? 'segundo' : 'segundos'}`;
+        } else if (diffInSeconds < 3600) {
+          const minutes = Math.floor(diffInSeconds / 60);
+          timeAgo = `hace ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+        } else if (diffInSeconds < 86400) {
+          const hours = Math.floor(diffInSeconds / 3600);
+          timeAgo = `hace ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+        } else if (diffInSeconds < 604800) {
+          const days = Math.floor(diffInSeconds / 86400);
+          timeAgo = `hace ${days} ${days === 1 ? 'día' : 'días'}`;
+        } else if (diffInSeconds < 2592000) {
+          const weeks = Math.floor(diffInSeconds / 604800);
+          timeAgo = `hace ${weeks} ${weeks === 1 ? 'semana' : 'semanas'}`;
+        } else if (diffInSeconds < 31536000) {
+          const months = Math.floor(diffInSeconds / 2592000);
+          timeAgo = `hace ${months} ${months === 1 ? 'mes' : 'meses'}`;
+        } else {
+          const years = Math.floor(diffInSeconds / 31536000);
+          timeAgo = `hace ${years} ${years === 1 ? 'año' : 'años'}`;
+        }
+
+
         this.post.push({
           id: element.payload.doc.id,
           ...postData,
@@ -162,12 +198,12 @@ export class FeaturesComponent implements OnInit {
           likedByImage: postData.likedByImage || [],
           userImageLikes: postData.userImageLikes || [],
           commentsVideo: postData.commentsVideo || [],
+          date: timeAgo,
         });
 
         // Actualiza el último documento visible para la próxima página
         newLastVisible = element.payload.doc;
       });
-
       // Inicializa `lastVisible` para la próxima página
       this.lastVisible = newLastVisible;
 
@@ -192,6 +228,40 @@ export class FeaturesComponent implements OnInit {
       post.forEach((element: any) => {
         const postData = element.payload.doc.data();
         const postId = element.payload.doc.id;
+        const timestamp = postData.timestamp;
+        const date = new Date(
+          timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000
+        );
+        const now = new Date();
+        const diffInSeconds = Math.floor(
+          (now.getTime() - date.getTime()) / 1000
+        );
+
+        let timeAgo = '';
+
+        if (diffInSeconds < 60) {
+          timeAgo = `hace ${diffInSeconds} ${
+            diffInSeconds === 1 ? 'segundo' : 'segundos'
+          }`;
+        } else if (diffInSeconds < 3600) {
+          const minutes = Math.floor(diffInSeconds / 60);
+          timeAgo = `hace ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+        } else if (diffInSeconds < 86400) {
+          const hours = Math.floor(diffInSeconds / 3600);
+          timeAgo = `hace ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+        } else if (diffInSeconds < 604800) {
+          const days = Math.floor(diffInSeconds / 86400);
+          timeAgo = `hace ${days} ${days === 1 ? 'día' : 'días'}`;
+        } else if (diffInSeconds < 2592000) {
+          const weeks = Math.floor(diffInSeconds / 604800);
+          timeAgo = `hace ${weeks} ${weeks === 1 ? 'semana' : 'semanas'}`;
+        } else if (diffInSeconds < 31536000) {
+          const months = Math.floor(diffInSeconds / 2592000);
+          timeAgo = `hace ${months} ${months === 1 ? 'mes' : 'meses'}`;
+        } else {
+          const years = Math.floor(diffInSeconds / 31536000);
+          timeAgo = `hace ${years} ${years === 1 ? 'año' : 'años'}`;
+        }
         if (!existingPostIds.has(postId)) {
           // Verifica si la publicación no existe
           newPosts.push({
@@ -201,6 +271,7 @@ export class FeaturesComponent implements OnInit {
             likedByImage: postData.likedByImage || [],
             userImageLikes: postData.userImageLikes || [],
             commentsVideo: postData.commentsVideo || [],
+            date: timeAgo,
           });
         }
 

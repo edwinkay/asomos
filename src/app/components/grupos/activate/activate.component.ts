@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 })
 export class ActivateComponent implements OnInit, OnDestroy {
   activate: boolean = false;
+
+  activateVideo: boolean = false;
   private navigationSubscription: Subscription | undefined;
 
   mn = true;
@@ -22,15 +24,20 @@ export class ActivateComponent implements OnInit, OnDestroy {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
       this.activate = navigation.extras.state['activate'] || false;
+      this.activateVideo = navigation.extras.state['activateVideo'] || false;
 
       if (this.activate) {
         this.images(); // Si activate es true, abrir la sección de imágenes
       } else {
         this.main(); // Si activate es false, abrir la sección principal
       }
+      if (this.activateVideo) {
+        this.videos()
+      } else {
+        this.main();
+      }
     }
 
-    console.log(this.activate);
   }
 
   ngOnDestroy() {

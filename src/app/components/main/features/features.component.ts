@@ -302,6 +302,12 @@ export class FeaturesComponent implements OnInit {
       }
     }
   }
+  abrirVideos(uid: any){
+    const dato = 'activate-videos';
+    if (uid == dato) {
+      this.router.navigate(['/activate'], { state: { activateVideo: true } });
+    }
+  }
   deletePost(p: any) {
     this._post.delete(p).then(() => {
       this.option = false;

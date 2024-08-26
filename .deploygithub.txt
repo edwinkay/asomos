@@ -1,0 +1,1 @@
+"build:prod": "ng build --configuration production --base-href \"https://edwinkay.github.io/asomos/\"",

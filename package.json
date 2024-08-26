@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "build:prod": "ng build --configuration production --base-href \"https://edwinkay.github.io/asomos/\"",
+    "build:prod": "ng build --configuration production",
     "deploy": "npx angular-cli-ghpages --dir=dist/asomos"
   },
   "private": true,

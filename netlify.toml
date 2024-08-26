@@ -1,0 +1,12 @@
+# netlify.toml
+[build]
+  command = "npm run build:prod" # Usa el comando de build adecuado para Angular
+  functions = "netlify/functions" # Ajusta si usas funciones de Netlify
+  publish = "dist/asomos" # Carpeta donde se encuentran los archivos estáticos generados
+
+# Configuración para redirigir todas las rutas a index.html (importante para SPA)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+

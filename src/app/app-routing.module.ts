@@ -10,6 +10,8 @@ import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-ed
 import { BandejaComponent } from './components/mensajes/bandeja/bandeja.component';
 import { SendingComponent } from './components/mensajes/sending/sending.component';
 import { VerUsuarioComponent } from './components/main/ver-usuario/ver-usuario.component';
+import { BoardComponent } from './components/board/board/board.component';
+import { AuthGuard } from './auth.guard';
 
 
 const routes: Routes = [
@@ -26,30 +28,42 @@ const routes: Routes = [
   {
     path: 'main',
     component: NavbarComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'bandeja',
     component: BandejaComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'enviar-mensaje/:id',
     component: SendingComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'activate',
     component: ActivateComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'asomos',
     component: AsomosMainComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'administrar',
+    component: BoardComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'perfil-editar',
     component: PerfilEditarComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'usuario/:id',
     component: VerUsuarioComponent,
+    canActivate: [AuthGuard],
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];

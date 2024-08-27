@@ -36,6 +36,7 @@ import { PerfilEditarComponent } from './components/main/perfil-editar/perfil-ed
 import { BandejaComponent } from './components/mensajes/bandeja/bandeja.component';
 import { SendingComponent } from './components/mensajes/sending/sending.component';
 import { EmoticonsComponent } from './shared/emoticons/emoticons.component';
+import { BoardComponent } from './components/board/board/board.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { EmoticonsComponent } from './shared/emoticons/emoticons.component';
     ActivateComponent,
     ActivateMusicaComponent,
     ActivateVideoComponent,
+    BoardComponent,
     NavbarComponent,
     FeaturesComponent,
     GruposComponent,

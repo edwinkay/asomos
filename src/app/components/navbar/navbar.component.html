@@ -11,6 +11,9 @@
     <ion-list *ngIf="soloAdm">
       <ion-item (click)="abrir()">Ver Informes</ion-item>
     </ion-list>
+    <ion-list *ngIf="soloAdm">
+      <ion-item routerLink="/administrar">Ajustes</ion-item>
+    </ion-list>
     <ion-list>
       <ion-item (click)="salir()">Salir</ion-item>
     </ion-list>

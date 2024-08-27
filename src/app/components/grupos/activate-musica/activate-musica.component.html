@@ -140,6 +140,30 @@
     </div>
   </div>
 </div>
+<div *ngIf="modal3" class="custom-modal2">
+    <div class="modal-content2">
+      <span class="close-button2" (click)="cerrarModal()">CERRAR</span>
+      <h3>Aviso</h3>
+      <p>
+        Para comentar debes
+        <a (click)="cerrarModal()" routerLink="/login">Iniciar sesión</a> o
+        <a (click)="cerrarModal()" routerLink="/registrar">Registrarse</a>, es
+        gratis.
+      </p>
+    </div>
+  </div>
+  <div *ngIf="modal4" class="custom-modal2">
+    <div class="modal-content2">
+      <span class="close-button2" (click)="cerrarModal()">CERRAR</span>
+      <h3>Aviso</h3>
+      <p>
+        Para dar Like debes
+        <a (click)="cerrarModal()" routerLink="/login">Iniciar sesión</a> o
+        <a (click)="cerrarModal()" routerLink="/registrar">Registrarse</a>, es
+        gratis.
+      </p>
+    </div>
+  </div>
 <div *ngIf="modal5" class="custom-modal2">
     <div class="modal-content2">
       <span class="close-button2" (click)="cerrarModal()">CERRAR</span>

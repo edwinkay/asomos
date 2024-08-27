@@ -61,6 +61,8 @@ export class ActivateMusicaComponent implements OnInit {
   option: boolean = false;
   capIndex: any;
   usuarioActual: any;
+  modal3 = false;
+  modal4 = false;
   modal5 = false;
 
   aumentar = false;
@@ -113,11 +115,13 @@ export class ActivateMusicaComponent implements OnInit {
     this.aumentar = !this.aumentar;
   }
   cerrarModal() {
+    this.modal3 = false;
+    this.modal4 = false;
     this.modal5 = false;
   }
   bajar(b: any) {
     if (this.esInvitado) {
-      this.modal5 = true
+      this.modal5 = true;
     } else {
       this.descargarImagen(b);
     }
@@ -387,9 +391,10 @@ export class ActivateMusicaComponent implements OnInit {
       await this._image.updateImgAc(id, imagex);
       await this._post.update(post.id, imagex);
     } else {
-      this.modal = true;
+      this.modal4 = true;
     }
   }
+
   onPreviewImage(index: number): void {
     this.showMask = true;
     this.previewImage = true;
@@ -532,7 +537,7 @@ export class ActivateMusicaComponent implements OnInit {
       // this.modalcom = true;
       this.modal2?.present();
     } else {
-      this.modal = true;
+      this.modal3 = true;
     }
   }
   closeModal() {

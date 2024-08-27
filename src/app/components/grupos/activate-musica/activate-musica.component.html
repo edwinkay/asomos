@@ -11,14 +11,14 @@
     <div class="gallery-lightbox-container">
       <div class="gallery">
         <div *ngFor="let image of images; let i = index" class="gallery-img">
-          <img
+          <ion-img
             (mouseenter)="onMouseEnter(i)"
             (mouseleave)="onMouseLeave(i)"
             class="zoomable-image"
             (click)="onPreviewImage(i)"
             [src]="image?.url"
             alt="imagen"
-          />
+          ></ion-img>
         </div>
       </div>
       <div
@@ -29,6 +29,8 @@
         <span *ngIf="showCount" class="count">
           {{ currentIndex + 1 }}/{{ totalImageCount }}
         </span>
+        <button (click)="bajar(currentLightboxImage.url)" class="dw-btn">Descargar imagen
+        </button>
         <button disabled class="minus-btn">
           <ion-icon style="font-size: 30px" name="remove-outline"></ion-icon>
         </button>
@@ -138,6 +140,18 @@
     </div>
   </div>
 </div>
+<div *ngIf="modal5" class="custom-modal2">
+    <div class="modal-content2">
+      <span class="close-button2" (click)="cerrarModal()">CERRAR</span>
+      <h3>Aviso</h3>
+      <p>
+        Para descargar esta imagen debes
+        <a (click)="cerrarModal()" routerLink="/login">Iniciar sesión</a> o
+        <a (click)="cerrarModal()" routerLink="/registrar">Registrarse</a>, es
+        gratis.
+      </p>
+    </div>
+  </div>
 <ion-modal #modal trigger="open-modal" [presentingElement]="presentingElement">
   <ng-template>
     <ion-header>

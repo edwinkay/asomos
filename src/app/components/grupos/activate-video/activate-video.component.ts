@@ -33,6 +33,8 @@ export class ActivateVideoComponent implements OnInit {
   dataVideoId: any = [];
   ocultarx = true;
   adm = false;
+  modal3 = false;
+  modal4 = false;
 
   filteredVideos: any[] = [];
   searchTerm: string = '';
@@ -108,6 +110,10 @@ export class ActivateVideoComponent implements OnInit {
       video.playing = false;
     }
   }
+  cerrarModal() {
+    this.modal3 = false;
+    this.modal4 = false;
+  }
   addEmoji(emoji: string) {
     this.comentario += emoji;
   }
@@ -146,7 +152,7 @@ export class ActivateVideoComponent implements OnInit {
       };
       await this._videosService.updateActVideo(id, videox);
     } else {
-      this.modal = true;
+      this.modal4 = true;
     }
   }
   openModal() {
@@ -160,11 +166,9 @@ export class ActivateVideoComponent implements OnInit {
     const user = await this.afAuth.currentUser;
 
     if (user && !this.esInvitado) {
-      const username = user.displayName;
-      // this.modalcom = true;
       this.modal2?.present();
     } else {
-      this.modal = true;
+      this.modal3 = true;
     }
   }
   closeDelete() {
@@ -262,7 +266,7 @@ export class ActivateVideoComponent implements OnInit {
     if (comentario.trim() === '') {
     }
     // Obtener el usuario actual
-    else{
+    else {
       const user = await this.afAuth.currentUser;
 
       if (user) {
@@ -290,7 +294,6 @@ export class ActivateVideoComponent implements OnInit {
         this.comentario = '';
       }
     }
-
   }
   borrarComentario() {
     // Encuentra el índice del comentario en el array commentsVideo

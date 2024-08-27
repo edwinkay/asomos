@@ -61,6 +61,7 @@ export class ActivateMusicaComponent implements OnInit {
   option: boolean = false;
   capIndex: any;
   usuarioActual: any;
+  modal5 = false;
 
   aumentar = false;
 
@@ -110,6 +111,16 @@ export class ActivateMusicaComponent implements OnInit {
   }
   zoom() {
     this.aumentar = !this.aumentar;
+  }
+  cerrarModal() {
+    this.modal5 = false;
+  }
+  bajar(b: any) {
+    if (this.esInvitado) {
+      this.modal5 = true
+    } else {
+      this.descargarImagen(b);
+    }
   }
   getUsers() {
     this._user.getUsers().subscribe((usuarios) => {
@@ -433,6 +444,21 @@ export class ActivateMusicaComponent implements OnInit {
   }
   close2() {
     this.aumentar = false;
+  }
+  descargarImagen(url: string) {
+    fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const urlBlob = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = urlBlob;
+        a.setAttribute('download', 'imagen.jpg'); // Nombre del archivo descargado
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(urlBlob);
+      })
+      .catch(() => alert('No se pudo descargar la imagen.'));
   }
   async abrirEditar(comentario: any) {
     const user = await this.afAuth.currentUser;

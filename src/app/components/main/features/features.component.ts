@@ -52,6 +52,7 @@ export class FeaturesComponent implements OnInit {
   hay = 0;
   modal3 = false;
   modal4 = false;
+  modal5 = false;
 
   presentingElement: any = null;
   feature = 1;
@@ -142,6 +143,7 @@ export class FeaturesComponent implements OnInit {
   cerrarModal() {
     this.modal3 = false;
     this.modal4 = false;
+    this.modal5 = false;
   }
   obtainAll() {
     this._post.getPost().subscribe((data) => {
@@ -395,7 +397,15 @@ export class FeaturesComponent implements OnInit {
   async opciones(i: any, comentario: any) {
     const user = await this.afAuth.currentUser;
 
-    if (comentario.uid == 'activate') {
+    // Verificar si el usuario es invitado
+    if (this.usuarioActual === 'Invitad@') {
+      console.log('No puedes descargar');
+      this.modal5 = true; // Abre el modal5
+      return; // Sale de la función si el usuario es invitado
+    }
+
+    // Si el usuario no es invitado, proceder con las opciones normales
+    if (comentario.uid === 'activate') {
       const buttons = [
         {
           text: 'Descargar Imagen',
@@ -435,7 +445,7 @@ export class FeaturesComponent implements OnInit {
       if (data && data.action === 'delete') {
         const id = comentario?.id;
         this._post.delete(id).then(() => {
-          this.toastr.info('publicacion eliminada');
+          this.toastr.info('Publicación eliminada');
         });
       }
     } else {
@@ -471,7 +481,7 @@ export class FeaturesComponent implements OnInit {
       if (data && data.action === 'delete') {
         const id = comentario?.id;
         this._post.delete(id).then(() => {
-          this.toastr.info('publicacion eliminada');
+          this.toastr.info('Publicación eliminada');
         });
       }
     }
@@ -526,7 +536,6 @@ export class FeaturesComponent implements OnInit {
     const user = await this.afAuth.currentUser;
 
     if (user && !this.esInvitado) {
-      console.log('es usuario');
       this.modal2?.present();
     } else {
       this.modal3 = true;

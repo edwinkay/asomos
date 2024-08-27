@@ -126,6 +126,19 @@ nav {
         font-size: 25px;
       }
     }
+    .dw-btn {
+      position: absolute;
+      top: 0;
+      right: 10em;
+      padding: 0;
+      color: #fff;
+      background: 0 0;
+      border: 0;
+      cursor: pointer;
+      width: 17%;
+      height: 10%;
+      z-index: 2;
+    }
     .minus-btn {
       position: absolute;
       top: 0;

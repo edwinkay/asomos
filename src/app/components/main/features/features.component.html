@@ -31,19 +31,21 @@
     </div>
 
     <div *ngFor="let p of post; let i = index">
-      <ion-card *ngIf="isUrl(p.post)">
+      <ion-card style="margin: 10px -5px" *ngIf="isUrl(p.post)">
         <ion-card-header style="padding-right: 6px">
-          <div style="display: flex; gap: 1rem">
-            <ion-avatar
-              style="width: 45px; height: 45px"
-              (click)="verUsuario(p.uid)"
-            >
-              <img [src]="p.foto" alt="foto" />
-            </ion-avatar>
-            <ion-label (click)="verUsuario(p.uid)">
-              <h2>{{ p.usuario }}</h2>
-              <p>{{ p.date }}</p>
-            </ion-label>
+          <div style="display: flex; gap: 1rem; justify-content: space-around">
+            <div style="display: flex; gap: 1rem">
+              <ion-avatar
+                style="width: 45px; height: 45px"
+                (click)="verUsuario(p.uid)"
+              >
+                <img [src]="p.foto" alt="foto" />
+              </ion-avatar>
+              <ion-label (click)="verUsuario(p.uid)">
+                <h2>{{ p.usuario }}</h2>
+                <p>{{ p.date }}</p>
+              </ion-label>
+            </div>
             <ion-icon
               (click)="opciones(i, p)"
               name="ellipsis-vertical"
@@ -82,7 +84,7 @@
       </ion-card>
 
       <!-- Si no es una URL -->
-      <ion-card *ngIf="!isUrl(p.post)">
+      <ion-card style="margin: 10px -5px" *ngIf="!isUrl(p.post)">
         <ion-card-header style="padding-right: 6px">
           <div style="display: flex; gap: 1rem">
             <ion-avatar
@@ -143,7 +145,37 @@
   <div *ngIf="abrirFoto" class="full-screen-container">
     <span class="close-button" (click)="cerrar()">X</span>
     <div class="image-container">
-      <img [src]="lafoto" alt="Imagen del mensaje" class="full-screen-image" />
+      <img
+        (click)="cerrar()"
+        [src]="lafoto"
+        alt="Imagen del mensaje"
+        class="full-screen-image"
+      />
+    </div>
+  </div>
+
+  <div *ngIf="modal3" class="custom-modal2">
+    <div class="modal-content2">
+      <span class="close-button2" (click)="cerrarModal()">CERRAR</span>
+      <h3>Aviso</h3>
+      <p>
+        Para comentar debes
+        <a (click)="cerrarModal()" routerLink="/login">Iniciar sesión</a> o
+        <a (click)="cerrarModal()" routerLink="/registrar">Registrarse</a>, es
+        gratis.
+      </p>
+    </div>
+  </div>
+  <div *ngIf="modal4" class="custom-modal2">
+    <div class="modal-content2">
+      <span class="close-button2" (click)="cerrarModal()">CERRAR</span>
+      <h3>Aviso</h3>
+      <p>
+        Para dar Like debes
+        <a (click)="cerrarModal()" routerLink="/login">Iniciar sesión</a> o
+        <a (click)="cerrarModal()" routerLink="/registrar">Registrarse</a>, es
+        gratis.
+      </p>
     </div>
   </div>
 

@@ -48,8 +48,10 @@ export class FeaturesComponent implements OnInit {
   abrirFoto = false;
   lafoto: any;
   lastVisible: any = null;
-  limit = 10;
-  hay = 0
+  limit = 30;
+  hay = 0;
+  modal3 = false;
+  modal4 = false;
 
   presentingElement: any = null;
   feature = 1;
@@ -84,7 +86,7 @@ export class FeaturesComponent implements OnInit {
       this.obtPost();
       this.getImages();
       this.getUserImages();
-      this.obtainAll()
+      this.obtainAll();
       this.usuarioActual = user?.displayName;
       const comprobar = user?.uid;
       if (this.usuarioActual == 'Invitad@') {
@@ -137,18 +139,22 @@ export class FeaturesComponent implements OnInit {
   cerrar() {
     this.abrirFoto = false;
   }
-  obtainAll(){
-    this._post.getPost().subscribe((data)=>{
-      const datos = []
-      data.forEach((e:any)=>{
+  cerrarModal() {
+    this.modal3 = false;
+    this.modal4 = false;
+  }
+  obtainAll() {
+    this._post.getPost().subscribe((data) => {
+      const datos = [];
+      data.forEach((e: any) => {
         const postData = e.payload.doc.data();
         datos.push({
           id: e.payload.doc.id,
-          ...postData
-        })
-        this.hay = datos.length
-      })
-    })
+          ...postData,
+        });
+        this.hay = datos.length;
+      });
+    });
   }
   obtPost() {
     this._post.getPostByPage(this.limit, null).subscribe((post) => {
@@ -169,7 +175,9 @@ export class FeaturesComponent implements OnInit {
         let timeAgo = '';
 
         if (diffInSeconds < 60) {
-          timeAgo = `hace ${diffInSeconds} ${diffInSeconds === 1 ? 'segundo' : 'segundos'}`;
+          timeAgo = `hace ${diffInSeconds} ${
+            diffInSeconds === 1 ? 'segundo' : 'segundos'
+          }`;
         } else if (diffInSeconds < 3600) {
           const minutes = Math.floor(diffInSeconds / 60);
           timeAgo = `hace ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
@@ -189,7 +197,6 @@ export class FeaturesComponent implements OnInit {
           const years = Math.floor(diffInSeconds / 31536000);
           timeAgo = `hace ${years} ${years === 1 ? 'año' : 'años'}`;
         }
-
 
         this.post.push({
           id: element.payload.doc.id,
@@ -291,7 +298,6 @@ export class FeaturesComponent implements OnInit {
         this.mostrarBotonCargarMas = true;
         this.mostrarMensajeNoMasPublicaciones = false;
       }
-
     });
   }
 
@@ -373,7 +379,7 @@ export class FeaturesComponent implements OnInit {
       }
     }
   }
-  abrirVideos(uid: any){
+  abrirVideos(uid: any) {
     const dato = 'activate-videos';
     if (uid == dato) {
       this.router.navigate(['/activate'], { state: { activateVideo: true } });
@@ -388,42 +394,114 @@ export class FeaturesComponent implements OnInit {
 
   async opciones(i: any, comentario: any) {
     const user = await this.afAuth.currentUser;
-    if (
-      user?.uid === comentario.uid ||
-      user?.email == 'administrador.sistema@gmail.com'
-    ) {
+
+    if (comentario.uid == 'activate') {
+      const buttons = [
+        {
+          text: 'Descargar Imagen',
+          data: { action: 'download' },
+          handler: () => {
+            this.descargarImagen(comentario.post);
+          },
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          data: { action: 'cancel' },
+        },
+      ];
+
+      // Añadir opción de eliminar solo si el usuario tiene permisos
+      if (
+        user?.uid === comentario.uid ||
+        user?.email === 'administrador.sistema@gmail.com'
+      ) {
+        buttons.unshift({
+          text: 'Eliminar',
+          role: 'destructive',
+          data: { action: 'delete' },
+        });
+      }
+
       const actionSheet = await this.actionSheetCtrl.create({
         header: 'Acciones',
-        buttons: [
-          {
-            text: 'Eliminar',
-            role: 'destructive',
-            data: {
-              action: 'delete',
-            },
-          },
-          {
-            text: 'Cancelar',
-            role: 'cancel',
-            data: {
-              action: 'cancel',
-            },
-          },
-        ],
+        buttons,
       });
 
       await actionSheet.present();
-      const id = comentario?.id;
 
       const { data } = await actionSheet.onDidDismiss();
 
       if (data && data.action === 'delete') {
+        const id = comentario?.id;
+        this._post.delete(id).then(() => {
+          this.toastr.info('publicacion eliminada');
+        });
+      }
+    } else {
+      const buttons = [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          data: { action: 'cancel' },
+        },
+      ];
+
+      // Añadir opción de eliminar solo si el usuario tiene permisos
+      if (
+        user?.uid === comentario.uid ||
+        user?.email === 'administrador.sistema@gmail.com'
+      ) {
+        buttons.unshift({
+          text: 'Eliminar',
+          role: 'destructive',
+          data: { action: 'delete' },
+        });
+      }
+
+      const actionSheet = await this.actionSheetCtrl.create({
+        header: 'Acciones',
+        buttons,
+      });
+
+      await actionSheet.present();
+
+      const { data } = await actionSheet.onDidDismiss();
+
+      if (data && data.action === 'delete') {
+        const id = comentario?.id;
         this._post.delete(id).then(() => {
           this.toastr.info('publicacion eliminada');
         });
       }
     }
   }
+
+  // descargarImagen(url: string) {
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.setAttribute('download', 'imagen.jpg');
+  //   a.download = url.substring(url.lastIndexOf('/') + 1);
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  // }
+  descargarImagen(url: string) {
+    fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const urlBlob = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = urlBlob;
+        a.setAttribute('download', 'imagen.jpg'); // Nombre del archivo descargado
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(urlBlob);
+      })
+      .catch(() => alert('No se pudo descargar la imagen.'));
+  }
+
   openModal() {
     this.modal2?.present();
   }
@@ -448,10 +526,10 @@ export class FeaturesComponent implements OnInit {
     const user = await this.afAuth.currentUser;
 
     if (user && !this.esInvitado) {
-      // this.modalcom = true;
+      console.log('es usuario');
       this.modal2?.present();
     } else {
-      this.modal = true;
+      this.modal3 = true;
     }
   }
   closeModal() {
@@ -501,7 +579,7 @@ export class FeaturesComponent implements OnInit {
         }
       });
     } else {
-      this.modal = true;
+      this.modal4 = true;
     }
   }
   toggleEmoticonSection() {

@@ -62,7 +62,7 @@ export class ActivateMusicaComponent implements OnInit {
   capIndex: any;
   usuarioActual: any;
 
-  aumentar = false
+  aumentar = false;
 
   presentingElement: any = null;
   showEmoticonSection: boolean = false;
@@ -109,7 +109,7 @@ export class ActivateMusicaComponent implements OnInit {
     });
   }
   zoom() {
-    this.aumentar = !this.aumentar
+    this.aumentar = !this.aumentar;
   }
   getUsers() {
     this._user.getUsers().subscribe((usuarios) => {
@@ -285,6 +285,65 @@ export class ActivateMusicaComponent implements OnInit {
 
     input.click();
   }
+  subirOriginal() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.addEventListener('change', (event) => {
+      const file = (event?.target as HTMLInputElement)?.files?.[0];
+
+      if (file) {
+        const filePath = `images/${file.name}`;
+        const fileRef = this.storagex.ref(filePath);
+        const task = this.storagex.upload(filePath, file, {
+          contentType: file.type,
+        });
+
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              fileRef.getDownloadURL().subscribe((url) => {
+                const dato: any = {
+                  url: url,
+                };
+                this._image.addImagenInfo(dato).then(() => {
+                  console.log('actualizando');
+                  this.toastr.info('Actualizando lista de Imagenes');
+
+                  // compartir mensaje en features
+                  const idUser = this.usuario?.uid;
+                  let foto = this.objetoUsuario?.foto;
+                  if (foto == undefined) {
+                    foto =
+                      'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg';
+                  }
+                  let nombre =
+                    this.objetoUsuario?.usuario ?? this.usuario?.displayName;
+                  if (!nombre) {
+                    console.error('Nombre de usuario no disponible');
+                    return;
+                  }
+                  const data = {
+                    foto: 'https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/chatsImg%2Fcfg4EqTUsyaeHUBfQA96izlfnw82%2Factivate-logo.jpeg?alt=media&token=c11df322-a0ce-4a4c-982b-d79761e1d57e',
+                    usuario: 'Activate agrego una imagen',
+                    post: url,
+                    uid: 'activate',
+                    timestamp: new Date(),
+                  };
+                  this._post.addPost(data).then(() => {});
+                });
+              });
+            })
+          )
+          .subscribe();
+      }
+    });
+
+    input.click();
+  }
+
   async likeImage(image: any) {
     const imgUrl = image?.url;
     const post = this.post.find((post: any) => post.post == imgUrl);
@@ -328,7 +387,7 @@ export class ActivateMusicaComponent implements OnInit {
     this.currentLightboxImage = this.images[index];
     this.totalImageCount = this.images.length;
     document.body.style.overflow = 'hidden';
-    console.log(this.currentLightboxImage.url)
+    console.log(this.currentLightboxImage.url);
   }
   onClosePreview() {
     this.previewImage = false;
@@ -373,7 +432,7 @@ export class ActivateMusicaComponent implements OnInit {
     this.modalcom = false;
   }
   close2() {
-    this.aumentar = false
+    this.aumentar = false;
   }
   async abrirEditar(comentario: any) {
     const user = await this.afAuth.currentUser;

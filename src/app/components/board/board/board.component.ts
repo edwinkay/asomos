@@ -27,7 +27,7 @@ export class BoardComponent implements OnInit {
   users: any[] = [];
   usuario: any;
   presentingElement: any = null;
-  afusuario: any;
+  id: any;
 
   ngOnInit() {
     this.getUsers();
@@ -45,14 +45,11 @@ export class BoardComponent implements OnInit {
     });
   }
   actualizarPerfil(): void {
-    this.afAuth.currentUser.then((user) => {
-      const userUid = user?.uid;
-      const email = user?.email;
 
       const usuarioData = {
-        idUser: userUid,
-        usuario: this.usuario.usuario,
-        email: email,
+        idUser: this.usuario.idUser,
+        usuario: this.usuario.usuario || null,
+        email: this.usuario.email,
         foto: this.usuario.foto,
         telefono: this.usuario.telefono || null,
         Genero: this.usuario.Genero || null,
@@ -62,17 +59,19 @@ export class BoardComponent implements OnInit {
         estado: this.usuario.estado || null,
         rol: this.usuario.rol || 'usuario',
       };
-      if (this.usuario.id) {
-        this._user.updateUser(usuarioData, this.usuario.id).then(() => {
+      if (this.id) {
+        this._user.updateUser(usuarioData, this.id).then(() => {
           this.modal2?.dismiss();
           this.toastr.info('Datos actualizados');
         });
       }
-    });
+      // console.log(usuarioData)
+      // console.log(this.id)
   }
-  admin(usuario: any) {
+  admin(usuario: any, id:any) {
+    this.id = id
     this.modal2?.present();
-    this.usuario = { ...usuario, id: usuario.id };
+    this.usuario = usuario
   }
   closeModal() {
     this.modal2?.dismiss();
@@ -132,39 +131,14 @@ export class BoardComponent implements OnInit {
                     .snapshotChanges()
                     .pipe(
                       finalize(() => {
-                        fileRef.getDownloadURL().subscribe((url) => {
-                          this.afAuth.currentUser.then((user) => {
-                            user
-                              ?.updateProfile({
-                                photoURL: url,
-                              })
-                              .then(() => {
-                                const dato = {
-                                  foto: url,
-                                };
-                                this._user
-                                  .updateUser(dato, this.usuario.id)
-                                  .then(() => {
-                                    // Actualiza la URL de la foto en el modal
-                                    this.usuario.foto = url;
-                                    // Actualiza la URL de la foto en la lista de usuarios
-                                    const index = this.users.findIndex(
-                                      (u) => u.id === this.usuario.id
-                                    );
-                                    if (index !== -1) {
-                                      this.users[index].foto = url;
-                                    }
-                                    console.log('perfil actualizado');
-                                    this.toastr.info('Foto de perfil cambiada');
-                                  });
-                              })
-                              .catch((error) => {
-                                console.error(
-                                  'Error al actualizar la foto de perfil:',
-                                  error
-                                );
-                              });
-                          });
+                        fileRef.getDownloadURL().subscribe((url) =>
+                         {
+                          const dato = {
+                            foto: url,
+                          };
+                          this._user.updateUser(dato, this.id).then(()=>{
+                            this.toastr.info('Foto de perfil cambiada');
+                          })
                         });
                       })
                     )

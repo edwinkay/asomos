@@ -23,6 +23,7 @@ import { ComunicationService } from 'src/app/services/comunication.service';
 export class PerfilComponent implements OnInit {
   @ViewChild('modal') modal2: IonModal | undefined;
 
+  laFoto:any;
   usuario: any | null;
   currentUser: any | null;
   usuarioActual: any;
@@ -178,6 +179,7 @@ export class PerfilComponent implements OnInit {
         this.birthdayValue = userData?.cumpleanos;
         this.aboutMeValue = userData?.about;
         this.urlPortada = userData?.portada;
+        this.laFoto = userData?.foto
       });
     });
   }

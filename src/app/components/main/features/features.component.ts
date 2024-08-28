@@ -53,6 +53,7 @@ export class FeaturesComponent implements OnInit {
   modal3 = false;
   modal4 = false;
   modal5 = false;
+  activateAdmin = false;
 
   presentingElement: any = null;
   feature = 1;
@@ -83,30 +84,36 @@ export class FeaturesComponent implements OnInit {
     this.afAuth.user.subscribe((user) => {
       this.usuario = user;
       this.currentUser = user;
-      this.getUsers();
-      this.obtPost();
-      this.getImages();
-      this.getUserImages();
-      this.obtainAll();
 
-      setTimeout(() => {
-        this.verificarUsuarioExistente();
-      }, 4000);
+      this._user.getUsers().subscribe((usuarios) => {
+        this.usuariosInfo = usuarios.map((element: any) => ({
+          id: element.payload.doc.data(),
+          ...element.payload.doc.data(),
+        }));
 
-      this.usuarioActual = user?.displayName;
-      const comprobar = user?.uid;
-      if (this.usuarioActual == 'Invitad@') {
-        this.esInvitado = true;
-      }
-      if (comprobar == 'rm01jawdLvYSObMPDc8BTBasbJp2') {
-        this.esInvitado = true;
-      }
-      if (comprobar == 'QxwJYfG0c2MwfjnJR70AdmmKOIz2') {
-        this.adm = true;
-      }
+        this.objetoUsuario = this.usuariosInfo.find(
+          (obj) => obj.id.idUser === this.usuario?.uid
+        );
+        const rol = this.objetoUsuario.rol
+
+        if (rol == 'administrador') {
+          this.adm = true
+        }else if (rol == 'invitado') {
+          this.esInvitado = true
+        }
+
+        if (this.objetoUsuario) {
+          this.obtPost();
+          this.getImages();
+          this.getUserImages();
+          this.obtainAll();
+        }
+      });
     });
+
     this.presentingElement = document.querySelector('.ion-page');
   }
+
   async publicar() {
     if (this.infoText && this.infoText.trim()) {
       const user = await this.afAuth.currentUser;
@@ -340,25 +347,9 @@ export class FeaturesComponent implements OnInit {
       });
     });
   }
-  getUsers() {
-    this._user.getUsers().subscribe((usuarios) => {
-      this.usuariosInfo = [];
-      usuarios.forEach((element: any) => {
-        const data = element.payload.doc.data();
-        this.usuariosInfo.push({
-          id: element.payload.doc.data(),
-          ...element.payload.doc.data(),
-        });
-        const userData = this.usuariosInfo.find(
-          (obj) => obj.id.idUser === this.usuario?.uid
-        );
-        this.objetoUsuario = userData;
-      });
-    });
-  }
   verificarUsuarioExistente() {
     if (!this.objetoUsuario) {
-      this.crearUsuario()
+      this.crearUsuario();
     } else {
       this.toastr.success('Hola ' + this.objetoUsuario.usuario);
     }
@@ -370,7 +361,7 @@ export class FeaturesComponent implements OnInit {
         usuario: user?.displayName,
         email: user?.email,
         foto: user?.photoURL,
-        rol: 'usuario'
+        rol: 'usuario',
       };
       this._user.addIUserInfo(datos).then(() => {
         this.toastr.info('Bienvenido');
@@ -424,9 +415,18 @@ export class FeaturesComponent implements OnInit {
   async opciones(i: any, comentario: any) {
     const user = await this.afAuth.currentUser;
 
-    // Verificar si el usuario es invitado
-    if (this.usuarioActual === 'Invitad@') {
+    if (
+      comentario.uid == 'activate' &&
+      this.objetoUsuario.rol == 'adm-activate'
+    ) {
+      this.activateAdmin = true;
+    }
 
+    // Verificar si el usuario es invitado
+    if (
+      this.usuarioActual === 'Invitad@' ||
+      this.objetoUsuario.rol == 'invitado'
+    ) {
       this.modal5 = true; // Abre el modal5
       return; // Sale de la función si el usuario es invitado
     }
@@ -451,7 +451,9 @@ export class FeaturesComponent implements OnInit {
       // Añadir opción de eliminar solo si el usuario tiene permisos
       if (
         user?.uid === comentario.uid ||
-        user?.email === 'administrador.sistema@gmail.com'
+        user?.email === 'administrador.sistema@gmail.com' ||
+        this.objetoUsuario.rol == 'administrador' ||
+        this.activateAdmin
       ) {
         buttons.unshift({
           text: 'Eliminar',
@@ -487,7 +489,9 @@ export class FeaturesComponent implements OnInit {
       // Añadir opción de eliminar solo si el usuario tiene permisos
       if (
         user?.uid === comentario.uid ||
-        user?.email === 'administrador.sistema@gmail.com'
+        user?.email === 'administrador.sistema@gmail.com' ||
+        this.objetoUsuario.rol == 'administrador' ||
+        this.activateAdmin
       ) {
         buttons.unshift({
           text: 'Eliminar',
@@ -680,7 +684,8 @@ export class FeaturesComponent implements OnInit {
     const user = await this.afAuth.currentUser;
     if (
       user?.email === comentario.correo ||
-      user?.email == 'administrador.sistema@gmail.com'
+      user?.email == 'administrador.sistema@gmail.com' ||
+      this.objetoUsuario.rol == 'administrador'
     ) {
       this.modalEditar = true;
       this.ocultarx = false;
@@ -707,7 +712,8 @@ export class FeaturesComponent implements OnInit {
 
     if (
       user?.uid === p.idUser ||
-      user?.email == 'administrador.sistema@gmail.com'
+      user?.email == 'administrador.sistema@gmail.com' ||
+      this.objetoUsuario.rol == 'administrador'
     ) {
       const actionSheet = await this.actionSheetCtrl.create({
         header: 'Acciones',

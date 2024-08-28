@@ -99,16 +99,24 @@ export class ActivateMusicaComponent implements OnInit {
       this.usuario = user;
       this.currentUser = user;
       this.usuarioActual = user?.displayName;
-      const comprobar = user?.uid;
-      if (comprobar == 'rm01jawdLvYSObMPDc8BTBasbJp2') {
-        this.esInvitado = true;
-      }
-      if (
-        comprobar == 'QxwJYfG0c2MwfjnJR70AdmmKOIz2' ||
-        comprobar == 'AO7bYMNMPuSUMl5vH8tOqzavTrt2'
-      ) {
-        this.adm = true;
-      }
+
+      this._user.getUsers().subscribe((usuarios) => {
+        this.usuariosInfo = usuarios.map((element: any) => ({
+          id: element.payload.doc.data(),
+          ...element.payload.doc.data(),
+        }));
+
+        this.objetoUsuario = this.usuariosInfo.find(
+          (obj) => obj.id.idUser === this.usuario?.uid
+        );
+        const rol = this.objetoUsuario.rol;
+
+        if (rol == 'administrador' || rol == 'adm-activate') {
+          this.adm = true;
+        } else if (rol == 'invitado') {
+          this.esInvitado = true;
+        }
+      });
     });
   }
   zoom() {
@@ -127,27 +135,7 @@ export class ActivateMusicaComponent implements OnInit {
     }
   }
   getUsers() {
-    this._user.getUsers().subscribe((usuarios) => {
-      this.usuariosInfo = [];
-      this.idInfo = [];
-      usuarios.forEach((element: any) => {
-        const data = element.payload.doc.data();
-        this.usuariosInfo.push({
-          id: element.payload.doc.data(),
-          ...element.payload.doc.data(),
-          // likesCountImage: data.likesCountImage || 0,
-          // likedByImage: data.likedByImage || [],
-        });
-        const userData = this.usuariosInfo.find(
-          (obj) => obj.id.idUser === this.usuario?.uid
-        );
-        this.objetoUsuario = userData;
-        const userData2 = {
-          id: element.payload.doc.id, // Aquí obtenemos el ID del documento
-          ...element.payload.doc.data(),
-        };
-      });
-    });
+
   }
 
   goBack() {

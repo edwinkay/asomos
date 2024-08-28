@@ -14,7 +14,7 @@
 <ion-content>
   <div class="card-container">
     <div *ngFor="let usuario of users" class="card-item">
-      <ion-card (click)="admin(usuario)">
+      <ion-card (click)="admin(usuario, usuario.id)">
         <ion-card-header>
           <ion-img
             [src]="

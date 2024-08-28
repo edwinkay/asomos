@@ -68,14 +68,16 @@ export class BandejaComponent implements OnInit {
 
       // ID del administrador
       const adminId = 'QxwJYfG0c2MwfjnJR70AdmmKOIz2';
+      const invitado = 'rm01jawdLvYSObMPDc8BTBasbJp2';
 
       // Excluir al administrador
-      const usuariosSinAdmin = usuariosSinUsuarioActual.filter(
-        (obj) => obj.idUser !== adminId
+      // Excluir tanto al administrador como al invitado
+      const usuariosFiltrados = usuariosSinUsuarioActual.filter(
+        (obj) => obj.idUser !== adminId && obj.idUser !== invitado
       );
 
       // Asignar la lista filtrada a users2
-      this.users2 = usuariosSinAdmin;
+      this.users2 = usuariosFiltrados;
     });
   }
 

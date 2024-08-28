@@ -1,20 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { UsersService } from 'src/app/services/users.service';
 import { IonModal } from '@ionic/angular';
 import { ReporteService } from 'src/app/services/reporte.service';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   @ViewChild('modal') modal2: IonModal | undefined;
   @ViewChild('viewModal') viewModal: IonModal | undefined;
+
+  activate: boolean = false;
+  private navigationSubscription: Subscription | undefined;
 
   report = {
     name: '',
@@ -50,9 +54,35 @@ export class NavbarComponent implements OnInit {
     private _user: UsersService,
     private _rep: ReporteService,
     private toastr: ToastrService
-  ) {}
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      this.activate = navigation.extras.state['activate'] || false;
+
+      if (this.activate) {
+        this.abrirPerfil();
+      } else {
+        this.main();
+      }
+    }
+  }
 
   ngOnInit(): void {
+    this.navigationSubscription = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const navigation = this.router.getCurrentNavigation();
+        if (navigation?.extras.state) {
+          this.activate = navigation.extras.state['activate'] || false;
+
+          if (this.activate) {
+            this.abrirPerfil();
+          } else {
+            this.main();
+          }
+        }
+      }
+    });
+
     this.afAuth.user.subscribe((user) => {
       this.usuario = user;
       this.usuarioActual = user?.displayName;
@@ -68,6 +98,12 @@ export class NavbarComponent implements OnInit {
     });
 
     this.menu.close();
+  }
+
+  ngOnDestroy(): void {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
   }
 
   getUsers() {
@@ -89,12 +125,15 @@ export class NavbarComponent implements OnInit {
   }
 
   abrirPerfil() {
+    console.log('Abriendo perfil');
+
     this.mn = false;
     this.im = false;
     this.vd = true; // Mostrar el perfil
   }
 
   main() {
+    console.log('Mostrando main');
     this.mn = true;
     this.im = false;
     this.vd = false;
@@ -104,12 +143,6 @@ export class NavbarComponent implements OnInit {
     this.mn = false;
     this.im = true;
     this.vd = false;
-  }
-
-  videos() {
-    this.mn = false;
-    this.im = false;
-    this.vd = true;
   }
 
   enviar() {
@@ -187,6 +220,18 @@ export class NavbarComponent implements OnInit {
     await this.menu.close(); // Cerrar el menú
     this.afAuth.signOut().then(() => {
       this.router.navigate(['/login']);
+    });
+  }
+
+  async verUsuario(u: any) {
+    await this.afAuth.user.subscribe((data) => {
+      if (data?.uid == u.idUser) {
+        this.router.navigate(['/main'], { state: { activate: true } });
+        this.modal2?.dismiss();
+      } else {
+        this.router.navigate(['/usuario/', u.idUser]);
+        this.modal2?.dismiss();
+      }
     });
   }
 }

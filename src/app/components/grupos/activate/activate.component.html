@@ -11,53 +11,77 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div>
-    <div [hidden]="!mn">
-      <div class="contenedor">
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            row-gap: 2rem;
-          "
-        >
-          <div style="text-align: center">
-            <h2 class="move">Bienvenidos a Activate</h2>
-            <span class="move2">Sesión de Actividad Física Musicalizada</span>
-          </div>
+  <div *ngIf="mn" class="contenedor">
+    <ion-grid>
+      <ion-row class="ion-justify-content-center ion-text-center">
+        <ion-col size="12">
+          <h2 class="move">Bienvenidos a Activate</h2>
+          <span class="move2">Sesión de Actividad Física Musicalizada</span>
+        </ion-col>
+      </ion-row>
 
+      <ion-row class="ion-justify-content-center ion-align-items-center" style="gap: 6px;">
+        <ion-col size="auto">
+          <ion-row class="user-list" style="flex-wrap: nowrap; overflow-x: auto;">
+            <ion-col size="auto" *ngFor="let u of users2">
+              <ion-item lines="none" class="ion-no-padding">
+                <ion-avatar slot="start">
+                  <img
+                    [src]="u.foto || 'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg'"
+                    alt="Foto de perfil"
+                  />
+                </ion-avatar>
+                <ion-label>
+                  <h3>{{ u.usuario }}</h3>
+                </ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-button expand="block" fill="clear" (click)="verMas()">
+            Ver más ({{users2.length}})
+          </ion-button>
+        </ion-col>
+      </ion-row>
 
-          <div style="display: contents">
-            <img
-              class="img-fondo"
-              src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Factivate-logo.jpeg?alt=media&token=28baeec7-81b9-42a8-845d-3e226031f3ba"
-              alt=""
-            />
-          </div>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="12" class="ion-text-center">
+          <ion-img
+            class="img-fondo"
+            style="height: 92%; object-fit: cover;"
+            src="https://firebasestorage.googleapis.com/v0/b/fitpal-horario.appspot.com/o/fondos%2Factivate-logo.jpeg?alt=media&token=28baeec7-81b9-42a8-845d-3e226031f3ba"
+            alt="Fondo Activate"
+          ></ion-img>
+        </ion-col>
+      </ion-row>
+
+      <ion-row
+      style="    position: relative;
+    bottom: 27px;"
+      class="ion-justify-content-center">
+        <ion-col size="12" class="ion-text-center">
           <a
-            style="
-              user-select: none;
-              cursor: pointer;
-              position: absolute;
-              bottom: 6%;
-              text-decoration: none;
-            "
             href="https://www.facebook.com/profile.php?id=100061274895674"
-            ><i class="fab fa-facebook-square"></i> Unete a nuestro grupo de
-            Facebook.
+            class="facebook-link"
+          >
+            <ion-icon name="logo-facebook" slot="start"></ion-icon>
+            Únete a nuestro grupo de Facebook.
           </a>
-        </div>
-      </div>
-    </div>
-    <div [hidden]="!im">
-      <app-activate-musica></app-activate-musica>
-    </div>
-    <div [hidden]="!vd">
-      <app-activate-video></app-activate-video>
-    </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div *ngIf="im">
+    <app-activate-musica></app-activate-musica>
+  </div>
+
+  <div *ngIf="vd">
+    <app-activate-video></app-activate-video>
   </div>
 </ion-content>
+
+
+
 
 <ion-tab-bar slot="bottom">
   <ion-tab-button (click)="main()" [ngClass]="{ 'tab-selected': mn }">
@@ -75,3 +99,43 @@
     <ion-label>Videos</ion-label>
   </ion-tab-button>
 </ion-tab-bar>
+<ion-modal #modal trigger="open-modal" [presentingElement]="presentingElement">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Usuarios ({{users2.length}})</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-col size="auto" *ngFor="let u of users2">
+              <ion-item (click)="verUsuario(u)" lines="none" class="ion-no-padding">
+                <ion-avatar slot="start">
+                  <img
+                    [src]="u.foto || 'https://forma-architecture.com/wp-content/uploads/2021/04/Foto-de-perfil-vacia-thegem-person.jpg'"
+                    alt="Foto de perfil"
+                  />
+                </ion-avatar>
+                <ion-label>
+                  <h3>{{ u.usuario }}</h3>
+                </ion-label>
+              </ion-item>
+            </ion-col>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<div *ngIf="modal3" class="custom-modal2">
+    <div class="modal-content2">
+      <span class="close-button2" (click)="cerrarModal()">CERRAR</span>
+      <h3>Aviso</h3>
+      <p>
+        Para ver los usuarios debes
+        <a (click)="cerrarModal()" routerLink="/login">Iniciar sesión</a> o
+        <a (click)="cerrarModal()" routerLink="/registrar">Registrarse</a>, es
+        gratis.
+      </p>
+    </div>
+  </div>

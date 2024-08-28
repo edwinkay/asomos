@@ -601,9 +601,11 @@ export class ActivateMusicaComponent implements OnInit {
       const user = await this.afAuth.currentUser;
       const userId = user?.uid;
       if (userId === id) {
-        this.router.navigate(['/perfil']);
+        this.router.navigate(['/main'], { state: { activate: true } });
+        this.modal2?.dismiss();
       } else {
         this.router.navigate(['/usuario/', id]);
+        this.modal2?.dismiss();
       }
     }
   }
@@ -663,9 +665,11 @@ export class ActivateMusicaComponent implements OnInit {
     const user = await this.afAuth.currentUser;
     const userId = user?.uid;
     if (userId === id) {
-      this.router.navigate(['/perfil']);
+      this.router.navigate(['/main'], { state: { activate: true } });
+      this.modal2?.dismiss();
     } else {
       this.router.navigate(['/usuario/', id]);
+      this.modal2?.dismiss();
     }
   }
   async deleteImgModal(id: string, com: any) {

@@ -2,7 +2,11 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { ActionSheetController, AlertController, AlertInput } from '@ionic/angular';
+import {
+  ActionSheetController,
+  AlertController,
+  AlertInput,
+} from '@ionic/angular';
 import { IonModal } from '@ionic/angular';
 import { UsersService } from 'src/app/services/users.service';
 import { PostService } from 'src/app/services/post.service';
@@ -94,22 +98,23 @@ export class FeaturesComponent implements OnInit {
         this.objetoUsuario = this.usuariosInfo.find(
           (obj) => obj.id.idUser === this.usuario?.uid
         );
-        const rol = this.objetoUsuario.rol
+        const rol = this.objetoUsuario?.rol;
 
         if (rol == 'administrador') {
-          this.adm = true
-        }else if (rol == 'invitado') {
-          this.esInvitado = true
-        }
-
-        if (this.objetoUsuario) {
-          this.obtPost();
-          this.getImages();
-          this.getUserImages();
-          this.obtainAll();
+          this.adm = true;
+        } else if (rol == 'invitado') {
+          this.esInvitado = true;
         }
       });
     });
+    this.obtPost();
+    this.getImages();
+    this.getUserImages();
+    this.obtainAll();
+
+      setTimeout(() => {
+        this.verificarUsuarioExistente();
+      }, 4000);
 
     this.presentingElement = document.querySelector('.ion-page');
   }

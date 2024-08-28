@@ -88,6 +88,11 @@ export class FeaturesComponent implements OnInit {
       this.getImages();
       this.getUserImages();
       this.obtainAll();
+
+      setTimeout(() => {
+        this.verificarUsuarioExistente();
+      }, 4000);
+
       this.usuarioActual = user?.displayName;
       const comprobar = user?.uid;
       if (this.usuarioActual == 'Invitad@') {
@@ -351,6 +356,28 @@ export class FeaturesComponent implements OnInit {
       });
     });
   }
+  verificarUsuarioExistente() {
+    if (!this.objetoUsuario) {
+      this.crearUsuario()
+    } else {
+      this.toastr.success('Hola ' + this.objetoUsuario.usuario);
+    }
+  }
+  crearUsuario() {
+    this.afAuth.currentUser.then((user) => {
+      const datos = {
+        idUser: user?.uid,
+        usuario: user?.displayName,
+        email: user?.email,
+        foto: user?.photoURL,
+        rol: 'usuario'
+      };
+      this._user.addIUserInfo(datos).then(() => {
+        this.toastr.info('Bienvenido');
+      });
+    });
+  }
+
   isUrl(str: string): boolean {
     // Expresión regular para verificar si la cadena es una URL
     const pattern = new RegExp(
@@ -399,7 +426,7 @@ export class FeaturesComponent implements OnInit {
 
     // Verificar si el usuario es invitado
     if (this.usuarioActual === 'Invitad@') {
-      console.log('No puedes descargar');
+
       this.modal5 = true; // Abre el modal5
       return; // Sale de la función si el usuario es invitado
     }

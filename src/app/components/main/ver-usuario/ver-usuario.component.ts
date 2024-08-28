@@ -113,7 +113,6 @@ export class VerUsuarioComponent implements OnInit {
     this.location.back();
   }
   abrirBandeja() {
-    this.crearUsuario();
     this.router.navigate(['enviar-mensaje', this.id2]);
   }
   showEmoticonSection: boolean = false;
@@ -153,21 +152,6 @@ export class VerUsuarioComponent implements OnInit {
         this.urlPortada = userData?.portada;
       });
     });
-  }
-  crearUsuario() {
-    if (this.id == undefined) {
-      this.afAuth.currentUser.then((user) => {
-        const datos = {
-          idUser: user?.uid,
-          usuario: user?.displayName,
-          email: user?.email,
-          foto: user?.photoURL,
-        };
-        this._user.addIUserInfo(datos).then(() => {
-          console.log('usuario actualizado');
-        });
-      });
-    } else console.log('el usuario ya esta registrado');
   }
   toggleEmoticonSection() {
     this.showEmoticonSection = !this.showEmoticonSection;
@@ -278,7 +262,6 @@ export class VerUsuarioComponent implements OnInit {
     }
   }
   editarPerfil(isOpen: boolean) {
-    this.crearUsuario();
     this.isModalOpen = isOpen;
   }
   changePortada(): void {

@@ -145,7 +145,6 @@ export class PerfilComponent implements OnInit {
     });
   }
   abrirBandeja() {
-    this.crearUsuario();
     this.router.navigate(['/bandeja']);
   }
   showEmoticonSection: boolean = false;
@@ -181,21 +180,6 @@ export class PerfilComponent implements OnInit {
         this.urlPortada = userData?.portada;
       });
     });
-  }
-  crearUsuario() {
-    if (this.id == undefined) {
-      this.afAuth.currentUser.then((user) => {
-        const datos = {
-          idUser: user?.uid,
-          usuario: user?.displayName,
-          email: user?.email,
-          foto: user?.photoURL,
-        };
-        this._user.addIUserInfo(datos).then(() => {
-          console.log('usuario actualizado');
-        });
-      });
-    } else console.log('el usuario ya esta registrado');
   }
   toggleEmoticonSection() {
     this.showEmoticonSection = !this.showEmoticonSection;
@@ -306,7 +290,6 @@ export class PerfilComponent implements OnInit {
     }
   }
   editarPerfil() {
-    this.crearUsuario();
     this.router.navigate(['/perfil-editar']);
   }
   changePortada(): void {

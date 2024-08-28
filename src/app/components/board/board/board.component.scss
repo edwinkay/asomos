@@ -1,0 +1,20 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.card-item {
+  flex: 0 0 30%; /* Ajusta el ancho de cada card */
+  margin-bottom: 16px; /* Espacio entre las cards */
+}
+
+ion-card {
+  height: 100%; /* Hace que la card ocupe todo el espacio disponible */
+}
+
+ion-img {
+  width: 100%; /* Asegura que la imagen se ajuste al ancho de la card */
+  height: auto;
+  border-radius: 8px; /* Opcional: Redondea los bordes de la imagen */
+}

@@ -57,6 +57,9 @@ export class FeaturesComponent implements OnInit {
   modal3 = false;
   modal4 = false;
   modal5 = false;
+  modal6 = false;
+  com:any
+  idcom:any
   activateAdmin = false;
 
   presentingElement: any = null;
@@ -105,6 +108,7 @@ export class FeaturesComponent implements OnInit {
         } else if (rol == 'invitado') {
           this.esInvitado = true;
         }
+
       });
     });
     this.obtPost();
@@ -161,6 +165,7 @@ export class FeaturesComponent implements OnInit {
     this.modal3 = false;
     this.modal4 = false;
     this.modal5 = false;
+    this.modal6 = false;
   }
   obtainAll() {
     this._post.getPost().subscribe((data) => {
@@ -464,8 +469,16 @@ export class FeaturesComponent implements OnInit {
           text: 'Eliminar',
           role: 'destructive',
           data: { action: 'delete' },
+        })
+        buttons.unshift({
+          text: 'Editar',
+          data: { action: 'edit' },
+          handler: () => {
+            this.editarComentario(comentario?.usuario, comentario?.id);
+          },
         });
       }
+
 
       const actionSheet = await this.actionSheetCtrl.create({
         header: 'Acciones',
@@ -503,7 +516,13 @@ export class FeaturesComponent implements OnInit {
           role: 'destructive',
           data: { action: 'delete' },
         });
+        buttons.unshift({
+          text: 'Editar',
+          data: { action: 'edit' },
+          role: 'edit'
+        });
       }
+
 
       const actionSheet = await this.actionSheetCtrl.create({
         header: 'Acciones',
@@ -514,15 +533,33 @@ export class FeaturesComponent implements OnInit {
 
       const { data } = await actionSheet.onDidDismiss();
 
+
       if (data && data.action === 'delete') {
         const id = comentario?.id;
         this._post.delete(id).then(() => {
           this.toastr.info('Publicación eliminada');
         });
+      }else if (data.action === 'edit'){
+        this.editarComentario(comentario?.usuario, comentario?.id);
       }
     }
   }
 
+  editarComentario (com:any, idcom:any) {
+    this.com = com
+    this.idcom = idcom
+    this.modal6 = true
+    this.modal2?.dismiss();
+  }
+  gtitulo(){
+    const data = {
+      usuario: this.com
+    }
+    this._post.update(this.idcom, data).then(() => {
+      this.toastr.info('Titulo editado');
+      this.modal6 = false
+    });
+  }
   // descargarImagen(url: string) {
   //   const a = document.createElement('a');
   //   a.href = url;

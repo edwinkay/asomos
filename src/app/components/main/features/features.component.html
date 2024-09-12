@@ -33,9 +33,12 @@
     <div *ngFor="let p of post; let i = index">
       <ion-card style="margin: 10px -5px" *ngIf="isUrl(p.post)">
         <ion-card-header style="padding-right: 6px">
-          <div style="display: flex; gap: 1rem; justify-content: space-around">
+          <div style="display: flex;
+    gap: 1rem;
+    justify-content: space-between;">
             <div style="display: flex; gap: 1rem">
-              <ion-avatar
+              <div style="gap: 1rem; display: flex">
+                <ion-avatar
                 style="width: 45px; height: 45px"
                 (click)="verUsuario(p.uid)"
               >
@@ -45,6 +48,8 @@
                 <h2>{{ p.usuario }}</h2>
                 <p>{{ p.date }}</p>
               </ion-label>
+              </div>
+
             </div>
             <ion-icon
               (click)="opciones(i, p)"
@@ -86,17 +91,19 @@
       <!-- Si no es una URL -->
       <ion-card style="margin: 10px -5px" *ngIf="!isUrl(p.post)">
         <ion-card-header style="padding-right: 6px">
-          <div style="display: flex; gap: 1rem">
-            <ion-avatar
-              style="width: 45px; height: 45px"
-              (click)="verUsuario(p.uid)"
-            >
-              <img [src]="p.foto" alt="foto" />
-            </ion-avatar>
-            <ion-label (click)="abrirVideos(p.uid)">
-              <h2>{{ p.usuario }}</h2>
-              <p>{{ p.date }}</p>
-            </ion-label>
+          <div style="display: flex; gap: 1rem; justify-content: space-between">
+            <div style="gap: 1rem; display: flex">
+              <ion-avatar
+                style="width: 45px; height: 45px"
+                (click)="verUsuario(p.uid)"
+              >
+                <img [src]="p.foto" alt="foto" />
+              </ion-avatar>
+              <ion-label (click)="abrirVideos(p.uid)">
+                <h2>{{ p.usuario }}</h2>
+                <p>{{ p.date }}</p>
+              </ion-label>
+            </div>
             <ion-icon
               (click)="opciones(i, p)"
               name="ellipsis-vertical"
@@ -188,6 +195,19 @@
         <a (click)="cerrarModal()" routerLink="/registrar">Registrarse</a>, es
         gratis.
       </p>
+    </div>
+  </div>
+  <div *ngIf="modal6" class="custom-modal2">
+    <div class="modal-content2">
+      <span class="close-button2" (click)="cerrarModal()">CERRAR</span>
+      <h3>Editar titulo</h3>
+      <ion-input
+        label="Titulo"
+        label-placement="floating"
+        type="text"
+        [(ngModel)]="com"
+      ></ion-input>
+      <ion-button (click)="gtitulo()">Guardar</ion-button>
     </div>
   </div>
 

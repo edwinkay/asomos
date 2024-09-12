@@ -9,7 +9,11 @@ import {
   AlertInput,
 } from '@ionic/angular';
 import { IonModal } from '@ionic/angular';
+import { finalize } from 'rxjs/operators';
 import { VideosAsomosService } from 'src/app/services/videos-asomos.service';
+import { UsersService } from 'src/app/services/users.service';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-asomos-videos',
@@ -39,6 +43,12 @@ export class AsomosVideosComponent implements OnInit {
 
   option: boolean = false;
   capIndex: any;
+  usuariosInfo: any[] = [];
+  objetoUsuario: any;
+  titulo = 'Agreagar Video';
+  video = { id: '', nombre: '', th: '', url: '' };
+  modal6 = false;
+  urlFondo: any | null;
 
   presentingElement: any = null;
   showEmoticonSection: boolean = false;
@@ -55,20 +65,33 @@ export class AsomosVideosComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private _videosService: VideosAsomosService,
     private router: Router,
+    private _user: UsersService,
     private actionSheetCtrl: ActionSheetController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private storage: AngularFireStorage,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
     this.getVideos();
     this.afAuth.authState.subscribe((user) => {
       this.currentUser = user;
-      const comprobar = user?.uid;
-      if (comprobar == 'rm01jawdLvYSObMPDc8BTBasbJp2') {
-        this.esInvitado = true;
-      }
-      if (comprobar == 'QxwJYfG0c2MwfjnJR70AdmmKOIz2') {
+    });
+    this._user.getUsers().subscribe((usuarios) => {
+      this.usuariosInfo = usuarios.map((element: any) => ({
+        id: element.payload.doc.data(),
+        ...element.payload.doc.data(),
+      }));
+
+      this.objetoUsuario = this.usuariosInfo.find(
+        (obj) => obj.id.idUser === this.currentUser?.uid
+      );
+      const rol = this.objetoUsuario?.rol;
+
+      if (rol == 'administrador') {
         this.adm = true;
+      } else if (rol == 'invitado') {
+        this.esInvitado = true;
       }
     });
   }
@@ -77,6 +100,26 @@ export class AsomosVideosComponent implements OnInit {
     this.location.back();
   }
 
+  editarVideo(video: any) {
+    this.titulo = 'Editar Video';
+    if (this.adm) {
+      this.video = video;
+      this.modal6 = true;
+    }
+  }
+  addVideo() {
+    if (this.video.id) {
+      const data = {
+        nombre: this.video.nombre,
+        th: this.urlFondo,
+        url: this.video.url,
+      };
+      this._videosService.updateVideo(this.video.id, data).then(() => {
+        this.toastr.info('Video actualizado');
+        this.modal6 = false;
+      })
+    }
+  }
   getVideos() {
     this._videosService.getVideos().subscribe((data) => {
       this.videos = [];
@@ -107,6 +150,82 @@ export class AsomosVideosComponent implements OnInit {
     if (video) {
       video.playing = false;
     }
+  }
+  subirFoto(): void {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.addEventListener('change', (event) => {
+      const file = (event?.target as HTMLInputElement)?.files?.[0];
+
+      if (file) {
+        const image = new Image();
+        const reader = new FileReader();
+
+        reader.onload = (e: any) => {
+          image.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxWidth = 800; // Ancho máximo permitido
+            const maxHeight = 600; // Altura máxima permitida
+            let width = image.width;
+            let height = image.height;
+
+            // Redimensionar la imagen si es necesario
+            if (width > maxWidth || height > maxHeight) {
+              if (width > height) {
+                height *= maxWidth / width;
+                width = maxWidth;
+              } else {
+                width *= maxHeight / height;
+                height = maxHeight;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+
+            if (ctx) {
+              ctx.drawImage(image, 0, 0, width, height);
+
+              canvas.toBlob((blob) => {
+                if (blob) {
+                  const filePath = `fondos/thumbs-asomos/${file.name}`;
+                  const fileRef = this.storage.ref(filePath);
+                  const task = this.storage.upload(filePath, blob, {
+                    contentType: blob.type,
+                  });
+
+                  task
+                    .snapshotChanges()
+                    .pipe(
+                      finalize(() => {
+                        fileRef.getDownloadURL().subscribe((url) => {
+                          this.urlFondo = url;
+                          this.toastr.success('fondo subido correctamente');
+                        });
+                      })
+                    )
+                    .subscribe();
+                }
+              }, file.type);
+            } else {
+              console.error(
+                'Error: No se pudo obtener el contexto 2D del canvas.'
+              );
+            }
+          };
+
+          image.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    input.click();
   }
   addEmoji(emoji: string) {
     this.comentario += emoji;
@@ -154,6 +273,9 @@ export class AsomosVideosComponent implements OnInit {
   }
   closeModal() {
     this.modal2?.dismiss();
+  }
+  cerrarModal() {
+    this.modal6 = false;
   }
   async abrirCom(video: any) {
     this.dataVideoId = video;

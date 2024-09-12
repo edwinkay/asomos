@@ -46,7 +46,7 @@
           </div>
           <div *ngIf="!video.playing" class="section">
             <div class="title">
-              <p style="margin: 0">
+              <p (click)="editarVideo(video)" style="margin: 0">
                 {{ video.nombre }}
               </p>
             </div>
@@ -76,7 +76,7 @@
             class="section"
           >
             <div class="title">
-              <p style="margin: 0">
+              <p (click)="editarVideo(video)" style="margin: 0">
                 {{ video.nombre }}
               </p>
             </div>
@@ -103,6 +103,32 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+<div *ngIf="modal6" class="custom-modal2">
+  <div class="modal-content2">
+    <span class="close-button2" (click)="cerrarModal()">CERRAR</span>
+    <h3>{{ titulo }}</h3>
+    <ion-input
+      label="Titulo"
+      label-placement="floating"
+      type="text"
+      [(ngModel)]="video.nombre"
+    ></ion-input>
+    <ion-input
+      label="Url"
+      label-placement="floating"
+      type="text"
+      [(ngModel)]="urlFondo"
+    ></ion-input>
+    <ion-button (click)="subirFoto()">Subir Fondo</ion-button>
+    <ion-input
+      label="Url"
+      label-placement="floating"
+      type="text"
+      [(ngModel)]="video.url"
+    ></ion-input>
+    <ion-button (click)="addVideo()">Guardar</ion-button>
   </div>
 </div>
 

@@ -116,7 +116,6 @@ export class ActivateVideoComponent implements OnInit {
   }
   addVideo() {
     if (this.video.id !== '') {
-      console.log('actulizando datos');
       const data = {
         nombre: this.video.nombre,
         th: this.urlFondo,

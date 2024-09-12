@@ -474,7 +474,7 @@ export class FeaturesComponent implements OnInit {
           text: 'Editar',
           data: { action: 'edit' },
           handler: () => {
-            this.editarComentario(comentario?.usuario, comentario?.id);
+            this.editarComentario(comentario, comentario?.id);
           },
         });
       }
@@ -540,7 +540,7 @@ export class FeaturesComponent implements OnInit {
           this.toastr.info('Publicación eliminada');
         });
       }else if (data.action === 'edit'){
-        this.editarComentario(comentario?.usuario, comentario?.id);
+        this.editarComentario(comentario, comentario?.id);
       }
     }
   }
@@ -553,7 +553,9 @@ export class FeaturesComponent implements OnInit {
   }
   gtitulo(){
     const data = {
-      usuario: this.com
+      usuario: this.com.usuario,
+      post: this.com.post,
+      uid: this.com.uid
     }
     this._post.update(this.idcom, data).then(() => {
       this.toastr.info('Titulo editado');

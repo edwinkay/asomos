@@ -143,9 +143,12 @@
       type="text"
       [(ngModel)]="video.nombre"
     ></ion-input>
-    <div style="overflow: auto; height: 34px; margin-bottom: 7px">
-      <ion-label>{{ video.th }}</ion-label>
-    </div>
+    <ion-input
+      label="Url"
+      label-placement="floating"
+      type="text"
+      [(ngModel)]="urlFondo"
+    ></ion-input>
     <ion-button (click)="subirFoto()">Subir Fondo</ion-button>
     <ion-input
       label="Url"
